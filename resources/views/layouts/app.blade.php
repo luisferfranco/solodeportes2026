@@ -57,6 +57,7 @@
       <x-menu-sub title="Admin" icon="lucide.shield-user">
         <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
         <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
+        <x-menu-item title="Eventos" icon="lucide.trophy" link="{{ route('admin.eventos.index') }}" />
       </x-menu-sub>
       </x-menu>
     </x-slot:sidebar>
