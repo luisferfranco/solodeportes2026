@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->nivel > 1;
+    }
 }
