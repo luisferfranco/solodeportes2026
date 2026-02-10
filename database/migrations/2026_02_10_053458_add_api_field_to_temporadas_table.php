@@ -12,7 +12,7 @@ return new class extends Migration
   public function up(): void
   {
     Schema::table('temporadas', function (Blueprint $table) {
-      $table->integer('api_id')->nullable()->after('id');
+      $table->integer('sport_api_id')->nullable()->after('id');
     });
   }
 
@@ -22,7 +22,7 @@ return new class extends Migration
   public function down(): void
   {
     Schema::table('temporadas', function (Blueprint $table) {
-      $table->dropColumn('api_id');
+      $table->dropColumn('sport_api_id');
     });
   }
 };

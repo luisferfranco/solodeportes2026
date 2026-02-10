@@ -12,4 +12,9 @@ class Deporte extends Model
   protected $primaryKey = 'id';
   public $incrementing = false;
   protected $keyType = 'string';
+
+  public function temporadas()
+  {
+      return $this->hasMany(Temporada::class);
+  }
 }

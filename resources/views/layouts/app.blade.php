@@ -23,10 +23,10 @@
   </x-nav>
 
   <x-main>
-    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit border-r shadow-xl">
+    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200 lg:bg-inherit border-r border-gray-400 dark:border-gray-600">
 
       <div class="flex w-full justify-center">
-      <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
+        <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
       </div>
 
       {{-- MENU --}}
@@ -37,6 +37,7 @@
           :item="$user"
           value="name"
           avatar="avatar"
+          class="rounded-none!"
           >
           <x-slot:sub-value>
             <p>Saldo: 5,000</p>
@@ -55,6 +56,7 @@
 
       <x-menu-sub title="Admin" icon="lucide.shield-user">
         <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
+        <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
       </x-menu-sub>
       </x-menu>
     </x-slot:sidebar>
