@@ -10,9 +10,8 @@
 
     @livewireStyles
   </head>
-  <body>
+  <body class="bg-base-200 min-h-screen flex items-center justify-center">
     {{ $slot }}
-
     @livewireScripts
   </body>
 </html>
