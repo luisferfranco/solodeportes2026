@@ -161,12 +161,20 @@ new class extends Component
     @endscope
 
     @scope('actions', $row)
-      <x-button
-        label="Editar"
-        class="btn-secondary"
-        icon="lucide.edit"
-        wire:click="editar({{ $row->id }})"
-        />
+      <div class="flex gap-2">
+        <x-button
+          label="Ver"
+          class="btn-primary btn-sm"
+          icon="fas.eye"
+          link="{{ route('admin.temporadas.show', $row) }}"
+          />
+        <x-button
+          label="Editar"
+          class="btn-secondary btn-sm"
+          icon="fas.edit"
+          wire:click="editar({{ $row->id }})"
+          />
+      </div>
     @endscope
   </x-table>
 

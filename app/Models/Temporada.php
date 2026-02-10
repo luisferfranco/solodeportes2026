@@ -21,4 +21,9 @@ class Temporada extends Model
     {
         return $this->belongsTo(Deporte::class);
     }
+
+    public function juegos()
+    {
+        return $this->hasMany(Juego::class);
+    }
 }
