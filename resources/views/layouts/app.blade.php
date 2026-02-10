@@ -23,7 +23,7 @@
   </x-nav>
 
   <x-main>
-    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-red-100 lg:bg-inherit border-r shadow-xl">
+    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit border-r shadow-xl">
 
       <div class="flex w-full justify-center">
       <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
@@ -31,7 +31,7 @@
 
       {{-- MENU --}}
       <x-menu activate-by-route>
-      {{-- User --}}
+
       @if($user = auth()->user())
         <x-list-item
           :item="$user"
@@ -41,8 +41,8 @@
           <x-slot:sub-value>
             <p>Saldo: 5,000</p>
             <div class="flex gap-1 items-center">
-              <x-button icon="s-power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
-              <x-button icon="s-cog-6-tooth" class="btn-circle btn-ghost btn-xs" link="/profile" />
+              <x-button icon="lucide.power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
+              <x-button icon="lucide.settings" class="btn-circle btn-ghost btn-xs" link="/profile" />
               <x-theme-toggle />
             </div>
           </x-slot:sub-value>
@@ -53,9 +53,8 @@
 
       <x-menu-separator />
 
-      <x-menu-sub title="Admin" icon="o-cog-6-tooth">
-        <x-menu-item title="Wifi" icon="o-wifi" link="####" />
-        <x-menu-item title="Archives" icon="o-archive-box" link="####" />
+      <x-menu-sub title="Admin" icon="lucide.shield-user">
+        <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
       </x-menu-sub>
       </x-menu>
     </x-slot:sidebar>
