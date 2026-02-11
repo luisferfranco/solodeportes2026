@@ -6,3 +6,4 @@ Route::livewire('temporadas', 'pages::admin.temporadas.index')->name('temporadas
 Route::livewire('temporadas/{temporada}', 'pages::admin.temporadas.show')->name('temporadas.show');
 
 Route::livewire('eventos', 'pages::admin.eventos.index')->name('eventos.index');
+Route::livewire('eventos/{evento}', 'pages::admin.eventos.show')->name('eventos.show');

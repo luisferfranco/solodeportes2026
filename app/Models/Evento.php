@@ -21,7 +21,6 @@ class Evento extends Model
     'fecha_fin_inscripcion' => 'datetime',
   ];
 
-
   public function tipoJuego()
   {
     return $this->belongsTo(TipoJuego::class, 'tipojuego_id');
@@ -35,5 +34,10 @@ class Evento extends Model
   public function deporte()
   {
     return $this->belongsTo(Deporte::class);
+  }
+
+  public function getImagenUrlAttribute($value)
+  {
+    return $value ? asset('storage/' . $value) : '/img/evento-default.png';
   }
 }

@@ -233,10 +233,13 @@ new class extends Component
     @endscope
 
     @scope('cell_nombre', $e)
-      <div class="flex gap-1 items-baseline">
+      <a
+        href="{{ route('admin.eventos.show', $e) }}"
+        class="flex gap-1 items-baseline text-info hover:underline"
+        >
         <x-icon name="{{ $e->deporte->icono }}" class="h-4 w-4 text-base-content/50" />
         <span>{{ $e->nombre }}</span>
-      </div>
+      </a>
     @endscope
 
     @scope('cell_estado', $e)
@@ -254,7 +257,6 @@ new class extends Component
           class="btn-ghost btn-xs"
           wire:click='editarEvento({{ $e }})'
           />
-        <x-button icon="lucide.trash" class="btn-ghost btn-xs" />
       </div>
     @endscope
   </x-table>
