@@ -115,10 +115,8 @@ new class extends Component
       <p class="text-info py-1"><x-icon name="fas.people-group"/> {{ $evento->participaciones->count() }} Participantes</p>
     @endif
 
-    <p class="my-4 text-base-content/80">{{ $evento->descripcion }}</p>
-
     {{-- Boletos del usuario --}}
-    <div class="mt-auto mb-2">
+    <div class="mt-auto py-2">
       @if ($boletos->count() > 0)
         <p class="text-xs text-base-content/50 mb-1">Tienes {{ $boletos->count() }} boleto{{ $boletos->count() > 1 ? 's' : '' }}</p>
         @foreach ($boletos as $boleto)
