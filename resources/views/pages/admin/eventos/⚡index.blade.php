@@ -27,7 +27,7 @@ new class extends Component
   public $acierto=1;
   public $diferencia=0.5;
   public $file;
-  public $estado;
+  public $estado="pendiente";
 
   public function mount() {
     $this->eventos = Evento::orderBy('created_at')
@@ -75,7 +75,7 @@ new class extends Component
     $this->evento->precio = $this->precio;
     $this->evento->acierto = $this->acierto;
     $this->evento->diferencia = $this->diferencia;
-    $this->evento->estado = 'pendiente';
+    $this->evento->estado = $this->estado;
     $this->evento->save();
 
     if ($this->file) {
@@ -206,17 +206,20 @@ new class extends Component
             type="number"
             inline
             />
-          <x-select
-            wire:model.live='estado'
-            :options="\App\Enums\EventoStatus::options()"
-            label="Estado del Evento"
-            placeholder="Selecciona un estado"
-            class="outline-none!"
-            required
-            inline
-            />
 
-          </div>
+          @if ($evento->exists)
+            <x-select
+              wire:model.live='estado'
+              :options="\App\Enums\EventoStatus::options()"
+              label="Estado del Evento"
+              placeholder="Selecciona un estado"
+              class="outline-none!"
+              required
+              inline
+              />
+          @endif
+        </div>
+
         <x-file
           wire:model='file'
           label="Imagen del Evento"
