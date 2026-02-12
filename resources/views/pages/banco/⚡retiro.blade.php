@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User;
 use Mary\Traits\Toast;
 use Livewire\Component;
 use App\Models\Transaccion;
+use App\Notifications\BankNotification;
 
 new class extends Component
 {
@@ -30,7 +32,7 @@ new class extends Component
       'notas' => 'nullable|string|max:500',
     ]);
 
-    Transaccion::create([
+    $transaccion = Transaccion::create([
       'user_id' => auth()->id(),
       'monto'   => -$this->monto,
       'tipo'    => 'retiro',
@@ -42,6 +44,10 @@ new class extends Component
     $user = auth()->user();
     $user->clabe = $this->clabe;
     $user->save();
+
+    User::where('nivel', 99)
+      ->get()
+      ->each(fn($admin) => $admin->notify(new BankNotification(auth()->user(), $transaccion)));
 
     $this->success(
       title: 'Retiro Solicitado',

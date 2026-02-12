@@ -16,4 +16,6 @@ Route::middleware('auth')->group(function () {
   Route::livewire('/transaccion/{transaccion}', 'pages::banco.show')->name('banco.show');
   Route::livewire('/deposito', 'pages::banco.deposito')->name('banco.deposito');
   Route::livewire('/retiro', 'pages::banco.retiro')->name('banco.retiro');
+
+  Route::livewire('/notificaciones', 'pages::notificaciones')->name('notificaciones');
 });
