@@ -52,6 +52,7 @@
 
         <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('banco') }}" />
         <livewire:menu-item-notification />
+        <x-menu-item title="Tienda" icon="lucide.store" link="{{ route('tienda') }}" />
 
         <x-menu-separator />
 

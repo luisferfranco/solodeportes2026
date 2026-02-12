@@ -6,6 +6,7 @@ enum EventoStatus: string
 {
   case ACTIVO     = 'activo';
   case INACTIVO   = 'inactivo';
+  case ENCURSO    = 'encurso';
   case PENDIENTE  = 'pendiente';
   case FINALIZADO = 'finalizado';
   case ARCHIVADO  = 'archivado';
@@ -15,6 +16,7 @@ enum EventoStatus: string
     return match($this) {
       self::ACTIVO     => 'Activo',
       self::INACTIVO   => 'Inactivo',
+      self::ENCURSO    => 'En Curso',
       self::PENDIENTE  => 'Pendiente',
       self::FINALIZADO => 'Finalizado',
       self::ARCHIVADO  => 'Archivado',
@@ -26,6 +28,7 @@ enum EventoStatus: string
     return match($this) {
       self::ACTIVO     => 'success',
       self::INACTIVO   => 'error',
+      self::ENCURSO    => 'warning',
       self::PENDIENTE  => 'info',
       self::FINALIZADO => 'info',
       self::ARCHIVADO  => 'neutral',
