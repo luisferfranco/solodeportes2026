@@ -72,12 +72,12 @@ new class extends Component
         </div>
         <div>
           <p class="text-base-content/50">Puntos de Acierto</p>
-          <p class="font-bold">{{ Number::format($evento->acierto) }}</p>
+          <p class="font-bold">{{ Number::format($evento->acierto ?? 0) }}</p>
         </div>
         <div></div>
         <div>
           <p class="text-base-content/50">Puntos de Diferencia</p>
-          <p class="font-bold">{{ Number::format($evento->diferencia) }}</p>
+          <p class="font-bold">{{ Number::format($evento->diferencia ?? 0) }}</p>
         </div>
       </div>
     </div>
