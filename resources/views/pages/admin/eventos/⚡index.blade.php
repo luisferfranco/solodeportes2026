@@ -274,8 +274,7 @@ new class extends Component
     @endscope
 
     @scope('cell_estado', $e)
-      <livewire:estado-evento-select :evento="$e" />
-      {{-- <x-badge :value="$e->estado->label()" class="badge-{{ $e->estado->color() }} badge-sm" /> --}}
+      <livewire:estado-evento-select :evento="$e" key="evid-{{ $e->id }}" />
     @endscope
 
     @scope('cell_temporada_id', $e)

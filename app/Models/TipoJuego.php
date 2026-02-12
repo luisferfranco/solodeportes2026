@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Evento;
 use Illuminate\Database\Eloquent\Model;
 
 class TipoJuego extends Model
@@ -13,8 +14,7 @@ class TipoJuego extends Model
   protected $keyType = 'string';
   public $incrementing = false;
 
-  public function eventos()
-  {
+  public function eventos() {
     return $this->hasMany(Evento::class);
   }
 }

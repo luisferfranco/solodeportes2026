@@ -108,7 +108,10 @@ new class extends Component
   <div class="p-4 flex flex-col flex-1">
     <h2 class="text-xl text-accent uppercase tracking-wide font-bold">{{ $evento->nombre }}</h2>
     <p class="text-sm text-base-content/50">{{ $evento->temporada->nombre }}</p>
-    <x-badge value="{{ $evento->estado->label() }}" class="badge-sm badge-{{ $evento->estado->color() }} mb-2" />
+    <div class="flex gap-2 mb-2">
+      <x-badge value="{{ $evento->estado->label() }}" class="badge-sm badge-{{ $evento->estado->color() }} uppercase" />
+      <x-badge value="{{ $evento->tipojuego->nombre }}" class="badge-sm badge-secondary font-bold uppercase tracking-wide" />
+    </div>
 
     <p>Precio: ${{ Number::format($evento->precio, 2) }}</p>
     @if ($evento->participaciones->count() > 0)
