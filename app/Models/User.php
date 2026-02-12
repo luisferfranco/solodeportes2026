@@ -58,7 +58,7 @@ class User extends Authenticatable
           ->sum('monto');
     }
 
-    public function isAdmin(): bool
+    public function getIsAdminAttribute(): bool
     {
         return $this->nivel > 1;
     }

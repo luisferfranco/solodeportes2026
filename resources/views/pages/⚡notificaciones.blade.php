@@ -62,7 +62,10 @@ new class extends Component
 
   <x-table :headers="$headers" :rows="$notificaciones">
     @scope('cell_id', $n)
-      <div class="flex gap-2 items-start {{ $n->read_at ? 'text-base-content/50' : 'text-base-content' }}">
+      @php
+        $color = $n->data['color'] ?? 'base-content';
+      @endphp
+      <div class="flex gap-2 items-start {{ $n->read_at ? 'text-' . $color . '/50' : 'text-' . $color . " font-bold" }}">
         <x-icon
           :name="$n?->data['icon'] ?? 'fas.info-circle'"
           class="w-6 h-6"

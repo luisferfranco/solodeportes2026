@@ -32,34 +32,34 @@
       {{-- MENU --}}
       <x-menu activate-by-route>
 
-      @if($user = auth()->user())
-        <x-list-item
-          :item="$user"
-          value="name"
-          avatar="avatar"
-          class="rounded-none!"
-          >
-          <x-slot:sub-value>
-            <p>Saldo: 5,000</p>
-            <div class="flex gap-1 items-center">
-              <x-button icon="lucide.power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
-              <x-button icon="lucide.settings" class="btn-circle btn-ghost btn-xs" link="/profile" />
-              <x-theme-toggle />
-            </div>
-          </x-slot:sub-value>
-        </x-list-item>
-      @endif
+        @if($user = auth()->user())
+          <x-list-item
+            :item="$user"
+            value="name"
+            avatar="avatar"
+            class="rounded-none!"
+            >
+            <x-slot:sub-value>
+              <p>Saldo: <span class="font-bold font-mono">{{ Number::format($user->saldo,2) }}</span></p>
+              <div class="flex gap-1 items-center">
+                <x-button icon="lucide.power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
+                <x-button icon="lucide.settings" class="btn-circle btn-ghost btn-xs" link="/profile" />
+                <x-theme-toggle />
+              </div>
+            </x-slot:sub-value>
+          </x-list-item>
+        @endif
 
-      <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('banco') }}" />
-      <livewire:menu-item-notification />
+        <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('banco') }}" />
+        <livewire:menu-item-notification />
 
-      <x-menu-separator />
+        <x-menu-separator />
 
-      <x-menu-sub title="Admin" icon="lucide.shield-user">
-        <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
-        <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
-        <x-menu-item title="Eventos" icon="lucide.trophy" link="{{ route('admin.eventos.index') }}" />
-      </x-menu-sub>
+        <x-menu-sub title="Admin" icon="lucide.shield-user">
+          <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
+          <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
+          <x-menu-item title="Eventos" icon="lucide.trophy" link="{{ route('admin.eventos.index') }}" />
+        </x-menu-sub>
       </x-menu>
     </x-slot:sidebar>
 
