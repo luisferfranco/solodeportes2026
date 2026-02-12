@@ -11,11 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::table('eventos', function (Blueprint $table) {
-        // el enum de estado en eventos se va a manejar con un enum de php, por lo que se cambia el tipo de dato a string
-        $table->dropColumn('estado');
-        $table->string('estado')->nullable()->after('descripcion');
-      });
+        // 1) añadir columna temporal string y copiar los valores existentes
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->string('estado_tmp')->nullable()->after('descripcion');
+        });
+
+        \DB::statement('UPDATE eventos SET estado_tmp = estado');
+
+        // 2) eliminar la columna enum original
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->dropColumn('estado');
+        });
+
+        // 3) crear la columna final string y restaurar los valores desde la temporal
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->string('estado')->nullable()->after('descripcion');
+        });
+
+        \DB::statement('UPDATE eventos SET estado = estado_tmp');
+
+        // 4) eliminar columna temporal
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->dropColumn('estado_tmp');
+        });
     }
 
     /**
@@ -23,9 +41,28 @@ return new class extends Migration
      */
     public function down(): void
     {
-      Schema::table('eventos', function (Blueprint $table) {
-        $table->dropColumn('estado');
-        $table->enum('estado', ['pendiente', 'en_progreso', 'finalizado'])->nullable()->after('descripcion');
-      });
+        // 1) crear columna temporal enum y copiar valores desde la columna string actual
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->string('estado_tmp')->nullable()->after('descripcion');
+        });
+
+        \DB::statement('UPDATE eventos SET estado_tmp = estado');
+
+        // 2) eliminar la columna string actual
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->dropColumn('estado');
+        });
+
+        // 3) recrear la columna enum y restaurar los valores desde la temporal
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->enum('estado', ['pendiente', 'en_progreso', 'finalizado'])->nullable()->after('descripcion');
+        });
+
+        \DB::statement('UPDATE eventos SET estado = estado_tmp');
+
+        // 4) eliminar columna temporal
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->dropColumn('estado_tmp');
+        });
     }
 };
