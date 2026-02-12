@@ -24,33 +24,18 @@ new class extends Component
       @endif
     </div>
 
-	{{--
-  id,
-  precio,
-  acierto,
-  inicia_survivor,
-  diferencia,
-  reglas,
-  ronda_inicial,
-  created_at,
-  updated_at,
-  fecha_limite,
-  fecha_inicio_inscripcion,
-  fecha_fin_inscripcion,
-  --}}
-
     <div class="w-full">
-
-      <p class="mb-2">
-        <x-icon name="{{ $evento->deporte->icono }}" class="h-3 w-3" />
-        <span>{{ $evento->deporte->nombre }} (Temporada {{ $evento->temporada->temporada }})</span>
-      </p>
-      <div class="flex items-baseline mb-2">
-        <p><x-badge :value="$evento->tipoJuego->nombre" class="badge-info badge-sm" /></p>
-        <p><x-badge :value="$evento->estado->label()" class="badge-{{ $evento->estado->color() }} badge-sm ml-2" /></p>
-      </div>
-
       <div class="bg-base-200 px-6 py-2 rounded w-full shadow-md">
+
+        <div class="mb-2">
+          <x-icon name="{{ $evento->deporte->icono }}" class="h-3 w-3" />
+          <span>{{ $evento->deporte->nombre }} (Temporada {{ $evento->temporada->temporada }})</span>
+        </div>
+        <div class="flex items-baseline mb-2">
+          <p><x-badge :value="$evento->tipoJuego->nombre" class="badge-info badge-sm" /></p>
+          <p><x-badge :value="$evento->estado->label()" class="badge-{{ $evento->estado->color() }} badge-sm ml-2" /></p>
+        </div>
+
         <h3 class="font-bold text-xl">Descripción</h3>
         <div>
           {!! Str::markdown($evento->descripcion) !!}

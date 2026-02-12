@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::livewire('/', 'pages::users.index');
 
 Route::livewire('/register', 'pages::auth.register')->name('register');
