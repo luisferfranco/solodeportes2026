@@ -31,4 +31,14 @@ enum EventoStatus: string
       self::ARCHIVADO  => 'neutral',
     };
   }
+
+  public static function options(): array
+  {
+    return array_map(function ($case) {
+      return [
+        'id'    => $case->value,
+        'name'  => $case->label(),
+      ];
+    }, self::cases());
+  }
 }

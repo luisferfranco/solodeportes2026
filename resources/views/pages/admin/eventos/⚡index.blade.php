@@ -27,6 +27,7 @@ new class extends Component
   public $acierto=1;
   public $diferencia=0.5;
   public $file;
+  public $estado;
 
   public function mount() {
     $this->eventos = Evento::orderBy('created_at')
@@ -106,11 +107,18 @@ new class extends Component
     $this->precio       = $evento->precio;
     $this->acierto      = $evento->acierto;
     $this->diferencia   = $evento->diferencia;
+    $this->estado       = $evento->estado;
 
     // Trigger the update of temporadas based on the selected deporte
     $this->updatedDeporte($evento->deporte_id);
 
     $this->show = true;
+  }
+
+  public function updatedEstado($estado) {
+    $this->evento->estado = $estado;
+    $this->evento->save();
+    $this->mount(); // Refresh the eventos list
   }
 };
 ?>
@@ -195,10 +203,20 @@ new class extends Component
             label="Puntos por Diferencia"
             placeholder="Puntos por Diferencia"
             class="outline-none!"
+            type="number"
+            inline
+            />
+          <x-select
+            wire:model.live='estado'
+            :options="\App\Enums\EventoStatus::options()"
+            label="Estado del Evento"
+            placeholder="Selecciona un estado"
+            class="outline-none!"
+            required
             inline
             />
 
-        </div>
+          </div>
         <x-file
           wire:model='file'
           label="Imagen del Evento"
@@ -207,12 +225,23 @@ new class extends Component
           inline
           />
 
-        <x-button
-          label="Crear Evento"
-          icon="fas.plus-circle"
-          class="btn-primary mt-4"
-          type="submit"
-          />
+        <div>
+          @if ($evento->exists)
+            <x-button
+              label="Actualizar Evento"
+              icon="fas.check-circle"
+              class="btn-primary mt-4"
+              type="submit"
+              />
+          @else
+            <x-button
+              label="Crear Evento"
+              icon="fas.check-circle"
+              class="btn-primary mt-4"
+              type="submit"
+              />
+          @endif
+        </div>
 
       </x-form>
     </x-card>
@@ -243,7 +272,8 @@ new class extends Component
     @endscope
 
     @scope('cell_estado', $e)
-      <x-badge :value="$e->estado->label()" class="badge-{{ $e->estado->color() }} badge-sm" />
+      <livewire:estado-evento-select :evento="$e" />
+      {{-- <x-badge :value="$e->estado->label()" class="badge-{{ $e->estado->color() }} badge-sm" /> --}}
     @endscope
 
     @scope('cell_temporada_id', $e)
