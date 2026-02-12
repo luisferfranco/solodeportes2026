@@ -136,22 +136,22 @@ new class extends Component
         label="Detalles"
         class="btn-ghost btn-info"
         />
-      @if (auth()->user()->saldo >= $evento->precio)
-        @if ($evento->estado === EventoStatus::ACTIVO)
+      @if ($evento->estado === EventoStatus::ACTIVO)
+        @if (auth()->user()->saldo >= $evento->precio)
           <x-button
             icon="fas.cart-shopping"
             class="btn-primary"
             label="Comprar"
             wire:click='comprar'
             />
+        @else
+          <x-button
+            link="{{ route('banco.deposito') }}"
+            icon="fas.credit-card"
+            class="btn-error"
+            label="Recargar saldo"
+            />
         @endif
-      @else
-        <x-button
-          link="{{ route('banco.deposito') }}"
-          icon="fas.credit-card"
-          class="btn-error"
-          label="Recargar saldo"
-          />
       @endif
     </div>
   </div>

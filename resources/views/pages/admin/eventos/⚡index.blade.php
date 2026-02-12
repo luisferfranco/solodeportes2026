@@ -203,7 +203,6 @@ new class extends Component
             label="Puntos por Diferencia"
             placeholder="Puntos por Diferencia"
             class="outline-none!"
-            type="number"
             inline
             />
 
