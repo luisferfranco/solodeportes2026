@@ -51,8 +51,20 @@ class User extends Authenticatable
         return "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
     }
 
+    public function getSaldoAttribute(): float
+    {
+        return Transaccion::where('user_id', $this->id)
+          ->where('estado', 'aprobada')
+          ->sum('monto');
+    }
+
     public function isAdmin(): bool
     {
         return $this->nivel > 1;
+    }
+
+    public function transacciones()
+    {
+        return $this->hasMany(Transaccion::class);
     }
 }

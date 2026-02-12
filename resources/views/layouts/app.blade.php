@@ -8,7 +8,7 @@
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen font-sans antialiased bg-base-200">
+<body class="min-h-screen font-sans antialiased bg-base-100">
 
   {{-- NAVBAR mobile only --}}
   <x-nav sticky class="lg:hidden">
@@ -23,7 +23,7 @@
   </x-nav>
 
   <x-main>
-    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200 lg:bg-inherit border-r border-gray-400 dark:border-gray-600">
+    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit border-r border-gray-400 dark:border-gray-600">
 
       <div class="flex w-full justify-center">
         <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
@@ -50,7 +50,7 @@
         </x-list-item>
       @endif
 
-      <x-menu-item title="Hello" icon="o-sparkles" link="/" />
+      <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('banco') }}" />
 
       <x-menu-separator />
 

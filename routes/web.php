@@ -11,4 +11,9 @@ Route::get('/logout', function() {
 
 Route::middleware('auth')->group(function () {
   Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
+
+  Route::livewire('/banco/{user?}', 'pages::banco.index')->name('banco');
+  Route::livewire('/transaccion/{transaccion}', 'pages::banco.show')->name('banco.show');
+  Route::livewire('/deposito', 'pages::banco.deposito')->name('banco.deposito');
+  Route::livewire('/retiro', 'pages::banco.retiro')->name('banco.retiro');
 });
