@@ -8,7 +8,7 @@ new class extends Component
 
   public function mount() {
     $this->eventos = \App\Models\Evento::with('temporada.deporte')
-      ->where('estado', 'activo')
+      ->whereIn('estado', ['activo', 'pendiente'])
       ->orderBy('created_at', 'desc')
       ->get();
   }

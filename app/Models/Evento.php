@@ -4,6 +4,10 @@ namespace App\Models;
 
 use App\Enums\EventoStatus;
 use App\Enums\TipoJuegoEnum;
+use App\Models\Deporte;
+use App\Models\Participacion;
+use App\Models\Temporada;
+use App\Models\TipoJuego;
 use Illuminate\Database\Eloquent\Model;
 
 class Evento extends Model
@@ -21,23 +25,26 @@ class Evento extends Model
     'fecha_fin_inscripcion' => 'datetime',
   ];
 
-  public function tipoJuego()
-  {
-    return $this->belongsTo(TipoJuego::class, 'tipojuego_id');
-  }
-
-  public function temporada()
-  {
-    return $this->belongsTo(Temporada::class);
-  }
-
-  public function deporte()
-  {
-    return $this->belongsTo(Deporte::class);
-  }
-
   public function getImagenUrlAttribute($value)
   {
     return $value ? asset('storage/' . $value) : '/img/evento-default.png';
   }
+
+  //! RELACIONES
+  public function tipoJuego() {
+    return $this->belongsTo(TipoJuego::class, 'tipojuego_id');
+  }
+
+  public function temporada() {
+    return $this->belongsTo(Temporada::class);
+  }
+
+  public function deporte() {
+    return $this->belongsTo(Deporte::class);
+  }
+
+  public function participaciones() {
+    return $this->hasMany(Participacion::class);
+  }
+
 }

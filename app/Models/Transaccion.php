@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use App\Enums\TipoTransaccion;
 use App\Enums\EstadoTransaccion;
+use App\Enums\TipoTransaccion;
+use App\Models\Evento;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaccion extends Model
@@ -11,7 +13,7 @@ class Transaccion extends Model
   public $table = 'transacciones';
   protected $fillable = [
     'user_id',
-    // [deposito, retiro]
+    // [deposito, retiro, compra, premio]
     'tipo',
     // Para indicar los premios de los eventos y la semana premiada
     'semana_premiada',

@@ -4,12 +4,15 @@ namespace App\Enums;
 
 enum EventoStatus: string
 {
-  case ACTIVO     = 'activo';
-  case INACTIVO   = 'inactivo';
-  case ENCURSO    = 'encurso';
-  case PENDIENTE  = 'pendiente';
-  case FINALIZADO = 'finalizado';
-  case ARCHIVADO  = 'archivado';
+  const __default = self::UNKNOWN;
+
+  case ACTIVO     = 'activo';     // Recibiendo inscripciones
+  case INACTIVO   = 'inactivo';   // Suspendido, no recibe inscripciones
+  case ENCURSO    = 'encurso';    // Comenzado, no recibe inscripciones
+  case PENDIENTE  = 'pendiente';  // Por publicarse, no recibe inscripciones
+  case FINALIZADO = 'finalizado'; // Terminado, no recibe inscripciones
+  case ARCHIVADO  = 'archivado';  // Archivado, no recibe inscripciones
+  case UNKNOWN    = 'unknown';    // Desconocido, no recibe inscripciones
 
   public function label(): string
   {
@@ -17,9 +20,10 @@ enum EventoStatus: string
       self::ACTIVO     => 'Activo',
       self::INACTIVO   => 'Inactivo',
       self::ENCURSO    => 'En Curso',
-      self::PENDIENTE  => 'Pendiente',
+      self::PENDIENTE  => 'Proximamente',
       self::FINALIZADO => 'Finalizado',
       self::ARCHIVADO  => 'Archivado',
+      self::UNKNOWN    => 'Desconocido',
     };
   }
 
@@ -28,10 +32,11 @@ enum EventoStatus: string
     return match($this) {
       self::ACTIVO     => 'success',
       self::INACTIVO   => 'error',
-      self::ENCURSO    => 'warning',
-      self::PENDIENTE  => 'info',
+      self::ENCURSO    => 'success',
+      self::PENDIENTE  => 'warning',
       self::FINALIZADO => 'info',
-      self::ARCHIVADO  => 'neutral',
+      self::ARCHIVADO  => 'accent',
+      self::UNKNOWN    => 'secondary',
     };
   }
 
