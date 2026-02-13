@@ -26,7 +26,7 @@ new class extends Component
 
   <livewire:evento-info :evento="$evento" />
 
-  <div class="mt-4">
+  <div class="my-4">
     <x-button
       label="Comprar"
       icon="fas.cart-shopping"
@@ -35,4 +35,6 @@ new class extends Component
       spinner="comprar"
       />
   </div>
+
+  <livewire:boletos-usuario :evento="$evento" />
 </div>
