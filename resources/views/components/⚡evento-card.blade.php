@@ -64,8 +64,6 @@ new class extends Component
       'tipo' => 'retiro',
       'descripcion' => "Compra de boleto para evento '{$this->evento->nombre}'",
     ]);
-
-
   }
 };
 ?>

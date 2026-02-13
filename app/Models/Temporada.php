@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Deporte;
+use App\Models\Juego;
 use Illuminate\Database\Eloquent\Model;
 
 class Temporada extends Model
