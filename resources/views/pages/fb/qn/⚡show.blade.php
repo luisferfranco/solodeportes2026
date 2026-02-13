@@ -14,7 +14,9 @@ new class extends Component
 ?>
 
 <div>
-  <x-title :title="$evento->nombre" />
+  <x-title title="{{ $evento->nombre }}" />
+
+  <livewire:nav-evento :evento="$evento" opc="1" />
 
   <livewire:evento-info :evento="$evento" />
 </div>

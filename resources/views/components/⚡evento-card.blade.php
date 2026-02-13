@@ -107,7 +107,7 @@ new class extends Component
 
   <div class="p-4 flex flex-col flex-1">
     <h2 class="text-xl text-accent uppercase tracking-wide font-bold">{{ $evento->nombre }}</h2>
-    <p class="text-sm text-base-content/50">{{ $evento->temporada->nombre }}</p>
+    <p class="text-sm text-base-content/50 mb-2">{{ $evento->temporada->nombre }}</p>
     <div class="flex gap-2 mb-2">
       <x-badge value="{{ $evento->estado->label() }}" class="badge-sm badge-{{ $evento->estado->color() }} uppercase" />
       <x-badge value="{{ $evento->tipojuego->nombre }}" class="badge-sm badge-secondary font-bold uppercase tracking-wide" />
@@ -134,7 +134,7 @@ new class extends Component
     {{-- Botones de acción --}}
     <div class="flex gap-1 items-center justify-end">
       <x-button
-        link="#"
+        link="{{ route(strtolower($evento->temporada->deporte->id) . '.' . $evento->tipojuego_id . '.show', $evento) }}"
         icon="fas.info-circle"
         label="Detalles"
         class="btn-ghost btn-info"

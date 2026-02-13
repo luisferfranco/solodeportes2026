@@ -23,4 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/notificaciones', 'pages::notificaciones')->name('notificaciones');
 
     Route::livewire('/tienda', 'pages::tienda.index')->name('tienda');
+
+    // Rutas para eventos
+    // {deporte}/qn/{evento}/... Quiniela
+    // {deporte}/sr/{evento}/... Survivor
+    // {deporte}/jk/{evento}/... Jackpot
+
+    // Futbol Soccer
+    Route::livewire('/fb/qn/{evento}', 'pages::fb.qn.show')->name('fb.qn.show');
+
+    // Futbol Americano
+    Route::livewire('/fa/qn/{evento}', 'pages::fb.qn.show')->name('fa.qn.show');
+    Route::livewire('/fa/sr/{evento}', 'pages::fb.qn.show')->name('fa.sr.show');
 });
