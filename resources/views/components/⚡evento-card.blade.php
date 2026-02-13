@@ -13,10 +13,6 @@ new class extends Component
 
   public Evento $evento;
   public $boletos;
-  public $open = false;
-
-  // Formulario de Participación
-  public $nombre;
 
   public function mount(Evento $evento) {
     $this->evento = $evento;
@@ -27,76 +23,15 @@ new class extends Component
   }
 
   public function comprar() {
-    $num = Participacion::where('evento_id', $this->evento->id)
-      ->where('user_id', auth()->id())
-      ->count();
-    $this->nombre = auth()->user()->displayName . ' #' . sprintf("%02d", $num + 1);
-    $this->open = true;
+    $this->dispatch('open-modal-comprar');
   }
 
-  public function confirmarCompra() {
-    $this->validate([
-      'nombre' => 'required|string|max:255',
-    ]);
-
-    // Verificar que el usuario tenga saldo suficiente
-    if (auth()->user()->saldo < $this->evento->precio) {
-      $this->error(
-        title: 'Saldo insuficiente',
-        description: 'No tienes saldo suficiente para comprar este boleto. Por favor recarga tu saldo e intenta de nuevo.',
-        icon: 'fas.credit-card',
-        redirectTo: route('banco.deposito'),
-      );
-      return;
-    }
-
-    // Crear la participación
-    $participacion = Participacion::create([
-      'evento_id' => $this->evento->id,
-      'user_id' => auth()->id(),
-      'nombre' => $this->nombre,
-    ]);
-
-    // Descontar el saldo del usuario
-    $transaccion = Transaccion::create([
-      'user_id' => auth()->id(),
-      'monto' => -$this->evento->precio,
-      'tipo' => 'retiro',
-      'descripcion' => "Compra de boleto para evento '{$this->evento->nombre}'",
-    ]);
-  }
 };
 ?>
 
 <div class="bg-base-100 rounded-lg shadow-xl overflow-hidden border border-gray-300 dark:border-gray-600 flex flex-col h-full">
 
-  <x-modal wire:model='open'>
-    <p class="mb-6">El siguiente nombre es con el que puedes referirte a este boleto, también es el que se presentará en los tableros de líderes del evento. Puedes modificarlo, pero una vez comprado, no podrás cambiar el nombre</p>
-    <x-form wire:submit='confirmarCompra'>
-      <x-input
-        wire:model='nombre'
-        label="Nombre del boleto"
-        class="outline-none! w-full"
-        placeholder="{{ $nombre }}"
-        required
-        inline
-        />
-      <div class="flex gap-1 items-center justify-end mt-4">
-        <x-button
-          label="Confirmar compra"
-          icon="fas.circle-check"
-          class="btn-primary"
-          type="submit"
-          />
-        <x-button
-          label="Cancelar"
-          icon="fas.xmark"
-          class="btn-ghost"
-          wire:click='$set("open", false)'
-          />
-      </div>
-    </x-form>
-  </x-modal>
+  <livewire:modal-comprar-evento :evento="$evento" />
 
   <img src="{{ $evento->imagenUrl }}"
     alt="{{ $evento->temporada->deporte->nombre }}"
@@ -144,6 +79,7 @@ new class extends Component
             class="btn-primary"
             label="Comprar"
             wire:click='comprar'
+            spinner="comprar"
             />
         @else
           <x-button

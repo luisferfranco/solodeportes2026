@@ -13,7 +13,7 @@ new class extends Component
     $this->user = auth()->user();
 
     $this->eventos = $this->user->eventos()
-      // ->whereIn('estado', ['activo', 'encurso'])
+      ->whereIn('estado', ['activo', 'encurso'])
       ->get();
   }
 
