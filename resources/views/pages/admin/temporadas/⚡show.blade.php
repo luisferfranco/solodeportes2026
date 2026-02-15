@@ -1,10 +1,11 @@
 <?php
 
-use App\Models\Juego;
 use App\Models\Equipo;
-use Livewire\Component;
+use App\Models\Juego;
 use App\Models\Temporada;
 use App\Services\APIService;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 new class extends Component
 {
@@ -48,7 +49,7 @@ new class extends Component
   public function getData() {
     $this->juegos = Juego::where('temporada_id', $this->temporada->id)
       ->where('ronda', $this->ronda)
-      ->with(['equipoLocal', 'equipoVisitante'])
+      ->with(['homeTeam', 'awayTeam'])
       ->get();
 
     // Obtener la ronda máxima
@@ -63,7 +64,9 @@ new class extends Component
     }
   }
 
-  public function updatedRonda() {
+  #[On('ronda-seleccionada')]
+  public function rondaSeleccionada($ronda) {
+    $this->ronda = $ronda;
     $this->getData();
   }
 };
@@ -89,27 +92,22 @@ new class extends Component
       />
   </div>
 
-  <x-select
-    wire:model.live='ronda'
-    label="Ronda"
-    class="outline-none!"
-    :options="$rondas"
-    />
+  <livewire:selector-rondas :temporada="$temporada" />
 
   <x-table
     :headers="$headers"
     :rows="$juegos"
     >
     @scope("cell_home_id", $row)
-      <div class="flex gap-1 justify-end items-baseline">
-        <p>{{ $row->equipoLocal->nombre }}</p>
-        <img src="{{ $row->equipoLocal->logo }}" class="w-6 h-6" />
+      <div class="flex gap-1 justify-end items-center">
+        <p>{{ $row->homeTeam->nombre }}</p>
+        <img src="{{ $row->homeTeam->logo }}" class="w-6 h-6" />
       </div>
     @endscope
     @scope("cell_away_id", $row)
-      <div class="flex gap-1 justify-start items-baseline">
-        <img src="{{ $row->equipoVisitante->logo }}" class="w-6 h-6" />
-        <p>{{ $row->equipoVisitante->nombre }}</p>
+      <div class="flex gap-1 justify-start items-center">
+        <img src="{{ $row->awayTeam->logo }}" class="w-6 h-6" />
+        <p>{{ $row->awayTeam->nombre }}</p>
       </div>
     @endscope
   </x-table>

@@ -25,7 +25,6 @@ new class extends Component
   }
 
   public function updatedRonda($ronda) {
-    $this->ronda = $ronda;
     $this->dispatch('ronda-seleccionada', $this->ronda);
   }
 
