@@ -2,9 +2,12 @@
 
 use App\Models\Temporada;
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 new class extends Component
 {
+  use Toast;
+
   public Temporada $temporada;
   public $ronda;
   public $options = [];
@@ -25,12 +28,34 @@ new class extends Component
     $this->ronda = $ronda;
     $this->dispatch('ronda-seleccionada', $this->ronda);
   }
+
+  public function setRonda() {
+    $this->temporada->ronda = $this->ronda;
+    $this->temporada->save();
+    $this->success('Ronda actualizada');
+  }
 };
 ?>
 
-<x-select
-  wire:model.live='ronda'
-  label="Selecciona la ronda"
-  class="w-full outline-none! text-xl select-xl"
-  :options="$options"
-  />
+<div class="flex items-end w-full gap-2">
+  <div class="grow">
+    <x-select
+      wire:model.live='ronda'
+      label="Selecciona la ronda"
+      class="w-full outline-none! text-xl select-xl"
+      :options="$options"
+      placeholder="Selecciona la ronda"
+      option-label="name"
+      option-value="id"
+      />
+  </div>
+  @if (auth()->user()->isAdmin)
+    <x-button
+      icon="fas.play"
+      class="btn-primary btn-xl"
+      label="Set Ronda"
+      wire:click='setRonda'
+      spinner
+      />
+  @endif
+</div>
