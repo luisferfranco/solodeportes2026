@@ -16,10 +16,6 @@ new class extends Component
 
   public function mount(Juego $juego, Participacion $participacion) {
 
-    if ($juego->id == 2391746) {
-      info($participacion);
-    }
-
     $this->juego  = $juego;
     $this->prono  = Pronostico::where('juego_id', $juego->id)
       ->where('participacion_id', $participacion->id)

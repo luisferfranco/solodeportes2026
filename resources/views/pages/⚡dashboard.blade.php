@@ -27,10 +27,6 @@ new class extends Component
         ->whereIn('estado', ['activo', 'encurso'])
         ->get();
     }
-
-    foreach($this->eventos as $evento) {
-      info($evento->nombre . ' - ' . $evento->estado->label());
-    }
   }
 };
 ?>

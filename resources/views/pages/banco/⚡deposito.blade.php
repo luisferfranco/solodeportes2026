@@ -17,10 +17,6 @@ new class extends Component
   public $notas;
 
   public function save() {
-    info($this->monto);
-    info($this->file);
-    info($this->notas);
-
     $this->validate([
       'monto' => 'required|numeric|min:1',
       'file'  => 'required|image|max:2048',

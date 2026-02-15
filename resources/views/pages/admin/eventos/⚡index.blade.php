@@ -48,7 +48,6 @@ new class extends Component
   }
 
   public function updatedDeporte($deporteId) {
-    info("Selected Deporte ID: $deporteId");
     $this->temporadas = Temporada::where('deporte_id', $deporteId)
       ->orderBy('temporada', 'desc')
       ->get();

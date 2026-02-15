@@ -34,8 +34,6 @@ new class extends Component
   }
 
   public function updatedOption($value) {
-    info("Opción seleccionada: " . $value);
-
     $route = strtolower($this->evento->temporada->deporte_id) . '.' . $this->evento->tipojuego_id . '.';
 
     // 1. show
@@ -54,7 +52,6 @@ new class extends Component
 
     $route .= $routeMap[$value] ?? 'show';
 
-    info(route($route, ['evento' => $this->evento]));
     $this->redirectRoute($route, ['evento' => $this->evento]);
   }
 };
