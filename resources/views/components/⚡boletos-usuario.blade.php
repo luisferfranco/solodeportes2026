@@ -20,14 +20,23 @@ new class extends Component
 ?>
 
 <div>
-  <p class="text-xs text-base-content/50 mb-1">Tienes {{ $boletos->count() }} boleto{{ $boletos->count() > 1 ? 's' : '' }}</p>
+  <p class="text-xs text-base-content/50 mt-2">Tienes {{ $boletos->count() }} boleto{{ $boletos->count() > 1 ? 's' : '' }}</p>
   @if ($boletos->count() > 0)
-    <div class="mt-auto py-2">
+    <div class="mt-auto pb-2">
       @foreach ($boletos as $boleto)
-        <div class="p-2 mb-2 bg-secondary/20 rounded-lg flex items-center gap-2">
-          <x-icon name="fas.ticket" class="text-secondary" />
-          <p class="text-sm text-secondary">#{{ sprintf("%05d",$boleto->id) }} {{ $boleto->nombre }}</p>
-        </div>
+          <x-button
+            link="{{ route(strtolower($boleto->evento->temporada->deporte_id) . '.' . $boleto->evento->tipojuego_id . '.pronosticos', [$boleto->evento->id, 'p' => $boleto->id]) }}"
+            class="btn-sm btn-secondary w-full mb-2"
+            >
+            <div class="flex justify-between gap-2 items-center w-full">
+              <div class="flex gap-1 items-center">
+                <x-icon name="fas.ticket" class="text-secondary-content" />
+                <p class="text-sm text-secondary-content">#{{ sprintf("%05d",$boleto->id) }} {{ $boleto->nombre }}</p>
+              </div>
+
+              <x-icon name="fas.play" class="w-3 h-3" />
+            </div>
+          </x-button>
       @endforeach
     </div>
   @endif
