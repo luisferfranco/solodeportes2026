@@ -54,7 +54,7 @@ new class extends Component
 
     $route .= $routeMap[$value] ?? 'show';
 
-    info((route($route, ['evento' => $this->evento])));
+    info(route($route, ['evento' => $this->evento]));
     $this->redirectRoute($route, ['evento' => $this->evento]);
   }
 };

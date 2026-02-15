@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\Juego;
+use App\Models\Participacion;
+use App\Models\Pronostico;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component
@@ -9,24 +12,38 @@ new class extends Component
   public Juego $juego;
   public $valido;
   public $prono;
+  public Participacion $participacion;
 
-  public function mount(Juego $juego) {
+  public function mount(Juego $juego, Participacion $participacion) {
+
+    if ($juego->id == 2391746) {
+      info($participacion);
+    }
+
     $this->juego  = $juego;
-    $prono = auth()->user()
-      ->pronosticos()
-      ->where('juego_id', $juego->id)
-      ->first();
+    $this->prono  = Pronostico::where('juego_id', $juego->id)
+      ->where('participacion_id', $participacion->id)
+      ->value('diferencia');
     $this->valido = Gate::allows('pronosticar', $this->juego);
   }
 
-  public function prono($prono) {
-    info($prono);
+  public function pronostica($prono) {
+    if (!$this->valido) {
+      return;
+    }
+    $this->prono = $prono;
+    Pronostico::updateOrCreate([
+      'juego_id'          => $this->juego->id,
+      'participacion_id'  => $this->participacion->id
+    ], [
+      'diferencia'        => $prono
+    ]);
   }
 };
 ?>
 
-<div class="bg-base-100 rounded-xl my-3 overflow-hidden border border-gray-300 dark:border-gray-700">
-  <div class="flex items-center justify-between px-2 py-1 {{ $valido ? 'bg-success text-success-content' : 'bg-error text-error-content' }}">
+<div class="bg-base-100 rounded-xl my-3 overflow-hidden border {{ $valido ? 'border-success/50' : 'border-error/50' }}">
+  <div class="flex items-center justify-between px-2 py-1 {{ $valido ? 'bg-success/50' : 'bg-error/50' }} text-base-content">
     <div>Valido hasta el <span class="font-bold">{{ $juego->valido_hasta }}</span> ({{ $juego->valido_hasta->diffForHumans() }})</div>
     <div>Juego #{{ $juego->id }}</div>
   </div>
@@ -41,8 +58,9 @@ new class extends Component
       @for ($i = -2; $i <= 2; $i++)
         <x-button
           label=" {{ abs($i) }} "
-          class="h-10 w-10 rounded btn-neutral hover:btn-accent btn-lg"
-          wire:click='prono({{ $i }})'
+          class="h-10 w-10 rounded {{ $prono === $i ? 'btn-secondary' : 'btn-neutral' }} hover:btn-accent btn-lg"
+          wire:click='pronostica({{ $i }})'
+          spinner
           />
       @endfor
     </div>
