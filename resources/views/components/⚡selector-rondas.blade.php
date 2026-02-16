@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Temporada;
+use App\Services\APIService;
 use Livewire\Component;
 use Mary\Traits\Toast;
 
@@ -33,6 +34,15 @@ new class extends Component
     $this->temporada->save();
     $this->success('Ronda actualizada');
   }
+
+  public function marcadores() {
+    $APIService = new APIService();
+    $APIService->cargarMarcadores($this->temporada, $this->ronda);
+  }
+
+  public function calificar() {
+    //
+  }
 };
 ?>
 
@@ -54,6 +64,20 @@ new class extends Component
       class="btn-primary btn-xl"
       label="Set Ronda"
       wire:click='setRonda'
+      spinner
+      />
+    <x-button
+      icon="far.circle-dot"
+      class="btn-secondary btn-xl"
+      label="Marcadores"
+      wire:click='marcadores'
+      spinner
+      />
+    <x-button
+      icon="far.circle-check"
+      class="btn-secondary btn-xl"
+      label="Calificar"
+      wire:click='calificar'
       spinner
       />
   @endif

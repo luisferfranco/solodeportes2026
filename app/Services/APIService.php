@@ -21,7 +21,6 @@ class APIService
     if ($response->failed()) {
       info("Temporada: {$temporada->id}", [$temporada, $temporada->deporte]);
       info("Error: $url");
-      info("ApiService::cargarEquipos() {$temporada->id} Error al cargar temporada: " . $response->body());
       return;
     }
 
@@ -60,7 +59,6 @@ class APIService
     if ($response->failed()) {
       info("Temporada: {$temporada->id}", [$temporada, $temporada->deporte]);
       info("Error: $url");
-      info("ApiService::cargarRondas() {$temporada->id} Error al cargar temporada: " . $response->body());
       return;
     }
 
@@ -87,6 +85,37 @@ class APIService
         $gameData
       );
     }
+  }
+
+  public function cargarMarcadores(Temporada $temporada, $ronda) {
+    $liga   = $temporada->sport_api_id;
+    $apikey = env('API_KEY');
+
+
+    $juegos = Juego::where('temporada_id', $temporada->id)
+      ->where('ronda', $ronda)
+      ->get();
+
+    foreach ($juegos as $juego) {
+      $url    = env('API_URL') . "v2/json/lookup/event/{$juego->id}";
+      $response = Http::withHeaders([
+        'X_API_KEY' => $apikey
+      ])->get($url);
+
+      if ($response->failed()) {
+        info("Juego: {$juego->id}", [$juego]);
+        info("Error: $url");
+        continue;
+      }
+
+      $res = $response->json()['lookup'] ?? [];
+
+      $juego->home_score  = $res['intHomeScore'] ?? null;
+      $juego->away_score  = $res['intAwayScore'] ?? null;
+      $juego->status      = $res['strStatus'] ?? null;
+      $juego->save();
+    }
+
   }
 
 }

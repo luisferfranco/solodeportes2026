@@ -26,6 +26,8 @@ new class extends Component
     $this->headers = [
       ['key' => 'id', 'label' => 'ID', 'class'=>"w-5"],
       ['key' => 'home_id', 'label' => 'ID Local'],
+      ['key' => 'home_score', 'label' => ''],
+      ['key' => 'away_score', 'label' => ''],
       ['key' => 'away_id', 'label' => 'ID Visitante'],
       ['key' => 'valido_hasta',    'label' => 'Valido Hasta', ],
     ];
@@ -104,6 +106,15 @@ new class extends Component
         <img src="{{ $row->homeTeam->logo }}" class="w-6 h-6" />
       </div>
     @endscope
+
+    @scope('cell_home_score', $row)
+      <p class="text-center">{{ $row->home_score ?? '---' }}</p>
+    @endscope
+
+    @scope('cell_away_score', $row)
+      <p class="text-center">{{ $row->away_score ?? '---' }}</p>
+    @endscope
+
     @scope("cell_away_id", $row)
       <div class="flex gap-1 justify-start items-center">
         <img src="{{ $row->awayTeam->logo }}" class="w-6 h-6" />
