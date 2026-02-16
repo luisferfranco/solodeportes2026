@@ -18,7 +18,8 @@ new class extends Component
   }
 
   public function comprar() {
-    $this->dispatch('open-modal-comprar');
+    info("comprar - evento: " . $this->evento->id);
+    $this->dispatch('open-modal-comprar', eventoId: $this->evento->id);
   }
 
 };

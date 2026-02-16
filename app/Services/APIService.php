@@ -24,6 +24,7 @@ class APIService
       return;
     }
 
+    $i = 1;
     $equipos = $response->json()['list'];
     foreach ($equipos as $equipo) {
       $equipoData = [
@@ -37,6 +38,9 @@ class APIService
         'oscuro'        => $equipo['strColour2'] ?? null,
         'logo'          => $equipo['strBadge'] ?? null
       ];
+
+      info("Cargando Equipo {$i}: {$equipo['strTeam']}");
+      $i++;
 
       \App\Models\Equipo::updateOrCreate(
         ['api_id' => $equipoData['api_id']],
@@ -66,19 +70,21 @@ class APIService
 
     foreach ($schedule as $game) {
 
-      $home_id = Equipo::where('api_id', $game['idHomeTeam'])->value('id');
-      $away_id = Equipo::where('api_id', $game['idAwayTeam'])->value('id');
+      $home_id = Equipo::where('api_id', $game['idHomeTeam'])->first();
+      $away_id = Equipo::where('api_id', $game['idAwayTeam'])->first();
 
       $gameData = [
         'id'            => $game['idEvent'],
         'deporte_id'    => $temporada->deporte_id,
         'temporada_id'  => $temporada->id,
-        'home_id'       => $home_id,
-        'away_id'       => $away_id,
+        'home_id'       => $home_id->id ?? null,
+        'away_id'       => $away_id->id ?? null,
         'ronda'         => $game['intRound'] ?? null,
         'valido_hasta'  => $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00'),
         'status'        => $game['strStatus'] ?? null,
       ];
+
+      info("Juego {$gameData['id']} - {$home_id->nombre} vs {$away_id->nombre} - Ronda: {$gameData['ronda']} - Valido hasta: {$gameData['valido_hasta']}");
 
       Juego::updateOrCreate(
         ['id' => $gameData['id']],
@@ -108,11 +114,11 @@ class APIService
         continue;
       }
 
-      $res = $response->json()['lookup'] ?? [];
+      $res = $response->json()['lookup'][0] ?? [];
 
-      $juego->home_score  = $res['intHomeScore'] ?? null;
-      $juego->away_score  = $res['intAwayScore'] ?? null;
-      $juego->status      = $res['strStatus'] ?? null;
+      $juego->home_score  = $res['intHomeScore'];
+      $juego->away_score  = $res['intAwayScore'];
+      $juego->status      = $res['strStatus'];
       $juego->save();
     }
 

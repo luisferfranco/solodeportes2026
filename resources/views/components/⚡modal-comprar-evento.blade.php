@@ -20,7 +20,17 @@ new class extends Component
   }
 
   #[On('open-modal-comprar')]
-  public function comprar() {
+  public function comprar($eventoId) {
+    info("Evento de componente: " . $this->evento->id);
+    info("Evento recibido: ". $eventoId);
+
+    if ($this->evento->id != $eventoId) {
+      info("Dios es caca");
+      return;
+    }
+
+    info("Dios es mierda");
+
     $num = Participacion::where('evento_id', $this->evento->id)
       ->where('user_id', auth()->id())
       ->count();
