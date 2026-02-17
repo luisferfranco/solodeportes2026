@@ -44,13 +44,13 @@ new class extends Component
     <div>Juego #{{ $juego->id }}</div>
   </div>
   <div class="px-2 py-1 flex items-center justify-between gap-2 my-4">
-    <div class="grow">
+    <div class="w-1/4">
       <div class="flex justify-center">
         <p class="text-center"><img src="{{ $juego->homeTeam->logo }}" class="h-18 w-18"></p>
       </div>
       <p class="text-center">{{ $juego->homeTeam->nombre }}</p>
     </div>
-    <div class="flex items-center justify-center gap-2 shrink-0">
+    <div class="flex items-center justify-center gap-2 grow">
       @for ($i = -2; $i <= 2; $i++)
         <x-button
           label=" {{ abs($i) }} "
@@ -60,7 +60,7 @@ new class extends Component
           />
       @endfor
     </div>
-    <div class="grow">
+    <div class="w-1/4">
       <div class="flex justify-center">
         <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="h-18 w-18"></p>
       </div>
