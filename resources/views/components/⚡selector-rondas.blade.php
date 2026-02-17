@@ -2,6 +2,7 @@
 
 use App\Models\Temporada;
 use App\Services\APIService;
+use App\Services\FBService;
 use Livewire\Component;
 use Mary\Traits\Toast;
 
@@ -41,7 +42,8 @@ new class extends Component
   }
 
   public function calificar() {
-    //
+    $FBService = new FBService();
+    $FBService->califica($this->temporada, $this->ronda);
   }
 };
 ?>
