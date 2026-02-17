@@ -10,7 +10,7 @@ class JuegoPolicy
 {
     public function pronosticar(User $user, Juego $juego): bool
     {
-        return ($juego->valido_hasta > now()) || auth()->user()->isAdmin();;
+        return ($juego->valido_hasta > now()) || auth()->user()->isAdmin;
     }
 
     /**
