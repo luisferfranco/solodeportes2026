@@ -41,7 +41,13 @@ new class extends Component
       'deporte_id'    => 'required|exists:deportes,id',
       'nombre'        => 'required|string',
       'sport_api_id'  => 'nullable',
-      'temporada_id'  => 'required|string',
+      'temporada_id'  => [
+        'required',
+        'string',
+        \Illuminate\Validation\Rule::unique('temporadas', 'temporada')
+          ->where('deporte_id', $this->deporte_id)
+          ->ignore($this->temporada->id),
+      ],
       'fecha_inicio'  => 'nullable|date',
       'fecha_fin'     => 'nullable|date',
       'ronda'         => 'required',
