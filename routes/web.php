@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/fb/qn/{evento}/leaderboard', 'pages::fb.qn.pronosticos')->name('fb.qn.leaderboard');
     Route::livewire('/fb/qn/{evento}/pronosticos', 'pages::fb.qn.pronosticos')->name('fb.qn.pronosticos');
     Route::livewire('/fb/qn/{evento}/resultados/', 'pages::fb.qn.resultados')->name('fb.qn.resultados');
-    Route::livewire('/fb/qn/{evento}/marcadores', 'pages::fb.qn.pronosticos')->name('fb.qn.marcadores');
+    Route::livewire('/fb/qn/{evento}/marcadores', 'pages::fb.qn.marcadores')->name('fb.qn.marcadores');
 
     // Futbol Americano
     Route::livewire('/fa/qn/{evento}', 'pages::fb.qn.show')->name('fa.qn.show');

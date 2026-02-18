@@ -135,6 +135,7 @@ class APIService
       $juego->home_score  = $game['intHomeScore'];
       $juego->away_score  = $game['intAwayScore'];
       $juego->status      = $game['strStatus'];
+      $juego->youtube     = $game['strVideo'] ?? null;
       $juego->save();
     }
 
