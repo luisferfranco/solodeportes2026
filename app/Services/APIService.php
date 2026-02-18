@@ -102,29 +102,39 @@ class APIService
   public function cargarMarcadores(Temporada $temporada, $ronda) {
     $liga   = $temporada->sport_api_id;
     $apikey = env('API_KEY');
+    $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
 
-
-    $juegos = Juego::where('temporada_id', $temporada->id)
+    // Obtener la fecha mínima y máxima de los juegos de la ronda
+    $min = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $ronda)
-      ->get();
+      ->min('valido_hasta');
+    $max = Juego::where('temporada_id', $temporada->id)
+      ->where('ronda', $ronda)
+      ->max('valido_hasta');
 
-    foreach ($juegos as $juego) {
-      $url    = env('API_URL') . "v2/json/lookup/event/{$juego->id}";
-      $response = Http::withHeaders([
-        'X_API_KEY' => $apikey
-      ])->get($url);
+    $response = Http::withHeaders([
+      'X_API_KEY' => $apikey
+    ])->get($url);
 
-      if ($response->failed()) {
-        info("Juego: {$juego->id}", [$juego]);
-        info("Error: $url");
+    if ($response->failed()) {
+      info("Juego: {$juego->id}", [$juego]);
+      info("Error: $url");
+    }
+
+    $res = $response->json()['schedule'] ?? [];
+    foreach ($res as $game) {
+      if ($game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00') < $min || $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00') > $max) {
         continue;
       }
 
-      $res = $response->json()['lookup'][0] ?? [];
+      $juego = Juego::find($game['idEvent']);
+      if (!$juego) {
+        continue;
+      }
 
-      $juego->home_score  = $res['intHomeScore'];
-      $juego->away_score  = $res['intAwayScore'];
-      $juego->status      = $res['strStatus'];
+      $juego->home_score  = $game['intHomeScore'];
+      $juego->away_score  = $game['intAwayScore'];
+      $juego->status      = $game['strStatus'];
       $juego->save();
     }
 
