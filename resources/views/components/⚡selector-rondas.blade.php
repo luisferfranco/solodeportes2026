@@ -39,11 +39,14 @@ new class extends Component
   public function marcadores() {
     $APIService = new APIService();
     $APIService->cargarMarcadores($this->temporada, $this->ronda);
+    $this->dispatch('marcadores-cargados', $this->ronda);
+    $this->success('Marcadores cargados');
   }
 
   public function calificar() {
     $FBService = new FBService();
     $FBService->califica($this->temporada, $this->ronda);
+    $this->success('Ronda calificada');
   }
 };
 ?>

@@ -71,6 +71,12 @@ new class extends Component
     $this->ronda = $ronda;
     $this->getData();
   }
+
+  #[On('marcadores-cargados')]
+  public function marcadoresCargados($ronda) {
+    $this->ronda = $ronda;
+    $this->getData();
+  }
 };
 ?>
 

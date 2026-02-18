@@ -40,3 +40,4 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/fa/qn/{evento}', 'pages::fb.qn.show')->name('fa.qn.show');
     Route::livewire('/fa/sr/{evento}', 'pages::fb.qn.show')->name('fa.sr.show');
 });
+

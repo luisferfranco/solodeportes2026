@@ -17,6 +17,8 @@ class Temporada extends Model
         'deporte_id',
         'temporada',
         'nombre',
+        'fecha_inicio',
+        'fecha_fin'
     ];
 
     public function deporte()

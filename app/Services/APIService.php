@@ -70,6 +70,12 @@ class APIService
 
     foreach ($schedule as $game) {
 
+      if ($temporada->fecha_inicio && $temporada->fecha_fin) {
+        if ($game['dateEvent'] < $temporada->fecha_inicio || $game['dateEvent'] > $temporada->fecha_fin) {
+          continue;
+        }
+      }
+
       $home_id = Equipo::where('api_id', $game['idHomeTeam'])->first();
       $away_id = Equipo::where('api_id', $game['idAwayTeam'])->first();
 
@@ -84,7 +90,7 @@ class APIService
         'status'        => $game['strStatus'] ?? null,
       ];
 
-      info("Juego {$gameData['id']} - {$home_id->nombre} vs {$away_id->nombre} - Ronda: {$gameData['ronda']} - Valido hasta: {$gameData['valido_hasta']}");
+      info("({$temporada->id}/{$gameData['ronda']}) {$home_id->nombre} vs {$away_id->nombre}");
 
       Juego::updateOrCreate(
         ['id' => $gameData['id']],
