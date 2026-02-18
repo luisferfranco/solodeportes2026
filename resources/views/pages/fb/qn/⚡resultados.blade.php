@@ -18,6 +18,8 @@ new class extends Component
   public $juegosIds;
   public $headers;
   public $nopar;
+  public $resSum;
+  public $difSum;
 
   public function mount(Evento $evento)
   {
@@ -32,13 +34,20 @@ new class extends Component
     $temporada = $this->evento->temporada;
 
     // para desplegar los resultados, deberán traerse todos los juegos de la ronda y hacer un outer join con los pronósticos, para mostrar los juegos aunque no se hayan pronosticado. El resultado deberá guardarse en la variable $this->pronosticos, que se usará en la vista para mostrar los resultados.
-    $this->juegos = Juego::where('temporada_id', $temporada->id)
+    $this->pronosticos = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $this->rd)
       ->with(['homeTeam', 'awayTeam', 'pronosticos' => function ($query) {
         $query->where('participacion_id', $this->participacion->id);
       }])
       ->get();
-    $this->pronosticos = $this->juegos;
+
+    // Obtener la suma de los pronosticos en los campos res y dif
+    $this->resSum = $this->pronosticos->sum(function ($juego) {
+      return $juego->pronosticos->first()?->res ?? 0;
+    });
+    $this->difSum = $this->pronosticos->sum(function ($juego) {
+      return $juego->pronosticos->first()?->dif ?? 0;
+    });
 
     $this->headers = [
       ['key' => 'juegos', 'label' => 'Juego'],
@@ -78,6 +87,27 @@ new class extends Component
   @endif
 
   <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
+
+  <div class="flex justify-end items-center mt-4 gap-4">
+    <x-stat
+      title="Aciertos"
+      value="{{ $resSum }}"
+      icon="fas.check"
+      class="bg-info/30"
+      />
+    <x-stat
+      title="Diferencias"
+      value="{{ $difSum }}"
+      icon="fas.bullseye"
+      class="bg-info/30"
+      />
+    <x-stat
+      title="Total"
+      value="{{ $resSum * $evento->acierto + $difSum * $evento->diferencia }}"
+      icon="fas.star"
+      class="bg-info/70"
+      />
+  </div>
 
   <x-table
     :headers="$headers"
