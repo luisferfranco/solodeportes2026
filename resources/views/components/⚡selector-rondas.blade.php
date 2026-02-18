@@ -46,6 +46,7 @@ new class extends Component
   public function calificar() {
     $FBService = new FBService();
     $FBService->califica($this->temporada, $this->ronda);
+    $this->dispatch('marcadores-cargados', $this->ronda);
     $this->success('Ronda calificada');
   }
 };
