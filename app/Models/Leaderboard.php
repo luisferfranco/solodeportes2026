@@ -12,6 +12,7 @@ class Leaderboard extends Model
         'ronda',
         'aciertos',
         'diferencias',
+        'puntos'
     ];
 
     public function participacion()

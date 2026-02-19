@@ -56,7 +56,8 @@ class FBService
           ],
           [
             'aciertos' => $result->sumres ?? 0,
-            'diferencias' => $result->sumdif ?? 0
+            'diferencias' => $result->sumdif ?? 0,
+            'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
           ]
         );
       }

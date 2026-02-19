@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('ronda');
             $table->integer('aciertos');
             $table->integer('diferencias');
+            $table->float('puntos');
 
             $table->timestamps();
         });
