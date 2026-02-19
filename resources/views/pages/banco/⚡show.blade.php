@@ -35,7 +35,7 @@ new class extends Component
     $this->transaccion->notas = $this->notas;
     $this->transaccion->save();
 
-    auth()->user()->notify(new BankProcessedNotification(auth()->user(), $this->transaccion));
+    $this->transaccion->user->notify(new BankProcessedNotification(auth()->user(), $this->transaccion));
 
     $this->success(
       title: 'Transacción Procesada',
