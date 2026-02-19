@@ -28,7 +28,7 @@ new class extends Component
       return;
     }
     $this->prono = $prono;
-    Pronostico::updateOrCreate([
+    $p = Pronostico::updateOrCreate([
       'juego_id'          => $this->juego->id,
       'participacion_id'  => $this->participacion->id
     ], [
@@ -38,7 +38,7 @@ new class extends Component
 };
 ?>
 
-<div class="bg-base-100 rounded-xl my-3 overflow-hidden border {{ $valido ? 'border-success/50' : 'border-error/50' }}">
+<div class="{{ $valido ? 'bg-base-100' : 'bg-error/30' }} rounded-xl my-3 overflow-hidden border {{ $valido ? 'border-success/50' : 'border-error/50' }}">
   <div class="flex items-center justify-between px-2 py-1 {{ $valido ? 'bg-success/50' : 'bg-error/50' }} text-base-content">
     <div>Valido hasta el <span class="font-bold">{{ $juego->valido_hasta }}</span> ({{ $juego->valido_hasta->diffForHumans() }})</div>
     <div>Juego #{{ $juego->id }}</div>
@@ -54,7 +54,7 @@ new class extends Component
       @for ($i = -2; $i <= 2; $i++)
         <x-button
           label=" {{ abs($i) }} "
-          class="h-10 w-10 rounded {{ $prono === $i ? 'btn-secondary' : 'btn-neutral' }} hover:btn-accent btn-lg"
+          class="h-10 w-10 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
           wire:click='pronostica({{ $i }})'
           spinner
           />
