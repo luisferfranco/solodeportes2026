@@ -41,16 +41,12 @@ class FBService
 
     foreach ($temporada->eventos as $evento) {
       foreach ($evento->participaciones as $participacion) {
-        $sumres = $participacion->pronosticos()
+        $result = $participacion->pronosticos()
             ->whereHas('juego', function ($query) use ($ronda) {
-          $query->where('ronda', $ronda);
+              $query->where('ronda', $ronda);
             })
-            ->sum('res');
-        $sumdif = $participacion->pronosticos()
-            ->whereHas('juego', function ($query) use ($ronda) {
-          $query->where('ronda', $ronda);
-            })
-            ->sum('dif');
+            ->selectRaw('SUM(res) as sumres, SUM(dif) as sumdif')
+            ->first();
 
         Leaderboard::updateOrCreate(
           [
@@ -59,8 +55,8 @@ class FBService
             'evento_id' => $evento->id
           ],
           [
-            'aciertos' => $sumres,
-            'diferencias' => $sumdif
+            'aciertos' => $result->sumres ?? 0,
+            'diferencias' => $result->sumdif ?? 0
           ]
         );
       }
