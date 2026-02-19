@@ -47,4 +47,8 @@ class Evento extends Model
     return $this->hasMany(Participacion::class);
   }
 
+  public function leaderboard() {
+    return $this->hasMany(Leaderboard::class);
+  }
+
 }

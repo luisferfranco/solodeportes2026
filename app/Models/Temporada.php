@@ -30,4 +30,9 @@ class Temporada extends Model
     {
         return $this->hasMany(Juego::class);
     }
+
+    public function eventos()
+    {
+        return $this->hasMany(Evento::class);
+    }
 }

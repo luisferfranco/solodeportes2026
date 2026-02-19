@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
     // Futbol Soccer
     Route::livewire('/fb/qn/{evento}', 'pages::fb.qn.show')->name('fb.qn.show');
-    Route::livewire('/fb/qn/{evento}/leaderboard', 'pages::fb.qn.pronosticos')->name('fb.qn.leaderboard');
+    Route::livewire('/fb/qn/{evento}/leaderboard', 'pages::fb.qn.leaderboard')->name('fb.qn.leaderboard');
     Route::livewire('/fb/qn/{evento}/pronosticos', 'pages::fb.qn.pronosticos')->name('fb.qn.pronosticos');
     Route::livewire('/fb/qn/{evento}/resultados/', 'pages::fb.qn.resultados')->name('fb.qn.resultados');
     Route::livewire('/fb/qn/{evento}/marcadores', 'pages::fb.qn.marcadores')->name('fb.qn.marcadores');

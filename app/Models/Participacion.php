@@ -24,4 +24,12 @@ class Participacion extends Model
   public function evento() {
     return $this->belongsTo(Evento::class);
   }
+
+  public function pronosticos() {
+    return $this->hasMany(Pronostico::class, 'participacion_id');
+  }
+
+  public function leaderboard() {
+    return $this->hasOne(Leaderboard::class, 'participacion_id');
+  }
 }
