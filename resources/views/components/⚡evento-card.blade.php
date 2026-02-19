@@ -4,12 +4,12 @@ use App\Enums\EventoStatus;
 use App\Models\Evento;
 use App\Models\Participacion;
 use App\Models\Transaccion;
+use Livewire\Attributes\On;
 use Livewire\Component;
-use Mary\Traits\Toast;
 
 new class extends Component
 {
-  use Toast;
+  use Mary\Traits\Toast;
 
   public Evento $evento;
 
@@ -18,10 +18,17 @@ new class extends Component
   }
 
   public function comprar() {
-    info("comprar - evento: " . $this->evento->id);
     $this->dispatch('open-modal-comprar', eventoId: $this->evento->id);
   }
 
+  #[On('participacion-comprada')]
+  public function actualizarParticipaciones($eventoId) {
+    info("participacion-comprada - evento: " . $eventoId);
+    if ($this->evento->id != $eventoId) {
+      return;
+    }
+    $this->evento = Evento::find($this->evento->id);
+  }
 };
 ?>
 

@@ -70,6 +70,8 @@ new class extends Component
       icon: 'fas.check',
     );
     $this->open = false;
+
+    $this->dispatch('participacion-comprada', eventoId: $this->evento->id);
   }
 
   public function cancelar() {
