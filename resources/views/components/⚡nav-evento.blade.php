@@ -34,25 +34,19 @@ new class extends Component
   }
 
   public function updatedOption($value) {
+    if (!$value) return;
+
     $route = strtolower($this->evento->temporada->deporte_id) . '.' . $this->evento->tipojuego_id . '.';
 
-    // 1. show
-    // 2. leaderboard
-    // 3. pronosticos
-    // 4. resultados
-    // 5. marcadores
-
     $routeMap = [
-      '1' => 'show',
-      '2' => 'leaderboard',
-      '3' => 'pronosticos',
-      '4' => 'resultados',
-      '5' => 'marcadores',
+      '1' => 'evento.show',
+      '2' => 'evento.leaderboard',
+      '3' => $route . 'pronosticos',
+      '4' => 'evento.resultados',
+      '5' => 'evento.marcadores',
     ];
 
-    $route .= $routeMap[$value] ?? 'show';
-
-    $this->redirectRoute($route, ['evento' => $this->evento]);
+    $this->redirectRoute($routeMap[$value ?? 1], ['evento' => $this->evento]);
   }
 };
 ?>

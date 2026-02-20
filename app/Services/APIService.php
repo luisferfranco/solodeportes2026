@@ -105,12 +105,13 @@ class APIService
     $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
 
     // Obtener la fecha mínima y máxima de los juegos de la ronda
-    $min = Juego::where('temporada_id', $temporada->id)
+    $dateRange = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $ronda)
-      ->min('valido_hasta');
-    $max = Juego::where('temporada_id', $temporada->id)
-      ->where('ronda', $ronda)
-      ->max('valido_hasta');
+      ->selectRaw('MIN(valido_hasta) as min_date, MAX(valido_hasta) as max_date')
+      ->first();
+
+    $min = $dateRange?->min_date;
+    $max = $dateRange?->max_date;
 
     $response = Http::withHeaders([
       'X_API_KEY' => $apikey
@@ -123,9 +124,15 @@ class APIService
 
     $res = $response->json()['schedule'] ?? [];
     foreach ($res as $game) {
-      if ($game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00') < $min || $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00') > $max) {
+
+      $gameDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $game['dateEvent'] . ' 00:00:00');
+      $minDateTime = \Carbon\Carbon::parse($min);
+      $maxDateTime = \Carbon\Carbon::parse($max);
+
+      if ($gameDateTime->lt($minDateTime) || $gameDateTime->gt($maxDateTime)) {
         continue;
       }
+
 
       $juego = Juego::find($game['idEvent']);
       if (!$juego) {

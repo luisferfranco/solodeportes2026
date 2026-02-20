@@ -57,9 +57,9 @@ new class extends Component
     <livewire:boletos-usuario :evento="$evento" />
 
     {{-- Botones de acción --}}
-    <div class="flex gap-1 items-center justify-end">
+    <div class="flex gap-1 items-center justify-end mt-auto">
       <x-button
-        link="{{ route(strtolower($evento->temporada->deporte->id) . '.' . $evento->tipojuego_id . '.show', $evento) }}"
+        link="{{ route('evento.show', $evento) }}"
         icon="fas.info-circle"
         label="Detalles"
         class="btn-ghost btn-info"

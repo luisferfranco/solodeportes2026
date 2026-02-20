@@ -4,6 +4,7 @@ use App\Models\Evento;
 use App\Models\Juego;
 use App\Models\Participacion;
 use App\Models\Pronostico;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -21,11 +22,12 @@ new class extends Component
   public $resSum;
   public $difSum;
 
-  public function mount(Evento $evento)
+  public function mount(Evento $evento, ?Participacion $participacion = null)
   {
     $this->evento = $evento;
     $this->nopar = $evento->participaciones()->where('user_id', auth()->id())->count();
-    $this->participacion = Participacion::where('user_id', auth()->id())
+    $this->participacion = $participacion ?? Participacion::query()
+          ->where('user_id', auth()->id())
           ->where('evento_id', $this->evento->id)
           ->first();
 
@@ -152,7 +154,24 @@ new class extends Component
         <x-badge class="badge-info badge-xs" value="SIN RESULTADO" />
       @else
         <div class="text-2xl text-center font-bold">
-          {{ $row->home_score - $row->away_score }}
+          @if ($row->deporte_id == 'FA')
+            @php
+              $dif = $row->home_score - $row->away_score;
+              $d = abs($dif);
+              if ($d < 7) {
+                $dif = $dif > 0 ? '1' : '-1';
+              } else if ($d < 14) {
+                $dif = $dif > 0 ? '2' : '-2';
+              } else if ($d < 21) {
+                $dif = $dif > 0 ? '3' : '-3';
+              } else {
+                $dif = $dif > 0 ? '4' : '-4';
+              }
+            @endphp
+            {{ $dif }}
+          @else
+            {{ $row->home_score - $row->away_score }}
+          @endif
         </div>
       @endif
     @endscope

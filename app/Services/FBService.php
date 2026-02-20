@@ -16,9 +16,22 @@ class FBService
 
     // Debería calificar todos los juegos para todos los pronósticos,
     // independientemente de si está en uno u otro evento.
-
     foreach ($juegos as $juego) {
+
       $dif = $juego->home_score - $juego->away_score;
+      if ($temporada->deporte_id == "FA") {
+        // Para el futbol americano se recalculan las diferencias
+        $d = abs($dif);
+        if ($d < 7) {
+          $dif = $dif > 0 ? 1 : -1;;
+        } else if ($d < 14) {
+          $dif = $dif > 0 ? 2 : -2;
+        } else if ($d < 21) {
+          $dif = $dif > 0 ? 3 : -3;
+        } else {
+          $dif = $dif > 0 ? 4 : -4;
+        }
+      }
 
       // Todas las calificaciones a cero
       $updated = Pronostico::query()

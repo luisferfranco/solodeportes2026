@@ -29,15 +29,21 @@ Route::middleware('auth')->group(function () {
     // {deporte}/sr/{evento}/... Survivor
     // {deporte}/jk/{evento}/... Jackpot
 
-    // Futbol Soccer
-    Route::livewire('/fb/qn/{evento}', 'pages::fb.qn.show')->name('fb.qn.show');
-    Route::livewire('/fb/qn/{evento}/leaderboard', 'pages::fb.qn.leaderboard')->name('fb.qn.leaderboard');
-    Route::livewire('/fb/qn/{evento}/pronosticos', 'pages::fb.qn.pronosticos')->name('fb.qn.pronosticos');
-    Route::livewire('/fb/qn/{evento}/resultados/', 'pages::fb.qn.resultados')->name('fb.qn.resultados');
-    Route::livewire('/fb/qn/{evento}/marcadores', 'pages::fb.qn.marcadores')->name('fb.qn.marcadores');
+    // Comunes
+    Route::livewire('/evento/{evento}', 'pages::evento.show')->name('evento.show');
+    Route::livewire('/evento/{evento}/resultados/{participacion?}', 'pages::evento.resultados')->name('evento.resultados');
+    Route::livewire('/evento/{evento}/marcadores', 'pages::evento.marcadores')->name('evento.marcadores');
+    Route::livewire('/evento/{evento}/leaderboard', 'pages::evento.leaderboard')->name('evento.leaderboard');
 
-    // Futbol Americano
-    Route::livewire('/fa/qn/{evento}', 'pages::fb.qn.show')->name('fa.qn.show');
+    // Futbol Soccer
+    Route::livewire('/fb/qn/{evento}/pronosticos', 'pages::fb.qn.pronosticos')->name('fb.qn.pronosticos');
+
+    // Futbol Americano - Quiniela
+    Route::livewire('/fa/qn/{evento}/pronosticos', 'pages::fa.qn.pronosticos')->name('fa.qn.pronosticos');
+
+    // Futbol Americano - Survivor
     Route::livewire('/fa/sr/{evento}', 'pages::fb.qn.show')->name('fa.sr.show');
+
+
 });
 

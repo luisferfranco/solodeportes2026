@@ -52,8 +52,8 @@ new class extends Component
 };
 ?>
 
-<div class="flex items-end w-full gap-2">
-  <div class="grow">
+<div class="flex flex-col md:flex-row items-end w-full gap-2">
+  <div class="grow w-full md:w-auto">
     <x-select
       wire:model.live='ronda'
       label="Selecciona la ronda"
@@ -65,26 +65,28 @@ new class extends Component
       />
   </div>
   @if (auth()->user()->isAdmin)
-    <x-button
-      icon="fas.play"
-      class="btn-primary btn-xl"
-      label="Set Ronda"
-      wire:click='setRonda'
-      spinner
-      />
-    <x-button
-      icon="far.circle-dot"
-      class="btn-secondary btn-xl"
-      label="Marcadores"
-      wire:click='marcadores'
-      spinner
-      />
-    <x-button
-      icon="far.circle-check"
-      class="btn-secondary btn-xl"
-      label="Calificar"
-      wire:click='calificar'
-      spinner
-      />
+    <div class="w-full md:w-auto flex justify-between gap-2">
+      <x-button
+        icon="fas.play"
+        class="btn-primary btn-xl"
+        label="Set Ronda"
+        wire:click='setRonda'
+        spinner
+        />
+      <x-button
+        icon="far.circle-dot"
+        class="btn-secondary btn-xl"
+        label="Marcadores"
+        wire:click='marcadores'
+        spinner
+        />
+      <x-button
+        icon="far.circle-check"
+        class="btn-secondary btn-xl"
+        label="Calificar"
+        wire:click='calificar'
+        spinner
+        />
+    </div>
   @endif
 </div>

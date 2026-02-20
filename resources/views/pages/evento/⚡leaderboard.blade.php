@@ -23,9 +23,9 @@ new class extends Component
 
     $this->headers = [
       ['key' => 'participacion_id', 'label' => 'Participante'],
-      ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right'],
-      ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right'],
-      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right'],
+      ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right text-lg'],
+      ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right text-lg'],
+      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right text-lg font-bold'],
     ];
 
     $this->resultados = Leaderboard::where('evento_id', $evento->id)
@@ -103,12 +103,20 @@ new class extends Component
       <x-avatar
         :image="$row->participacion->user->avatar"
         class="h-10 w-10"
-      />
+        />
       <div>
-        <p>{{ $row->participacion->nombre }}</p>
+        <p>
+          <a href="{{ route('evento.resultados', ['evento' => $this->evento->id, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
+            {{ $row->participacion->nombre }}
+          </a>
+        </p>
         <p class="text-base-content/50 text-xs">De: {{ $row->participacion->user->name }}</p>
       </div>
     </div>
+  @endscope
+
+  @scope('cell_puntos', $row)
+    <div class="text-lg">{{ Number::format($row->puntos,2) }}</div>
   @endscope
  </x-table>
 </div>
