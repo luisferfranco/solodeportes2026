@@ -36,7 +36,7 @@ new class extends Component
 
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
-    $this->redirectRoute('fb.qn.leaderboard', ['evento' => $this->evento->id, 'rd' => $ronda]);
+    $this->redirectRoute('fb.qn.leaderboard', ['evento' => $this->evento, 'rd' => $ronda]);
   }
 };
 ?>
@@ -106,7 +106,7 @@ new class extends Component
         />
       <div>
         <p>
-          <a href="{{ route('evento.resultados', ['evento' => $this->evento->id, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
+          <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
             {{ $row->participacion->nombre }}
           </a>
         </p>

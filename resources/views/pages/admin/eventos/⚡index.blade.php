@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Temporada;
 use App\Models\TipoJuego;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 
 new class extends Component
 {
@@ -19,6 +20,7 @@ new class extends Component
   public $show = false;
   public $tipoJuego, $tiposJuego;
   public $nombre;
+  public $slug;
   public $descripcion;
   public $jornadas, $jornada;
   public $deportes, $deporte;
@@ -53,9 +55,17 @@ new class extends Component
       ->get();
   }
 
+  public function updatedNombre($value) {
+    // only auto-generate slug when the field is currently empty
+    if (!$this->slug) {
+      $this->slug = Str::slug($value);
+    }
+  }
+
   public function save() {
     $this->validate([
       'nombre'      => 'required|string|max:255',
+      'slug'        => ['nullable','string','max:255','unique:eventos,slug,'.$this->evento->id],
       'descripcion' => 'required|string',
       'deporte'     => 'required|exists:deportes,id',
       'temporada'   => 'required|exists:temporadas,id',
@@ -67,6 +77,7 @@ new class extends Component
     ]);
 
     $this->evento->nombre = $this->nombre;
+    $this->evento->slug = $this->slug;
     $this->evento->descripcion = $this->descripcion;
     $this->evento->deporte_id = $this->deporte;
     $this->evento->temporada_id = $this->temporada;
@@ -91,14 +102,16 @@ new class extends Component
   }
 
   public function crearEvento() {
-    $this->reset(['nombre', 'descripcion', 'deporte', 'temporada', 'tipoJuego', 'precio', 'acierto', 'diferencia', 'file']);
+    $this->reset(['nombre', 'slug', 'descripcion', 'deporte', 'temporada', 'tipoJuego', 'precio', 'acierto', 'diferencia', 'file']);
     $this->evento = new Evento();
+    $this->slug = '';
     $this->show = true;
   }
 
   public function editarEvento(Evento $evento) {
     $this->evento       = $evento;
     $this->nombre       = $evento->nombre;
+    $this->slug         = $evento->slug;
     $this->descripcion  = $evento->descripcion;
     $this->deporte      = $evento->deporte_id;
     $this->temporada    = $evento->temporada_id;
@@ -132,6 +145,13 @@ new class extends Component
           placeholder="Nombre del Evento"
           class="outline-none!"
           required
+          inline
+          />
+        <x-input
+          wire:model='slug'
+          label="Slug (URL amigable)"
+          placeholder="slug-del-evento"
+          class="outline-none!"
           inline
           />
         <x-textarea

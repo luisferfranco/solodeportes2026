@@ -44,12 +44,12 @@ new class extends Component
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
     $this->ronda = $ronda;
-    $this->redirectRoute('fb.qn.pronosticos', ['evento' => $this->evento->id, 'rd' => $this->ronda, "p" => $this->partId]);
+    $this->redirectRoute('fb.qn.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, "p" => $this->partId]);
   }
 
   #[On('participacion-seleccionada')]
   public function actualizaParticipacion($participacionId) {
-    $this->redirectRoute('fb.qn.pronosticos', ['evento' => $this->evento->id, 'rd' => $this->ronda, "p" => $participacionId]);
+    $this->redirectRoute('fb.qn.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, "p" => $participacionId]);
   }
 };
 ?>

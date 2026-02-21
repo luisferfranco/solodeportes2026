@@ -25,7 +25,7 @@ new class extends Component
     <div class="mt-auto pb-2">
       @foreach ($boletos as $boleto)
           <x-button
-            link="{{ route(strtolower($boleto->evento->temporada->deporte_id) . '.' . $boleto->evento->tipojuego_id . '.pronosticos', [$boleto->evento->id, 'p' => $boleto->id]) }}"
+            link="{{ route(strtolower($boleto->evento->temporada->deporte_id) . '.' . $boleto->evento->tipojuego_id . '.pronosticos', [$boleto->evento, 'p' => $boleto->id]) }}"
             class="btn-sm btn-secondary w-full mb-2"
             >
             <div class="flex justify-between gap-2 items-center w-full">
