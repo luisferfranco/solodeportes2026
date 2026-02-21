@@ -29,7 +29,7 @@ enum TipoTransaccion: string
       self::DEPOSITO => 'success',
       self::RETIRO   => 'error',
       self::COMPRA   => 'warning',
-      self::PREMIO   => 'success',
+      self::PREMIO   => 'accent',
       self::UNKNOWN  => 'secondary',
     };
   }

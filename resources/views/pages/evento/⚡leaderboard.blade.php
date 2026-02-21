@@ -2,16 +2,24 @@
 
 use App\Models\Evento;
 use App\Models\Leaderboard;
+use App\Services\BancoService;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Mary\Traits\Toast;
+use App\Models\Participacion;
 
 new class extends Component
 {
+  use Toast;
+
   public Evento $evento;
   public $rd;
   public $participaciones;
   public $resultados;
   public $headers;
+  public $modalPago = false;
+  public ?Participacion $partPago = null;
+  public $monto=0;
 
   public function mount(Evento $evento)
   {
@@ -23,9 +31,9 @@ new class extends Component
 
     $this->headers = [
       ['key' => 'participacion_id', 'label' => 'Participante'],
-      ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right text-lg'],
-      ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right text-lg'],
-      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right text-lg font-bold'],
+      ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right'],
+      ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right'],
+      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right font-bold'],
     ];
 
     $this->resultados = Leaderboard::where('evento_id', $evento->id)
@@ -38,10 +46,73 @@ new class extends Component
   public function actualizarRonda($ronda) {
     $this->redirectRoute('fb.qn.leaderboard', ['evento' => $this->evento, 'rd' => $ronda]);
   }
+
+  public function pagar(Participacion $participacion) {
+    $this->partPago = $participacion;
+    $this->monto = 0;
+    $this->modalPago = true;
+  }
+
+  public function realizarPago() {
+    $this->validate([
+      'monto' => 'required|numeric',
+    ]);
+
+    // Depositar en el banco
+    $bancoService = new BancoService();
+    $bancoService->premio($this->partPago, $this->rd, $this->monto);
+    $this->success('Pago Realizado');
+
+    $this->modalPago = false;
+  }
 };
 ?>
 
 <div>
+  <x-modal
+    wire:model='modalPago'
+    class="backdrop-blur"
+    title="Pago de Premios"
+    >
+    @if ($partPago)
+      <x-form wire:submit='realizarPago'>
+        <p>Introduce el premio que le corresponde a este usuario</p>
+
+        @php
+          $tienePremio = \App\Models\Transaccion::query()
+              ->where('user_id', $this->partPago->user_id)
+              ->where('evento_id', $this->evento->id)
+              ->where('semana_premiada', $this->rd)
+              ->where('tipo', 'premio')
+              ->exists();
+        @endphp
+        @if ($tienePremio)
+          <x-alert
+            title="Premio Existente"
+            icon="fas.exclamation-triangle"
+            class="alert-warning mb-4"
+            description="Este usuario ya tiene un premio registrado para esta ronda. Si realizas otro pago, se sumará al existente"
+            />
+        @endif
+
+
+
+        <x-input
+          label="Monto a Pagar"
+          wire:model='monto'
+          prefix="$"
+          class="outline-none!"
+          />
+        <x-button
+          type="submit"
+          class="mt-4 btn-success"
+          >
+          Confirmar Pago
+        </x-button>
+      </x-form>
+    @endif
+  </x-modal>
+
   <x-title title="{{ $evento->nombre }}" subtitle="Leaderboard" />
 
   <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="2" />
@@ -91,32 +162,61 @@ new class extends Component
     </section>
   @endif
 
+  <x-table
+    :headers="$headers"
+    :rows="$resultados"
+    class="mt-6"
+    :empty-message="'No hay resultados para esta ronda.'"
+    >
+    @scope('cell_participacion_id', $row)
+      <div class="flex items-center gap-2">
+        <x-avatar
+          :image="$row->participacion->user->avatar"
+          class="h-10 w-10"
+          />
+        <div>
+          <p>
+            <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
+              {{ $row->participacion->nombre }}
+            </a>
+          </p>
+          <p class="text-base-content/50 text-xs">De: {{ $row->participacion->user->name }}</p>
+        </div>
 
- <x-table
-  :headers="$headers"
-  :rows="$resultados"
-  class="mt-6"
-  :empty-message="'No hay resultados para esta ronda.'"
-  >
-  @scope('cell_participacion_id', $row)
-    <div class="flex items-center gap-2">
-      <x-avatar
-        :image="$row->participacion->user->avatar"
-        class="h-10 w-10"
-        />
-      <div>
-        <p>
-          <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
-            {{ $row->participacion->nombre }}
-          </a>
-        </p>
-        <p class="text-base-content/50 text-xs">De: {{ $row->participacion->user->name }}</p>
+        @php
+          $tienePremio = \App\Models\Transaccion::where('user_id', $row->participacion->user_id)
+            ->where('evento_id', $this->evento->id)
+            ->where('semana_premiada', $this->rd)
+            ->where('tipo', 'premio')
+            ->exists();
+        @endphp
+        @if ($tienePremio)
+          <x-icon name="fas.trophy" class="w-6 h-6 text-green-500" title="Premio pagado" />
+        @endif
+
       </div>
-    </div>
-  @endscope
+    @endscope
 
-  @scope('cell_puntos', $row)
-    <div class="text-lg">{{ Number::format($row->puntos,2) }}</div>
-  @endscope
- </x-table>
+    @scope('cell_aciertos', $row)
+      <div class="text-xl">{{ $row->aciertos }}</div>
+    @endscope
+
+    @scope('cell_diferencias', $row)
+      <div class="text-xl">{{ $row->diferencias }}</div>
+    @endscope
+
+    @scope('cell_puntos', $row)
+      <div class="text-xl">{{ Number::format($row->puntos,2) }}</div>
+    @endscope
+
+    @scope('actions', $row)
+      @if (auth()->user()->isAdmin)
+        <x-button
+          wire:click='pagar({{ $row->participacion }})'
+          icon="fas.money-bill-wave"
+          class="btn-ghost btn-xs"
+          />
+      @endif
+    @endscope
+  </x-table>
 </div>
