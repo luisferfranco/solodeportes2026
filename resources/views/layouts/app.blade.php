@@ -44,7 +44,7 @@
               <div class="flex gap-1 items-center">
                 <x-button icon="lucide.power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
                 <x-button icon="lucide.settings" class="btn-circle btn-ghost btn-xs" link="/profile" />
-                <x-theme-toggle />
+                <x-theme-toggle darkTheme="darkqn" />
               </div>
             </x-slot:sub-value>
           </x-list-item>
