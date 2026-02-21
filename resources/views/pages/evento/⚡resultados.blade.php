@@ -6,11 +6,11 @@ use App\Models\Participacion;
 use App\Models\Pronostico;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-new class extends Component
-{
+new class extends Component {
   public Evento $evento;
   public $pronosticos;
   public $participacion;
@@ -24,8 +24,14 @@ new class extends Component
 
   public function mount(Evento $evento, ?Participacion $participacion = null)
   {
+    if (Gate::forUser(auth()->user())->denies('view', $evento)) {
+      $this->redirectRoute('evento.show', ['evento' => $evento]);
+      return;
+    }
+
     $this->evento = $evento;
     $this->nopar = $evento->participaciones()->where('user_id', auth()->id())->count();
+
     $this->participacion = $participacion ?? Participacion::query()
           ->where('user_id', auth()->id())
           ->where('evento_id', $this->evento->id)

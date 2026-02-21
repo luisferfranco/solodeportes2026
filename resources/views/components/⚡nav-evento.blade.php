@@ -28,6 +28,7 @@ new class extends Component
     } else {
       $this->options = [
         ['id' => '1', 'name' => 'Información'],
+        ['id' => '2', 'name' => 'Leaderboard'],
         ['id' => '5', 'name' => 'Marcadores'],
       ];
     }

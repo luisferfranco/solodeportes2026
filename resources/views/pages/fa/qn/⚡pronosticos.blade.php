@@ -2,6 +2,7 @@
 
 use App\Models\Evento;
 use App\Models\Participacion;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 new class extends Component
@@ -13,6 +14,11 @@ new class extends Component
   public $partId;
 
   public function mount(Evento $evento, Participacion $participacion = null) {
+    if (Gate::forUser(auth()->user())->denies('view', $evento)) {
+      $this->redirectRoute('evento.show', ['evento' => $evento]);
+      return;
+    }
+
     $this->evento = $evento;
     $this->participaciones = $evento->participaciones()
       ->where('user_id', auth()->id())
