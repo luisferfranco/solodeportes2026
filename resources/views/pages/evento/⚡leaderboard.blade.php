@@ -138,13 +138,13 @@ new class extends Component
             <div class="flex justify-between items-center">
               <div class="flex items-center gap-3">
                 <x-avatar
-                  :image="$row->participacion->user->avatar"
+                  :image="$row->participacion->user->avatarUrl"
                   class="h-12 w-12"
                 />
                 <div>
                   <p class="text-sm uppercase tracking-widest text-black/60">{{ $medalla['label'] }}</p>
                   <p class="text-lg font-semibold text-black">{{ $row->participacion->nombre }}</p>
-                  <p class="text-xs text-black/60">De: {{ $row->participacion->user->name }}</p>
+                  <p class="text-xs text-black/60">De: <a href="{{ route('profile', ['user' => $row->participacion->user->id]) }}" class="hover:underline hover:text-info">{{ $row->participacion->user->displayName }}</a></p>
                 </div>
               </div>
               <div>
@@ -171,7 +171,7 @@ new class extends Component
     @scope('cell_participacion_id', $row)
       <div class="flex items-center gap-2">
         <x-avatar
-          :image="$row->participacion->user->avatar"
+          :image="$row->participacion->user->avatarUrl"
           class="h-10 w-10"
           />
         <div>
@@ -180,7 +180,7 @@ new class extends Component
               {{ $row->participacion->nombre }}
             </a>
           </p>
-          <p class="text-base-content/50 text-xs">De: {{ $row->participacion->user->name }}</p>
+          <p class="text-base-content/50 text-xs">De: <a href="{{ route('profile', ['user' => $row->participacion->user->id]) }}" class="hover:underline hover:text-info">{{ $row->participacion->user->displayName }}</a></p>
         </div>
 
         @php

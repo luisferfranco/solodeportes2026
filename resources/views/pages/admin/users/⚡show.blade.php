@@ -53,7 +53,7 @@ new class extends Component
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div class="flex items-center gap-4">
         <x-avatar
-          :image="$user->avatar"
+          :image="$user->avatarUrl"
           class="h-16 w-16"
         />
         <div>

@@ -14,6 +14,7 @@ Route::get('/logout', function () {
 
 Route::middleware('auth')->group(function () {
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
+    Route::livewire('/profile/{user?}', 'pages::users.show')->name('profile');
 
     Route::livewire('/banco/{user?}', 'pages::banco.index')->name('banco');
     Route::livewire('/transaccion/{transaccion}', 'pages::banco.show')->name('banco.show');
@@ -42,6 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/fa/qn/{evento:slug}/pronosticos', 'pages::fa.qn.pronosticos')->name('fa.qn.pronosticos');
 
     // Futbol Americano - Survivor
-    Route::livewire('/fa/sr/{evento:slug}', 'pages::fb.qn.show')->name('fa.sr.show');
+    Route::livewire('/fa/sr/{evento:slug}', 'pages::fb.qn.show')->name('fa.sr.pronosticos');
 
 });

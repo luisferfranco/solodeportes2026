@@ -182,7 +182,7 @@ new class extends Component
       >
       @scope('cell_name', $row)
         <x-avatar
-          :image="$row->avatar"
+          :image="$row->avatarUrl"
           class="h-10 w-10"
           :title="$row->displayName"
           :subtitle="$row->email"

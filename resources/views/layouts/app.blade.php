@@ -36,7 +36,7 @@
           <x-list-item
             :item="$user"
             value="name"
-            avatar="avatar"
+            avatar="avatarUrl"
             class="rounded-none!"
             >
             <x-slot:sub-value>
