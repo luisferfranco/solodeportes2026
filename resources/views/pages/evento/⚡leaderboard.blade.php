@@ -20,6 +20,7 @@ new class extends Component
   public $modalPago = false;
   public ?Participacion $partPago = null;
   public $monto=0;
+  public $acumuladoBtn = false;
 
   public function mount(Evento $evento)
   {
@@ -42,9 +43,29 @@ new class extends Component
       ->get();
   }
 
+  public function getData() {
+    info($this->acumuladoBtn ? 'Acumulado' : 'Ronda');
+    if ($this->acumuladoBtn) {
+      $this->resultados = Leaderboard::where('evento_id', $this->evento->id)
+        ->where('ronda', '<=', $this->rd)
+        ->selectRaw('participacion_id, SUM(aciertos) as aciertos, SUM(diferencias) as diferencias, SUM(puntos) as puntos')
+        ->groupBy('participacion_id')
+        ->orderByDesc('puntos')
+        ->get();
+    } else {
+      $this->resultados = Leaderboard::where('evento_id', $this->evento->id)
+        ->where('ronda', $this->rd)
+        ->orderByDesc('puntos')
+        ->get();
+    }
+    info($this->resultados);
+  }
+
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
-    $this->redirectRoute('fb.qn.leaderboard', ['evento' => $this->evento, 'rd' => $ronda]);
+    $this->rd = $ronda;
+    $this->getData();
+    // $this->redirectRoute('evento.leaderboard', ['evento' => $this->evento, 'rd' => $ronda]);
   }
 
   public function pagar(Participacion $participacion) {
@@ -65,6 +86,11 @@ new class extends Component
 
     $this->modalPago = false;
   }
+
+  public function updatedAcumuladoBtn() {
+    $this->getData();
+  }
+
 };
 ?>
 
@@ -128,9 +154,16 @@ new class extends Component
     ];
   @endphp
 
+  <div class="my-6 text-xl flex items-center">
+    <div>
+      <x-toggle wire:model.live='acumuladoBtn' class="toggle-xl" />
+    </div>
+    <div class="text-xl">Mostrar Acumulado</div>
+  </div>
+
+  {{-- Medallero --}}
   @if ($topParticipaciones->isNotEmpty())
     <section class="mt-6">
-      <h3 class="text-lg font-semibold tracking-wide">Medallero</h3>
       <div class="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3">
         @foreach ($topParticipaciones as $index => $row)
           @php $medalla = $medallas[$index] ?? $medallas[2]; @endphp
