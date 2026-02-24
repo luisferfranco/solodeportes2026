@@ -22,9 +22,9 @@ class Evento extends Model
         'fecha_fin_inscripcion' => 'datetime',
     ];
 
-    public function getImagenUrlAttribute($value)
+    public function getImagenUrlAttribute()
     {
-        return $value ? asset('storage/'.$value) : '/img/evento-default.png';
+        return $this->imagen ? asset('storage/'.$this->imagen) : '/img/evento-default.png';
     }
 
     public function getRouteKeyName(): string

@@ -86,12 +86,12 @@ new class extends Component
     $this->evento->acierto = $this->acierto;
     $this->evento->diferencia = $this->diferencia;
     $this->evento->estado = $this->estado;
-    $this->evento->save();
 
     if ($this->file) {
       $path = $this->file->store('eventos', 'public');
       $this->evento->update(['imagen' => $path]);
     }
+    $this->evento->save();
 
     $this->success('Evento creado exitosamente');
 
@@ -108,21 +108,21 @@ new class extends Component
     $this->show = true;
   }
 
-  public function editarEvento(Evento $evento) {
-    $this->evento       = $evento;
-    $this->nombre       = $evento->nombre;
-    $this->slug         = $evento->slug;
-    $this->descripcion  = $evento->descripcion;
-    $this->deporte      = $evento->deporte_id;
-    $this->temporada    = $evento->temporada_id;
-    $this->tipoJuego    = $evento->tipojuego_id;
-    $this->precio       = $evento->precio;
-    $this->acierto      = $evento->acierto;
-    $this->diferencia   = $evento->diferencia;
-    $this->estado       = $evento->estado;
+  public function editarEvento($evento) {
+    $this->evento       = Evento::find($evento);
+    $this->nombre       = $this->evento->nombre;
+    $this->slug         = $this->evento->slug;
+    $this->descripcion  = $this->evento->descripcion;
+    $this->deporte      = $this->evento->deporte_id;
+    $this->temporada    = $this->evento->temporada_id;
+    $this->tipoJuego    = $this->evento->tipojuego_id;
+    $this->precio       = $this->evento->precio;
+    $this->acierto      = $this->evento->acierto;
+    $this->diferencia   = $this->evento->diferencia;
+    $this->estado       = $this->evento->estado;
 
     // Trigger the update of temporadas based on the selected deporte
-    $this->updatedDeporte($evento->deporte_id);
+    $this->updatedDeporte($this->evento->deporte_id);
 
     $this->show = true;
   }
@@ -305,7 +305,7 @@ new class extends Component
         <x-button
           icon="lucide.edit"
           class="btn-ghost btn-xs"
-          wire:click='editarEvento({{ $e }})'
+          wire:click='editarEvento({{ $e->id }})'
           />
       </div>
     @endscope
