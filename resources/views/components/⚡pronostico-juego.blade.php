@@ -21,7 +21,7 @@ new class extends Component
       ->where('participacion_id', $participacion->id)
       ->value('diferencia');
 
-    info('Inicial Pronostico para juego #' . $juego->id . ' y participacion #' . $participacion->id . ': ' . $this->prono);
+    // info('Inicial Pronostico para juego #' . $juego->id . ' y participacion #' . $participacion->id . ': ' . $this->prono);
 
     $this->valido = Gate::allows('pronosticar', $this->juego);
   }
