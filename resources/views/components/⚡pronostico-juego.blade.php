@@ -46,15 +46,15 @@ new class extends Component
   <div class="px-2 py-1 flex items-center justify-between gap-2 my-4">
     <div class="w-1/4">
       <div class="flex justify-center">
-        <p class="text-center"><img src="{{ $juego->homeTeam->logo }}" class="h-18 w-18"></p>
+        <p class="text-center"><img src="{{ $juego->homeTeam->logo }}" class="lg:h-18 lg:w-18 h-8 w-8"></p>
       </div>
-      <p class="text-center">{{ $juego->homeTeam->nombre }}</p>
+      <p class="text-center text-xs md:text-base">{{ $juego->homeTeam->nombre }}</p>
     </div>
-    <div class="flex items-center justify-center gap-2 grow">
+    <div class="flex items-center justify-center grow">
       @for ($i = -2; $i <= 2; $i++)
         <x-button
           label=" {{ abs($i) }} "
-          class="h-10 w-10 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
+          class="h-8 w-8 lg:h-12 lg:w-12 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
           wire:click='pronostica({{ $i }})'
           spinner
           />
@@ -62,9 +62,9 @@ new class extends Component
     </div>
     <div class="w-1/4">
       <div class="flex justify-center">
-        <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="h-18 w-18"></p>
+        <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="lg:h-18 lg:w-18 h-8 w-8"></p>
       </div>
-      <p class="text-center">{{ $juego->awayTeam->nombre }}</p>
+      <p class="text-center text-xs md:text-base">{{ $juego->awayTeam->nombre }}</p>
     </div>
   </div>
 </div>
