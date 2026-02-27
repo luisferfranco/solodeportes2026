@@ -23,7 +23,6 @@ new class extends Component
 
   #[On('participacion-comprada')]
   public function actualizarParticipaciones($eventoId) {
-    info("participacion-comprada - evento: " . $eventoId);
     if ($this->evento->id != $eventoId) {
       return;
     }

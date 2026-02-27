@@ -44,7 +44,6 @@ new class extends Component
   }
 
   public function getData() {
-    info($this->acumuladoBtn ? 'Acumulado' : 'Ronda');
     if ($this->acumuladoBtn) {
       $this->resultados = Leaderboard::where('evento_id', $this->evento->id)
         ->where('ronda', '<=', $this->rd)
@@ -58,7 +57,6 @@ new class extends Component
         ->orderByDesc('puntos')
         ->get();
     }
-    info($this->resultados);
   }
 
   #[On('ronda-seleccionada')]
