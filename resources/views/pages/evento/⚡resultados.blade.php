@@ -68,13 +68,11 @@ new class extends Component {
 
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
-    info($ronda);
     $this->redirectRoute('fb.qn.resultados', ['evento' => $this->evento, 'rd' => $ronda]);
   }
 
   #[On('participacion-seleccionada')]
   public function actualizarParticipacion($partId) {
-    info($partId);
     $this->redirectRoute('fb.qn.resultados', ['evento' => $this->evento, 'p' => $partId, 'rd' => $this->rd]);
   }
 

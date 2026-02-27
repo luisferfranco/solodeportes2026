@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/', 'pages::users.index');
 
 Route::livewire('/register', 'pages::auth.register')->name('register');
 Route::livewire('/login', 'pages::auth.login')->name('login');
@@ -13,6 +12,7 @@ Route::get('/logout', function () {
 })->name('logout');
 
 Route::middleware('auth')->group(function () {
+    Route::livewire('/', 'pages::dashboard')->name('home');
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
     Route::livewire('/profile/{user?}', 'pages::users.show')->name('profile');
 
