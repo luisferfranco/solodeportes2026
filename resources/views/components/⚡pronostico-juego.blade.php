@@ -57,7 +57,7 @@ new class extends Component
       @for ($i = -2; $i <= 2; $i++)
         <x-button
           label=" {{ abs($i) }} "
-          class="h-8 w-8 lg:h-12 lg:w-12 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
+          class="h-8 w-8 lg:h-12 lg:w-12 rounded {{ $prono == $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
           wire:click='pronostica({{ $i }})'
           spinner
           />
