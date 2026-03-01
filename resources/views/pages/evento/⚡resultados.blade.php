@@ -68,12 +68,12 @@ new class extends Component {
 
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
-    $this->redirectRoute('fb.qn.resultados', ['evento' => $this->evento, 'rd' => $ronda]);
+    $this->redirectRoute('evento.resultados', ['evento' => $this->evento, 'rd' => $ronda]);
   }
 
   #[On('participacion-seleccionada')]
   public function actualizarParticipacion($partId) {
-    $this->redirectRoute('fb.qn.resultados', ['evento' => $this->evento, 'p' => $partId, 'rd' => $this->rd]);
+    $this->redirectRoute('evento.resultados', ['evento' => $this->evento, 'p' => $partId, 'rd' => $this->rd]);
   }
 
   #[On('marcadores-cargados')]
@@ -94,7 +94,7 @@ new class extends Component {
 
   <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
 
-  <div class="flex justify-end items-center mt-4 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 mt-4 gap-2">
     <x-stat
       title="Aciertos"
       value="{{ $resSum }}"
