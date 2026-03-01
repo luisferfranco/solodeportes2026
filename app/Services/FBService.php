@@ -15,6 +15,7 @@ class FBService
       ->get();
 
     // Resetear todas las calificaciones de la ronda
+    info('Reseteando calificaciones de la ronda ' . $ronda);
     foreach ($temporada->eventos as $evento) {
       Leaderboard::where('ronda', $ronda)
         ->where('evento_id', $evento->id)
@@ -65,25 +66,26 @@ class FBService
 
     foreach ($temporada->eventos as $evento) {
       foreach ($evento->participaciones as $participacion) {
-        $result = $participacion->pronosticos()
-            ->whereHas('juego', function ($query) use ($ronda) {
-              $query->where('ronda', $ronda);
-            })
-            ->selectRaw('SUM(res) as sumres, SUM(dif) as sumdif')
-            ->first();
+      $result = $participacion->pronosticos()
+        ->whereHas('juego', function ($query) use ($ronda) {
+          $query->where('ronda', $ronda)
+          ->where('status', 'Match Finished');
+        })
+        ->selectRaw('SUM(res) as sumres, SUM(dif) as sumdif')
+        ->first();
 
-        Leaderboard::updateOrCreate(
-          [
-            'participacion_id' => $participacion->id,
-            'ronda' => $ronda,
-            'evento_id' => $evento->id
-          ],
-          [
-            'aciertos' => $result->sumres ?? 0,
-            'diferencias' => $result->sumdif ?? 0,
-            'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
-          ]
-        );
+      Leaderboard::updateOrCreate(
+        [
+        'participacion_id' => $participacion->id,
+        'ronda' => $ronda,
+        'evento_id' => $evento->id
+        ],
+        [
+        'aciertos' => $result->sumres ?? 0,
+        'diferencias' => $result->sumdif ?? 0,
+        'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
+        ]
+      );
       }
     }
 
