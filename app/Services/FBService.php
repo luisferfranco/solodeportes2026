@@ -14,6 +14,13 @@ class FBService
       ->where('ronda', $ronda)
       ->get();
 
+    // Resetear todas las calificaciones de la ronda
+    foreach ($temporada->eventos as $evento) {
+      Leaderboard::where('ronda', $ronda)
+        ->where('evento_id', $evento->id)
+        ->delete();
+    }
+
     // Debería calificar todos los juegos para todos los pronósticos,
     // independientemente de si está en uno u otro evento.
     foreach ($juegos as $juego) {
