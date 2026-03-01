@@ -18,6 +18,10 @@ class FBService
     // independientemente de si está en uno u otro evento.
     foreach ($juegos as $juego) {
 
+      if ($juego->status != 'Match Finished') {
+        continue;
+      }
+
       $dif = $juego->home_score - $juego->away_score;
       if ($temporada->deporte_id == "FA") {
         // Para el futbol americano se recalculan las diferencias
