@@ -52,12 +52,12 @@ new class extends Component
 };
 ?>
 
-<div class="flex flex-col md:flex-row items-end w-full gap-2">
-  <div class="grow w-full md:w-auto">
+<div>
+  <div class="w-full md:w-auto">
     <x-select
       wire:model.live='ronda'
       label="Selecciona la ronda"
-      class="w-full outline-none! text-xl select-xl"
+      class="w-full outline-none! text-xl select-xl mb-4"
       :options="$options"
       placeholder="Selecciona la ronda"
       option-label="name"
@@ -65,7 +65,7 @@ new class extends Component
       />
   </div>
   @if (auth()->user()->isAdmin)
-    <div class="w-full md:w-auto flex justify-between gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 w-full md:w-auto">
       <x-button
         icon="fas.play"
         class="btn-primary btn-xl"

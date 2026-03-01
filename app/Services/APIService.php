@@ -79,6 +79,9 @@ class APIService
       $home_id = Equipo::where('api_id', $game['idHomeTeam'])->first();
       $away_id = Equipo::where('api_id', $game['idAwayTeam'])->first();
 
+      $valido = $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00');
+      $valido = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $valido, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+
       $gameData = [
         'id'            => $game['idEvent'],
         'deporte_id'    => $temporada->deporte_id,
@@ -86,11 +89,11 @@ class APIService
         'home_id'       => $home_id->id ?? null,
         'away_id'       => $away_id->id ?? null,
         'ronda'         => $game['intRound'] ?? null,
-        'valido_hasta'  => $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00'),
+        'valido_hasta'  => $valido,
         'status'        => $game['strStatus'] ?? null,
       ];
 
-      info("({$temporada->id}/{$gameData['ronda']}) {$home_id->nombre} vs {$away_id->nombre}");
+      info("({$temporada->id}/{$gameData['ronda']}) {$home_id->nombre} vs {$away_id->nombre} [{$gameData['valido_hasta']}]");
 
       Juego::updateOrCreate(
         ['id' => $gameData['id']],
@@ -110,8 +113,8 @@ class APIService
       ->selectRaw('MIN(valido_hasta) as min_date, MAX(valido_hasta) as max_date')
       ->first();
 
-    $min = $dateRange?->min_date;
-    $max = $dateRange?->max_date;
+    $min = $dateRange?->min_date ? \Carbon\Carbon::parse($dateRange->min_date)->format('Y-m-d') . ' 00:00:00' : null;
+    $max = $dateRange?->max_date ? \Carbon\Carbon::parse($dateRange->max_date)->format('Y-m-d') . ' 23:59:59' : null;
 
     $response = Http::withHeaders([
       'X_API_KEY' => $apikey
@@ -129,9 +132,11 @@ class APIService
       $minDateTime = \Carbon\Carbon::parse($min);
       $maxDateTime = \Carbon\Carbon::parse($max);
 
-      if ($gameDateTime->lt($minDateTime) || $gameDateTime->gt($maxDateTime)) {
+      info($game['idEvent']);
+      if ($gameDateTime->lte($minDateTime) || $gameDateTime->gte($maxDateTime)) {
         continue;
       }
+      info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
 
 
       $juego = Juego::find($game['idEvent']);
