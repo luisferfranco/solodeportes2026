@@ -56,7 +56,7 @@ new class extends Component
 <div>
   <x-title title="{{ $evento->nombre }}" subtitle="Marcadores" />
 
-  <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="4" />
+  <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="5" />
 
   <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
 
