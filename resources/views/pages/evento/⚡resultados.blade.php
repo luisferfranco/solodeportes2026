@@ -123,7 +123,7 @@ new class extends Component {
     @scope('cell_juegos', $row)
       <div class="flex flex-col space-y-2">
         <div>
-          <span class="text-xs text-base-content/50">{{ $row->valido_hasta->format('d M Y, H:i') }}</span>
+          <span class="text-xs text-base-content/50">{{ $row->valido_hasta->format('d M Y, H:i') }}</span> <x-badge class='badge-info badge-xs' value="{{ $row->status }}" />
         </div>
         <div class="flex items-center gap-2">
           <img src="{{ $row->homeTeam->logo }}" alt="{{ $row->homeTeam->nombre }}" class="w-6 h-6">
