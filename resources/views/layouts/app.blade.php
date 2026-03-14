@@ -55,14 +55,17 @@
         <livewire:menu-item-notification />
         <x-menu-item title="Tienda" icon="lucide.store" link="{{ route('tienda') }}" />
 
-        <x-menu-separator />
+        @if ($user && $user->is_admin)
+          <x-menu-separator />
 
-        <x-menu-sub title="Admin" icon="lucide.shield-user">
-          <x-menu-item title="Usuarios" icon="lucide.users" link="{{ route('admin.users.index') }}" />
-          <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
-          <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
-          <x-menu-item title="Eventos" icon="lucide.trophy" link="{{ route('admin.eventos.index') }}" />
-        </x-menu-sub>
+          <x-menu-sub title="Admin" icon="lucide.shield-user">
+            <x-menu-item title="Usuarios" icon="lucide.users" link="{{ route('admin.users.index') }}" />
+            <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
+            <x-menu-item title="Temporadas" icon="lucide.calendar" link="{{ route('admin.temporadas.index') }}" />
+            <x-menu-item title="Eventos" icon="lucide.trophy" link="{{ route('admin.eventos.index') }}" />
+            <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('admin.banco') }}" />
+          </x-menu-sub>
+        @endif
       </x-menu>
     </x-slot:sidebar>
 

@@ -16,6 +16,8 @@ new class extends Component
   public $file;
 
   public function mount(Transaccion $transaccion) {
+    $this->authorize('view', $transaccion);
+
     $this->transaccion = $transaccion;
     $this->notas = $transaccion->notas;
   }

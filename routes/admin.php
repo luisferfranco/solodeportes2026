@@ -14,3 +14,5 @@ Route::livewire('eventos/{evento:slug}', 'pages::admin.eventos.show')->name('eve
 
 Route::livewire('users', 'pages::admin.users.index')->name('users.index');
 Route::livewire('users/{user}', 'pages::admin.users.show')->name('users.show');
+
+Route::livewire('banco', 'pages::admin.banco')->name('banco');

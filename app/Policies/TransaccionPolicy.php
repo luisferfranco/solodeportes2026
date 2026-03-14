@@ -30,7 +30,7 @@ class TransaccionPolicy
      */
     public function view(User $user, Transaccion $transaccion): bool
     {
-        return false;
+        return $user->is_admin || $transaccion->user_id == $user->id;
     }
 
     /**
