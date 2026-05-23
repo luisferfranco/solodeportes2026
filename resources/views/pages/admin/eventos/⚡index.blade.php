@@ -30,6 +30,9 @@ new class extends Component
   public $diferencia=0.5;
   public $file;
   public $estado="pendiente";
+  public $codigo;
+  public $cupos;
+  public $boleto_maximo;
 
   public function mount() {
     $this->eventos = Evento::orderBy('created_at')
@@ -64,16 +67,18 @@ new class extends Component
 
   public function save() {
     $this->validate([
-      'nombre'      => 'required|string|max:255',
-      'slug'        => ['nullable','string','max:255','unique:eventos,slug,'.$this->evento->id],
-      'descripcion' => 'required|string',
-      'deporte'     => 'required|exists:deportes,id',
-      'temporada'   => 'required|exists:temporadas,id',
-      'tipoJuego'   => 'required|exists:tipo_juegos,id',
-      'precio'      => 'required|numeric|min:0',
-      'acierto'     => 'required|integer|min:0',
-      'diferencia'  => 'required|numeric|min:0',
-      'file'        => 'nullable|image|max:2048', // Max 2MB
+      'nombre'        => 'required|string|max:255',
+      'slug'          => ['nullable','string','max:255','unique:eventos,slug,'.$this->evento->id],
+      'descripcion'   => 'required|string',
+      'deporte'       => 'required|exists:deportes,id',
+      'temporada'     => 'required|exists:temporadas,id',
+      'tipoJuego'     => 'required|exists:tipo_juegos,id',
+      'precio'        => 'required|numeric|min:0',
+      'acierto'       => 'required|integer|min:0',
+      'cupos'         => 'nullable|integer|min:0',
+      'file'          => 'nullable|image|max:2048', // Max 2MB
+      'diferencia'    => 'required|numeric|min:0',
+      'boleto_maximo' => 'nullable|integer|min:0',
     ]);
 
     $this->evento->nombre = $this->nombre;
@@ -86,6 +91,9 @@ new class extends Component
     $this->evento->acierto = $this->acierto;
     $this->evento->diferencia = $this->diferencia;
     $this->evento->estado = $this->estado;
+    $this->evento->codigo = $this->codigo;
+    $this->evento->cupos = $this->cupos;
+    $this->evento->boleto_maximo = $this->boleto_maximo;
 
     if ($this->file) {
       $path = $this->file->store('eventos', 'public');
@@ -95,7 +103,7 @@ new class extends Component
 
     $this->success('Evento creado exitosamente');
 
-    $this->reset(['nombre', 'descripcion', 'deporte', 'temporada', 'tipoJuego', 'precio', 'acierto', 'diferencia', 'file']);
+    $this->reset(['nombre', 'descripcion', 'deporte', 'temporada', 'tipoJuego', 'precio', 'acierto', 'diferencia', 'file', 'codigo', 'cupos', 'boleto_maximo']);
 
     $this->show = false;
     $this->mount(); // Refresh the eventos list
@@ -136,136 +144,157 @@ new class extends Component
 ?>
 
 <div>
-  <x-modal wire:model='show' class="backdrop-blur">
-    <x-card title="{{ $evento->exists ? 'Editar Evento' : 'Crear Evento' }}" class="w-full max-w-lg">
-      <x-form wire:submit='save'>
+  <x-modal wire:model='show' class="backdrop-blur w-full" box-class="w-full max-w-5xl">
+    <h1 class="text-2xl">{{ $evento->exists ? 'Editar Evento' : 'Crear Evento' }}</h1>
+
+    <x-form wire:submit='save'>
+      <x-input
+        wire:model='nombre'
+        label="Nombre del Evento"
+        placeholder="Nombre del Evento"
+        class="outline-none!"
+        required
+        inline
+        />
+      <x-input
+        wire:model='slug'
+        label="Slug (URL amigable)"
+        placeholder="slug-del-evento"
+        class="outline-none!"
+        inline
+        />
+      <x-textarea
+        wire:model='descripcion'
+        label="Descripción del Evento"
+        placeholder="Descripción del Evento"
+        class="outline-none!"
+        required
+        inline
+        />
+      <div class="grid grid-cols-2 gap-2 gap-y-4">
+        <x-select
+          wire:model.live='deporte'
+          :options="$deportes"
+          option-label="nombre"
+          option-value="id"
+          label="Deporte"
+          placeholder="Selecciona un deporte"
+          class="outline-none!"
+          required
+          inline
+          />
+
+        <x-select
+          wire:model.live='temporada'
+          :options="$temporadas"
+          option-label="nombre"
+          option-value="id"
+          label="Temporada"
+          placeholder="Temporada del Evento"
+          class="outline-none!"
+          :disabled="$temporadas->isEmpty()"
+          required
+          inline
+          />
+
+        <x-select
+          wire:model.live='tipoJuego'
+          :options="$tiposJuego"
+          option-label="nombre"
+          option-value="id"
+          label="Tipo de Juego"
+          placeholder="Selecciona un tipo de juego"
+          class="outline-none!"
+          required
+          inline
+          />
+
         <x-input
-          wire:model='nombre'
-          label="Nombre del Evento"
-          placeholder="Nombre del Evento"
+          wire:model='precio'
+          label="Precio del Evento"
+          placeholder="Precio del Evento"
           class="outline-none!"
           required
           inline
           />
         <x-input
-          wire:model='slug'
-          label="Slug (URL amigable)"
-          placeholder="slug-del-evento"
+          wire:model='acierto'
+          label="Puntos por Acierto"
+          placeholder="Puntos por Acierto"
           class="outline-none!"
           inline
           />
-        <x-textarea
-          wire:model='descripcion'
-          label="Descripción del Evento"
-          placeholder="Descripción del Evento"
+        <x-input
+          wire:model='diferencia'
+          label="Puntos por Diferencia"
+          placeholder="Puntos por Diferencia"
           class="outline-none!"
-          required
           inline
           />
-        <div class="grid grid-cols-2 gap-2">
-          <x-select
-            wire:model.live='deporte'
-            :options="$deportes"
-            option-label="nombre"
-            option-value="id"
-            label="Deporte"
-            placeholder="Selecciona un deporte"
-            class="outline-none!"
-            required
-            inline
-            />
-
-          <x-select
-            wire:model.live='temporada'
-            :options="$temporadas"
-            option-label="nombre"
-            option-value="id"
-            label="Temporada"
-            placeholder="Temporada del Evento"
-            class="outline-none!"
-            :disabled="$temporadas->isEmpty()"
-            required
-            inline
-            />
-
-          <x-select
-            wire:model.live='tipoJuego'
-            :options="$tiposJuego"
-            option-label="nombre"
-            option-value="id"
-            label="Tipo de Juego"
-            placeholder="Selecciona un tipo de juego"
-            class="outline-none!"
-            required
-            inline
-            />
-
+        <div class="col-span-2">
           <x-input
-            wire:model='precio'
-            label="Precio del Evento"
-            placeholder="Precio del Evento"
-            class="outline-none!"
-            type="number"
-            required
-            inline
-            />
-          <x-input
-            wire:model='acierto'
-            label="Puntos por Acierto"
-            placeholder="Puntos por Acierto"
-            class="outline-none!"
-            type="number"
-            inline
-            />
-          <x-input
-            wire:model='diferencia'
-            label="Puntos por Diferencia"
-            placeholder="Puntos por Diferencia"
+            wire:model='codigo'
+            label="Código del Evento"
+            placeholder="Código del Evento"
             class="outline-none!"
             inline
             />
-
-          @if ($evento->exists)
-            <x-select
-              wire:model.live='estado'
-              :options="\App\Enums\EventoStatus::options()"
-              label="Estado del Evento"
-              placeholder="Selecciona un estado"
-              class="outline-none!"
-              required
-              inline
-              />
-          @endif
         </div>
-
-        <x-file
-          wire:model='file'
-          label="Imagen del Evento"
-          placeholder="Imagen del Evento"
+        <x-input
+          wire:model='cupos'
+          label="Cupos del Evento"
+          placeholder="Cupos del Evento"
+          class="outline-none!"
+          inline
+          />
+        <x-input
+          wire:model='boleto_maximo'
+          label="Máximo de Boletos por Usuario"
+          placeholder="Máximo de Boletos por Usuario"
           class="outline-none!"
           inline
           />
 
-        <div>
-          @if ($evento->exists)
-            <x-button
-              label="Actualizar Evento"
-              icon="fas.check-circle"
-              class="btn-primary mt-4"
-              type="submit"
-              />
-          @else
-            <x-button
-              label="Crear Evento"
-              icon="fas.check-circle"
-              class="btn-primary mt-4"
-              type="submit"
-              />
-          @endif
-        </div>
+        @if ($evento->exists)
+          <x-select
+            wire:model.live='estado'
+            :options="\App\Enums\EventoStatus::options()"
+            label="Estado del Evento"
+            placeholder="Selecciona un estado"
+            class="outline-none!"
+            required
+            inline
+            />
+        @endif
+      </div>
 
-      </x-form>
-    </x-card>
+      <x-file
+        wire:model='file'
+        label="Imagen del Evento"
+        placeholder="Imagen del Evento"
+        class="outline-none!"
+        inline
+        />
+
+      <div>
+        @if ($evento->exists)
+          <x-button
+            label="Actualizar Evento"
+            icon="fas.check-circle"
+            class="btn-primary mt-4"
+            type="submit"
+            />
+        @else
+          <x-button
+            label="Crear Evento"
+            icon="fas.check-circle"
+            class="btn-primary mt-4"
+            type="submit"
+            />
+        @endif
+      </div>
+
+    </x-form>
   </x-modal>
 
   <x-title title="Eventos" />

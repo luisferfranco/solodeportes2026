@@ -8,12 +8,13 @@ use Illuminate\Support\Str;
 
 class Evento extends Model
 {
-    protected $fillable = [
-        'tipojuego_id', 'nombre', 'descripcion', 'temporada_id',
-        'imagen', 'precio', 'deporte_id', 'aceirto', 'inicia_survivor',
-        'diferencia', 'reglas', 'estado', 'ronda_inicial', 'slug',
-        'created_at', 'updated_at', 'fecha_limite', 'fecha_inicio_inscripcion', 'fecha_fin_inscripcion',
-    ];
+  protected $guarded = [];
+    // protected $fillable = [
+    //     'tipojuego_id', 'nombre', 'descripcion', 'temporada_id',
+    //     'imagen', 'precio', 'deporte_id', 'aceirto', 'inicia_survivor',
+    //     'diferencia', 'reglas', 'estado', 'ronda_inicial', 'slug',
+    //     'created_at', 'updated_at', 'fecha_limite', 'fecha_inicio_inscripcion', 'fecha_fin_inscripcion',
+    // ];
 
     protected $casts = [
         'estado' => EventoStatus::class,
