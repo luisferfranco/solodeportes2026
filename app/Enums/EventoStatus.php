@@ -9,6 +9,7 @@ enum EventoStatus: string
   case ACTIVO     = 'activo';     // Recibiendo inscripciones
   case INACTIVO   = 'inactivo';   // Suspendido, no recibe inscripciones
   case ENCURSO    = 'encurso';    // Comenzado, no recibe inscripciones
+  case INICIADO   = 'iniciado';   // Iniciado, no recibe inscripciones
   case PENDIENTE  = 'pendiente';  // Por publicarse, no recibe inscripciones
   case FINALIZADO = 'finalizado'; // Terminado, no recibe inscripciones
   case ARCHIVADO  = 'archivado';  // Archivado, no recibe inscripciones
@@ -20,6 +21,7 @@ enum EventoStatus: string
       self::ACTIVO     => 'Activo',
       self::INACTIVO   => 'Inactivo',
       self::ENCURSO    => 'En Curso',
+      self::INICIADO   => 'Iniciado',
       self::PENDIENTE  => 'Proximamente',
       self::FINALIZADO => 'Finalizado',
       self::ARCHIVADO  => 'Archivado',
@@ -33,6 +35,7 @@ enum EventoStatus: string
       self::ACTIVO     => 'success',
       self::INACTIVO   => 'error',
       self::ENCURSO    => 'success',
+      self::INICIADO   => 'success',
       self::PENDIENTE  => 'warning',
       self::FINALIZADO => 'info',
       self::ARCHIVADO  => 'accent',
