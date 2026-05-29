@@ -9,6 +9,7 @@ new class extends Component
   public function mount() {
     $this->eventos = \App\Models\Evento::with('temporada.deporte')
       ->whereIn('estado', ['activo', 'pendiente'])
+      ->where('ocultar', false)
       ->orderBy('created_at', 'desc')
       ->get();
   }
