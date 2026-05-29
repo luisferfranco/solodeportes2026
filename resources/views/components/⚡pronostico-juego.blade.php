@@ -53,16 +53,26 @@ new class extends Component
       </div>
       <p class="text-center text-xs md:text-base">{{ $juego->homeTeam->nombre }}</p>
     </div>
-    <div class="flex items-center justify-center grow gap-1 lg:gap-2">
-      @for ($i = -2; $i <= 2; $i++)
-        <x-button
-          label=" {{ abs($i) }} "
-          class="h-8 w-8 lg:h-14 lg:w-14 rounded {{ $prono == $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
-          wire:click='pronostica({{ $i }})'
-          spinner
-          />
-      @endfor
+
+    <div>
+      @if ($prono === null)
+        <div class="py-1 px-2 bg-warning text-warning-content rounded mb-2">
+          <p class="font-bold text-sm tracking-widest">ATENCIÓN</p>
+          <p class="text-xs text-warning-content/75">Este partido aún no se ha pronosticado</p>
+        </div>
+      @endif
+      <div class="flex items-center justify-center grow gap-1 lg:gap-2">
+        @for ($i = -2; $i <= 2; $i++)
+          <x-button
+            label=" {{ abs($i) }} "
+            class="h-8 w-8 lg:h-14 lg:w-14 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
+            wire:click='pronostica({{ $i }})'
+            spinner
+            />
+        @endfor
+      </div>
     </div>
+
     <div class="w-1/4">
       <div class="flex justify-center">
         <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="lg:h-18 lg:w-18 h-8 w-8"></p>
