@@ -40,11 +40,10 @@ new class extends Component
     $this->evento = new Evento();
 
     $this->headers = [
-      ['key' => 'id', 'label' => 'Id', 'class' => 'w-8'],
-      ['key' => 'tipojuego_id', 'label' => 'TJ', 'class' => 'w-8'],
-      ['key' => 'nombre', 'label' => 'Nombre'],
-      ['key' => 'estado', 'label' => 'Estado'],
-      ['key' => 'temporada_id', 'label' => 'Temporada'],
+      ['key' => 'id',           'label' => 'Id', 'class' => 'w-8'],
+      ['key' => 'nombre',       'label' => 'Nombre'],
+      ['key' => 'estado',       'label' => 'Estado'],
+      ['key' => 'admin',        'label' => 'Administrador'],
     ];
 
     $this->tiposJuego = TipoJuego::orderBy('nombre')->get();
@@ -308,25 +307,29 @@ new class extends Component
 
   <x-table :headers="$headers" :rows="$eventos">
     @scope('cell_tipojuego_id', $e)
-      <x-badge :value="$e->tipoJuego->nombre" class="badge-neutral badge-sm" />
     @endscope
 
     @scope('cell_nombre', $e)
-      <a
-        href="{{ route('admin.eventos.show', $e) }}"
-        class="flex gap-1 items-baseline text-info hover:underline"
-        >
-        <x-icon name="{{ $e->deporte->icono }}" class="h-4 w-4 text-base-content/50" />
-        <span>{{ $e->nombre }}</span>
-      </a>
+      <div class="mb-2"><x-badge :value="$e->tipoJuego->nombre" class="badge-neutral badge-sm" /></div>
+      <div>
+        <a
+          wire:navigate
+          href="{{ route('admin.eventos.show', $e) }}"
+          class="flex gap-1 items-baseline text-info hover:underline"
+          >
+          <x-icon name="{{ $e->deporte->icono }}" class="h-4 w-4 text-base-content/50" />
+          <span>{{ $e->nombre }}</span>
+        </a>
+      </div>
+      <div>Temporada <span class="font-bold">{{ $e->temporada->temporada }}</span></div>
     @endscope
 
     @scope('cell_estado', $e)
       <livewire:estado-evento-select :evento="$e" key="evid-{{ $e->id }}" />
     @endscope
 
-    @scope('cell_temporada_id', $e)
-      <span>{{ $e->temporada->temporada }}</span>
+    @scope('cell_admin', $e)
+      <livewire:administrador-evento-select :evento="$e" key="evadm-{{ $e->id }}" />
     @endscope
 
     @scope('actions', $e)

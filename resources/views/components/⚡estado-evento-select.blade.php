@@ -29,6 +29,6 @@ new class extends Component
   :options="\App\Enums\EventoStatus::options()"
   option-label="name"
   option-value="id"
-  class="outline-none! w-full p-0 border-0 text-center"
+  class="outline-none! w-full"
   placeholder="Seleccionar estado"
   />

@@ -12,86 +12,90 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+  /** @use HasFactory<\Database\Factories\UserFactory> */
+  use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'clabe',
-        'nivel',
-        'nick',
-        'equipo_id',
-        'avatar',
-        'is_active',
-        'razon',
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var list<string>
+   */
+  protected $fillable = [
+    'name',
+    'email',
+    'password',
+    'clabe',
+    'nivel',
+    'nick',
+    'equipo_id',
+    'avatar',
+    'is_active',
+    'razon',
+  ];
+
+  /**
+   * The attributes that should be hidden for serialization.
+   *
+   * @var list<string>
+   */
+  protected $hidden = [
+    'password',
+    'remember_token',
+  ];
+
+  /**
+   * Get the attributes that should be cast.
+   *
+   * @return array<string, string>
+   */
+  protected function casts(): array
+  {
+    return [
+      'email_verified_at' => 'datetime',
+      'password' => 'hashed',
     ];
+  }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+  public function getDisplayNameAttribute(): string {
+    return $this->nick ?: $this->name;
+  }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+  public function getAvatarUrlAttribute(): string {
+    return $this->avatar ? asset($this->avatar) : "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
+  }
 
-    public function getDisplayNameAttribute(): string {
-        return $this->nick ?: $this->name;
-    }
+  public function getSaldoAttribute(): float {
+    return Transaccion::where('user_id', $this->id)
+      ->where('estado', 'aprobada')
+      ->sum('monto');
+  }
 
-    public function getAvatarUrlAttribute(): string {
-        return $this->avatar ? asset("storage/{$this->avatar}") : "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
-    }
+  public function getIsAdminAttribute(): bool {
+    return $this->nivel > 1;
+  }
 
-    public function getSaldoAttribute(): float {
-        return Transaccion::where('user_id', $this->id)
-          ->where('estado', 'aprobada')
-          ->sum('monto');
-    }
+  //! RELACIONES
+  public function transacciones() {
+    return $this->hasMany(Transaccion::class);
+  }
 
-    public function getIsAdminAttribute(): bool {
-        return $this->nivel > 1;
-    }
+  public function participaciones() {
+    return $this->hasMany(Participacion::class);
+  }
 
-    //! RELACIONES
-    public function transacciones() {
-        return $this->hasMany(Transaccion::class);
-    }
+  public function eventos() {
+    return $this->hasManyThrough(
+      Evento::class,
+      Participacion::class,
+      'user_id',      // Foreign key on Participacion table...
+      'id',           // Foreign key on Evento table...
+      'id',           // Local key on User table...
+      'evento_id'     // Local key on Participacion table...
+      )->distinct();
+  }
 
-    public function participaciones() {
-        return $this->hasMany(Participacion::class);
-    }
-
-    public function eventos() {
-        return $this->hasManyThrough(
-            Evento::class,
-            Participacion::class,
-            'user_id',      // Foreign key on Participacion table...
-            'id',           // Foreign key on Evento table...
-            'id',           // Local key on User table...
-            'evento_id'     // Local key on Participacion table...
-          )->distinct();
-    }
+  public function eventosAdministrados() {
+    return $this->belongsToMany(Evento::class, 'administradores_eventos');
+  }
 
 }
