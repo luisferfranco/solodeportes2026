@@ -69,9 +69,11 @@ class User extends Authenticatable
       ->where('estado', 'aprobada')
       ->sum('monto');
   }
-
   public function getIsAdminAttribute(): bool {
     return $this->nivel > 1;
+  }
+  public function getAdministradorEventosAttribute() {
+    return $this->eventosAdministrados->count() > 0;
   }
 
   //! RELACIONES
