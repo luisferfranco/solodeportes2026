@@ -18,7 +18,6 @@ new class extends Component
     $this->deportes = Deporte::orderBy('nombre')->get();
     $this->headers = [
       ['key' => 'id', 'label' => 'ID', 'class'=>"w-5"],
-      ['key' => 'apikey', 'label' => 'API Key', 'class'=>"w-10"],
       ['key' => 'nombre', 'label' => 'Nombre'],
     ];
   }
@@ -26,7 +25,6 @@ new class extends Component
   public function save() {
     $data = $this->validate([
       'depoid'      => 'required|string|unique:deportes,id',
-      'apikey'      => 'required|string|unique:deportes,apikey',
       'nombre'      => 'required|string',
       'descripcion' => 'nullable|string',
       'icono'       => 'nullable|string',
@@ -53,7 +51,6 @@ new class extends Component
     <x-card>
       <x-form wire:submit='save'>
         <x-input class="outline-none!" label="ID" wire:model="depoid" />
-        <x-input class="outline-none!" label="API Key" wire:model="apikey" />
         <x-input class="outline-none!" label="Nombre" wire:model="nombre" />
         <x-input class="outline-none!" label="Descripción" wire:model="descripcion" />
         <x-input class="outline-none!" label="Icono (fontawesome)" wire:model="icono" />
@@ -65,28 +62,34 @@ new class extends Component
 
 
 
-  <x-title title="Admin - Deportes" />
-
-  <x-button
-    label="Agregar Deporte"
-    class="btn-primary mb-4"
-    icon="lucide.plus"
-    wire:click="$set('open', true)"
+  <x-title
+    title="Admin::Deportes"
+    subtitile="Gestiona los deportes disponibles en la plataforma"
+    icon="lucide.medal"
     />
 
-  <x-table
-    :headers="$headers"
-    :rows="$deportes"
-    >
-    @scope("cell_nombre", $r)
-      <div class="flex gap-1 items-center">
-        <x-icon :name="$r->icono" class="w-6 h-6 mr-1" />
-        <div>
-          <p>{{ $r->nombre }}</p>
-          <p class="text-sm text-gray-500">{{ $r->descripcion }}</p>
+  <x-card class="bg-base-100">
+    <x-button
+      label="Agregar Deporte"
+      class="btn-primary mb-4"
+      icon="lucide.plus"
+      wire:click="$set('open', true)"
+      />
+
+    <x-table
+      :headers="$headers"
+      :rows="$deportes"
+      >
+      @scope("cell_nombre", $r)
+        <div class="flex gap-1 items-center">
+          <x-icon :name="$r->icono" class="w-6 h-6 mr-1" />
+          <div>
+            <p>{{ $r->nombre }}</p>
+            <p class="text-sm text-gray-500">{{ $r->descripcion }}</p>
+          </div>
         </div>
-      </div>
-    @endscope
-  </x-table>
+      @endscope
+    </x-table>
+  </x-card>
 
 </div>

@@ -58,17 +58,23 @@ class User extends Authenticatable
   }
 
   public function getDisplayNameAttribute(): string {
-    return $this->nick ?: $this->name;
+    return $this->nick ?? $this->name;
   }
-
   public function getAvatarUrlAttribute(): string {
     return $this->avatar ? asset($this->avatar) : "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
   }
-
   public function getSaldoAttribute(): float {
+    // Saldo aprobado
     return Transaccion::where('user_id', $this->id)
       ->where('estado', 'aprobada')
       ->sum('monto');
+  }
+  public function getRetirosPendientesAttribute(): float {
+    // Saldo pendiente de retiro/depósito
+    return (Transaccion::where('user_id', $this->id)
+      ->where('monto', '<', 0)
+      ->where('estado', 'pendiente')
+      ->sum('monto')) * -1;
   }
   public function getIsAdminAttribute(): bool {
     return $this->nivel > 1;

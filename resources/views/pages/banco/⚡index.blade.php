@@ -25,56 +25,82 @@ new class extends Component
 ?>
 
 <div>
-  <x-title title="Banco" />
+  <x-title
+    title="Banco"
+    subtitle="Gestiona tus fondos y revisa tus movimientos"
+    icon="fas.wallet"
+    />
   @if ($user !== auth()->user())
     <x-alert class="mb-4 alert-warning text-lg">Estado de Cuenta de <span class="font-bold">{{ $user->name }}</span></x-alert>
   @endif
 
-  <div class="bg-base-300 p-4 rounded shadow-md mb-4">
-    <p>Tu saldo actual es:</p>
-    <p class="text-2xl font-bold">$ {{ Number::format($user->saldo,2) }}</p>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-6">
+    <div class="md:col-span-2">
+      <div class="bg-base-100 p-4 shadow-md mb-4 border-base-300 border rounded-lg">
+        {{-- Saldos --}}
+        <div class="text-center mb-6">
+          <p class="text-xl font-bold tracking-widest text-base-content/75">SALDO TOTAL DISPONIBLE</p>
+          <p class="text-4xl text-accent font-bold">$ {{ Number::format($user->saldo - $user->retiros_pendientes,2) }}</p>
+        </div>
+
+        {{-- Botones depósito/retiro --}}
+        <div class="grid grid-cols-2 gap-1 w-full">
+          <x-button
+            class="btn-success h-18"
+            link="{{ route('banco.deposito') }}"
+            >
+            <div>
+              <div><x-icon name="fas.plus-circle" class="w-6 h-6 mb-2" /></div>
+              <div class="font-bold tracking-widest">DEPÓSITO</div>
+            </div>
+          </x-button>
+          @if ($user->saldo > 0)
+            <x-button
+              class="btn-error h-18"
+              link="{{ route('banco.retiro') }}"
+              >
+              <div>
+                <div><x-icon name="fas.minus-circle" class="w-6 h-6 mb-2" /></div>
+                <div class="font-bold tracking-widest">RETIRO</div>
+              </div>
+            </x-button>
+          @endif
+        </div>
+      </div>
+
+      @if ($user->retiros_pendientes > 0)
+        <div class="bg-base-100/50 p-4 shadow-md mb-4 border-base-300 border rounded-lg text-center">
+          <p class="text-sm text-base-content/75">Retiros Pendientes:</p>
+          <p class="text-2xl font-bold">$ {{ Number::format($user->retiros_pendientes,2) }}</p>
+        </div>
+      @endif
+    </div>
+
+    <div class="rounded-lg overflow-hidden shadow-md bg-base-100 border border-base-300 grid-cols-1 md:col-span-4">
+      <div class="p-4">
+        <h1 class="text-xl font-bold">Movimientos Recientes</h1>
+        <p class="text-xs text-base-content/50">Haz click sobre cualquier transaccion para ver el detalle</p>
+      </div>
+      <x-table
+        :headers="$headers"
+        :rows="$transacciones"
+        :link="route('banco.show', ['transaccion' => '[id]'])"
+        >
+        @scope('cell_id', $t)
+          <p>{{ $t->created_at }}</p>
+            <x-badge value="{{ $t->estado->label() }}" class="badge-{{ $t->estado->color() }} badge-sm" />
+          </p>
+          <p class="text-xs text-base-content/50">{{ $t->notas }}</p>
+        @endscope
+
+        @scope('cell_monto', $t)
+          <p class="font-mono text-lg {{ $t->monto > 0 ? 'text-success' : 'text-error' }}">{{ Number::format($t->monto, 2) }}</p>
+        @endscope
+      </x-table>
+    </div>
   </div>
 
-  <div class="flex gap-1 items-center mb-4">
-    <x-button
-      label="Depósito"
-      icon="fas.plus-circle"
-      class="btn-success"
-      link="{{ route('banco.deposito') }}"
-      />
-    @if ($user->saldo > 0)
-      <x-button
-        label="Retiro"
-        icon="fas.minus-circle"
-        class="btn-error"
-        link="{{ route('banco.retiro') }}"
-        />
-    @endif
-  </div>
 
-  <div class="rounded overflow-hidden shadow-md bg-base-100 border border-base-300">
-    <x-table :headers="$headers" :rows="$transacciones">
-      @scope('cell_id', $t)
-        <p>{{ $t->created_at }}</p>
-        <p class="flex gap-1 items-center">
-          <x-badge value="{{ $t->tipo->label() }}" class="badge-{{ $t->tipo->color() }} badge-sm" />
-          <x-badge value="{{ $t->estado->label() }}" class="badge-{{ $t->estado->color() }} badge-sm" />
-        </p>
-        <p class="text-xs text-base-content/50">{{ $t->notas }}</p>
-      @endscope
 
-      @scope('cell_monto', $t)
-        <p class="font-mono text-lg {{ $t->monto > 0 ? 'text-success' : 'text-error' }}">{{ Number::format($t->monto, 2) }}</p>
-      @endscope
 
-      @scope('actions', $t)
-        <x-button
-          label="Detalles"
-          icon="fas.magnifying-glass"
-          class="btn-ghost btn-sm btn-primary"
-          link="{{ route('banco.show', $t) }}"
-          />
-      @endscope
-    </x-table>
-  </div>
 </div>

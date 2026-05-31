@@ -17,7 +17,11 @@ new class extends Component
 ?>
 
 <div>
-  <x-title title="Tienda de eventos" />
+  <x-title
+    title="Tienda de eventos"
+    subtitle="Compra eventos con tu saldo para participar en sus quinielas y ganar premios"
+    icon="lucide.shopping-cart"
+    />
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
     @foreach ($eventos as $evento)

@@ -10,6 +10,8 @@ new class extends Component
   public $temporadas;
   public $headers;
 
+  puiblic $deporte_id, $temporada, $api_id, $nombre;
+
   public function mount() {
     $this->temporadas = Temporada::with('deporte')->get();
     $this->headers = [
@@ -27,43 +29,45 @@ new class extends Component
 ?>
 
 <div>
-  <x-title title="Temporadas" />
-
-  {{-- Crear temporada --}}
-  <x-button
-    label="Temporada"
-    class="btn-primary mb-4"
-    icon="fas.circle-plus"
-    link="{{ route('admin.temporadas.create') }}"
+  <x-title
+    title="Admin::Temporadas"
+    icon="lucide.calendar"
     />
 
-  <x-table
-    :headers="$headers"
-    :rows="$temporadas"
-    >
-    @scope('cell_deporte_id', $row)
-      <x-icon name="{{ $row->deporte->icono }}" class="w-4 h-4" />
-      {{ $row->nombre }}
-    @endscope
+  <x-card class="bg-base-100">
+    {{-- Crear temporada --}}
+    <x-button
+      label="Temporada"
+      class="btn-primary mb-4"
+      icon="fas.circle-plus"
+      link="{{ route('admin.temporadas.create') }}"
+      />
 
-    @scope('actions', $row)
-      <div class="flex gap-2">
-        <x-button
-          label="Ver"
-          class="btn-primary btn-sm"
-          icon="fas.eye"
-          link="{{ route('admin.temporadas.show', $row) }}"
-          />
-        <x-button
-          label="Editar"
-          class="btn-secondary btn-sm"
-          icon="fas.edit"
-          link="{{ route('admin.temporadas.edit', $row) }}"
-          />
-      </div>
-    @endscope
-  </x-table>
+    <x-table
+      :headers="$headers"
+      :rows="$temporadas"
+      >
+      @scope('cell_deporte_id', $row)
+        <x-icon name="{{ $row->deporte->icono }}" class="w-4 h-4" />
+        {{ $row->nombre }}
+      @endscope
 
-
-
+      @scope('actions', $row)
+        <div class="flex gap-2">
+          <x-button
+            label="Ver"
+            class="btn-primary btn-sm"
+            icon="fas.eye"
+            link="{{ route('admin.temporadas.show', $row) }}"
+            />
+          <x-button
+            label="Editar"
+            class="btn-secondary btn-sm"
+            icon="fas.edit"
+            link="{{ route('admin.temporadas.edit', $row) }}"
+            />
+        </div>
+      @endscope
+    </x-table>
+  </x-card>
 </div>

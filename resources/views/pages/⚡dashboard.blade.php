@@ -13,7 +13,7 @@ new class extends Component
     $this->user = auth()->user();
 
     $this->eventos = $this->user->eventos()
-      ->whereIn('estado', ['activo', 'encurso'])
+      ->whereIn('estado', ['activo', 'encurso', 'iniciado'])
       ->get();
   }
 
@@ -32,7 +32,11 @@ new class extends Component
 ?>
 
 <div>
-  <x-title title="Mis Eventos" />
+  <x-title
+    title="Mis Eventos"
+    subtitle="Aquí puedes ver tus eventos actuales y pasados"
+    icon="lucide.ticket"
+    />
 
   <x-toggle
     wire:model.live="toggle"

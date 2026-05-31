@@ -205,12 +205,13 @@ new class extends Component
 
   <img src="{{ $evento->imagenUrl }}"
     alt="{{ $evento->temporada->deporte->nombre }}"
-    class="w-full h-48 object-cover"
+    class="w-full h-48 md:h-72 object-cover"
     >
 
   <div class="p-4 flex flex-col flex-1">
-    <h2 class="text-xl text-accent uppercase tracking-wide font-bold">{{ $evento->nombre }}</h2>
-    <p class="text-sm text-base-content/50 mb-2">{{ $evento->temporada->nombre }}</p>
+    <h2 class="text-xl text-accent uppercase tracking-wide font-bold font-display">{{ $evento->nombre }}</h2>
+    <p class="text-xs text-base-content/50 mb-2">{{ $evento->temporada->nombre }}</p>
+
     <div class="flex gap-2 mb-2">
       <x-badge value="{{ $evento->estado->label() }}" class="badge-sm badge-{{ $evento->estado->color() }} uppercase" />
       <x-badge value="{{ $evento->tipojuego->nombre }}" class="badge-sm badge-secondary font-bold uppercase tracking-wide" />

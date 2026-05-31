@@ -8,7 +8,7 @@
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen font-sans antialiased bg-base-100">
+<body class="min-h-screen font-sans antialiased bg-base-200">
 
   {{-- NAVBAR mobile only --}}
   <x-nav sticky class="lg:hidden">
@@ -23,33 +23,35 @@
   </x-nav>
 
   <x-main>
-    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit border-r border-gray-400 dark:border-gray-600">
+    <x-slot:sidebar
+      drawer="main-drawer"
+      class="bg-base-100 lg:bg-base-100/75 border-r border-base-300 flex flex-col h-screen shadow-m rounded-l-xl"
+      >
 
       <div class="flex w-full justify-center">
         <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
       </div>
 
-      {{-- MENU --}}
       @if($user = auth()->user())
-        <x-list-item
-          :item="$user"
-          value="name"
-          avatar="avatarUrl"
-          class="rounded-none!"
-          >
-          <x-slot:sub-value>
-            <p>Saldo: <span class="font-bold font-mono">{{ Number::format($user->saldo,2) }}</span></p>
+        <div class="flex gap-1 px-3 items-start">
+          <img
+            src="{{ $user->avatarUrl }}"
+            class="w-10 h-10 rounded-full inline-block me-2"
+            >
+          <div>
+            <div class="font-bold">{{ $user->displayName }}</div>
+            <p class="text-xs text-base-content/75">Saldo: <span class="font-bold font-mono">{{ Number::format($user->saldo,2) }}</span></p>
             <div class="flex gap-1 items-center">
-              <x-button icon="lucide.power" class="btn-circle btn-ghost btn-xs" no-wire-navigate link="/logout" />
-              <x-button icon="lucide.settings" class="btn-circle btn-ghost btn-xs" link="/profile" />
+              <x-button icon="lucide.power" class="btn-circle btn-accent btn-ghost btn-xs" no-wire-navigate link="/logout" />
+              <x-button icon="lucide.settings" class="btn-circle btn-accent btn-ghost btn-xs" link="/profile" />
               <x-theme-toggle darkTheme="darkqn" />
             </div>
-          </x-slot:sub-value>
-        </x-list-item>
+          </div>
+        </div>
       @endif
 
       <x-menu activate-by-route>
-
+        <x-menu-separator />
 
         <x-menu-item title="Inicio" icon="lucide.home" link="{{ route('dashboard') }}" />
         <x-menu-item title="Banco" icon="lucide.piggy-bank" link="{{ route('banco') }}" />
