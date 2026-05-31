@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Models\Evento;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Participacion extends Model
 {
+  use SoftDeletes;
+
   protected $table = 'participaciones';
   protected $fillable = [
     'nombre',

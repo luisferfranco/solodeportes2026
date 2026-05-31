@@ -76,4 +76,7 @@ class Evento extends Model
     return $this->belongsToMany(User::class, 'administradores_eventos')
       ->withPivot('rol');
   }
+  public function invitaciones() {
+    return $this->hasMany(Invitacion::class);
+  }
 }

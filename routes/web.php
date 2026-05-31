@@ -11,6 +11,8 @@ Route::get('/logout', function () {
     return redirect(route('login'));
 })->name('logout');
 
+Route::livewire('/evento/aceptar_invitacion/{code}', 'pages::evento.aceptar_invitacion')->name('evento.aceptar_invitacion');
+
 Route::middleware('auth')->group(function () {
     Route::livewire('/', 'pages::dashboard')->name('home');
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');

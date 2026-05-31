@@ -62,7 +62,7 @@
           <p class="text-xs uppercase font-bold text-gray-500 px-4">administrar Eventos</p>
 
           @foreach ($user->eventosAdministrados as $evento)
-            <x-menu-item title="{{ $evento->nombre }}" icon="lucide.trophy" link="{{ route('admin.eventos.show', $evento) }}" />
+            <x-menu-item title="{{ $evento->nombre }}" icon="lucide.trophy" link="{{ route('evento.show', $evento) }}" />
           @endforeach
 
         @endif
