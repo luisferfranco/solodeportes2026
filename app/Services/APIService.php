@@ -70,6 +70,11 @@ class APIService
 
     foreach ($schedule as $game) {
 
+      // 500 indica pretemporada
+      if ($game['intRound'] == 500) {
+        continue;
+      }
+
       if ($temporada->fecha_inicio && $temporada->fecha_fin) {
         if ($game['dateEvent'] < $temporada->fecha_inicio || $game['dateEvent'] > $temporada->fecha_fin) {
           continue;
