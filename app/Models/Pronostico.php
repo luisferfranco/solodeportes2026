@@ -16,6 +16,13 @@ class Pronostico extends Model
     'dif'
   ];
 
+  protected $casts = [
+    'diferencia' => 'integer',
+    'quien' => 'integer',
+    'res' => 'integer',
+    'dif' => 'integer'
+  ];
+
    //! RELACIONES
   public function juego() {
     return $this->belongsTo(Juego::class);
