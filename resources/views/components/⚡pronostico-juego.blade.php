@@ -19,7 +19,7 @@ new class extends Component
     $this->juego  = $juego;
     $this->prono  = Pronostico::where('juego_id', $juego->id)
       ->where('participacion_id', $participacion->id)
-      ->value('diferencia');
+      ->first()?->diferencia;
 
     // info('Inicial Pronostico para juego #' . $juego->id . ' y participacion #' . $participacion->id . ': ' . $this->prono);
 
