@@ -16,10 +16,10 @@ new class extends Component
       ->with('user')
       ->get();
     $this->headers = [
-      ['key' => 'id', 'value' => 'ID', 'class'=>"w-5"],
-      ['key' => 'nombre', 'value' => 'Nombre'],
-      ['key' => 'user.name', 'value' => 'Usuario'],
-      ['key' => 'created_at', 'value' => 'Fecha de Participación'],
+      ['key' => 'id',         'label' => 'ID', 'class'=>"w-5"],
+      ['key' => 'nombre',     'label' => 'Nombre'],
+      ['key' => 'user.name',  'label' => 'Usuario'],
+      ['key' => 'created_at', 'label' => 'Fecha de Participación'],
     ];
   }
 };
@@ -30,11 +30,11 @@ new class extends Component
 
   <livewire:evento-info :evento="$evento" />
 
-  <x-card class="bg-base-100">
+  <x-card class="bg-base-100 mt-4">
     <x-table
       :headers="$headers"
       :rows="$participaciones"
-      :link=""
       />
+
   </x-card>
 </div>
