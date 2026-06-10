@@ -103,8 +103,8 @@ new class extends Component
       </div>
 
       @if (auth()->user()->id == 1)
-        <div class="mt-2 px-2 py-1 bg-base-200">
-          <p class="text-center text-xs font-bold tracking-widest mb-2 uppercase rounded-lg shadow">Tendencias</p>
+        <div class="mt-2 px-2 py-1 bg-base-200 rounded-lg shadow">
+          <p class="text-center text-xs font-bold tracking-widest mb-2 uppercase">Tendencias</p>
           <div class="flex items-center justify-between gap-1 font-bold text-base-content/50">
             <div>{{ Number::format($neg, precision: 2) }}%</div>
             <div>{{ Number::format($emp, precision: 2) }}%</div>
