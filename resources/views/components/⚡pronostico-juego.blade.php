@@ -13,6 +13,7 @@ new class extends Component
   public $valido;
   public $prono;
   public Participacion $participacion;
+  public $pos, $neg, $emp, $tot;
 
   public function mount(Juego $juego, Participacion $participacion) {
 
@@ -23,7 +24,20 @@ new class extends Component
       ->with(['pronosticos' => function ($query) use ($juego) {
         $query->where('juego_id', $juego->id);
       }])->get();
-    info('Pronósticos para juego #' . $juego->id . ': ' . $pronos->pluck('pronosticos')->flatten()->pluck('diferencia'));
+
+    $arr = $pronos->flatMap(function ($p) {
+      return $p->pronosticos->pluck('diferencia')->toArray();
+    })->toArray();
+
+    $this->pos = count(array_filter($arr, fn($x) => $x > 0));
+    $this->neg = count(array_filter($arr, fn($x) => $x < 0));
+    $this->emp = count(array_filter($arr, fn($x) => $x == 0));
+    $this->tot = $this->pos + $this->neg + $this->emp;
+
+    // Calcular porcentajes con verificación de división por cero
+    $this->pos = $this->tot > 0 ? round(($this->pos / $this->tot) * 100, 2) : 0;
+    $this->neg = $this->tot > 0 ? round(($this->neg / $this->tot) * 100, 2) : 0;
+    $this->emp = $this->tot > 0 ? round(($this->emp / $this->tot) * 100, 2) : 0;
 
     $this->juego  = $juego;
     $this->prono  = Pronostico::where('juego_id', $juego->id)
@@ -80,6 +94,14 @@ new class extends Component
             />
         @endfor
       </div>
+
+      @if (auth()->user()->id == 1)
+        <div class="flex items-center justify-between gap-1 font-bold text-base-content/50">
+          <div>{{ Number::format($pos) }}</div>
+          <div>{{ Number::format($emp) }}</div>
+          <div>{{ Number::format($neg) }}</div>
+        </div>
+      @endif
     </div>
 
     <div class="w-1/4">
