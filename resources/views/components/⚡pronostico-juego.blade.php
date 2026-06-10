@@ -17,12 +17,26 @@ new class extends Component
 
   public function mount(Juego $juego, Participacion $participacion) {
 
+    $this->calculaPronosticos();
+    $this->participacion = $participacion;
+
+    $this->juego  = $juego;
+    $this->prono  = Pronostico::where('juego_id', $juego->id)
+      ->where('participacion_id', $participacion->id)
+      ->first()?->diferencia;
+
+    // info('Inicial Pronostico para juego #' . $juego->id . ' y participacion #' . $participacion->id . ': ' . $this->prono);
+
+    $this->valido = Gate::allows('pronosticar', $this->juego);
+  }
+
+  public function calculaPronosticos() {
     // Cálculo de los pronósticos generales
-    $pronos = $participacion
+    $pronos = $this->participacion
       ->evento
       ->participaciones()
-      ->with(['pronosticos' => function ($query) use ($juego) {
-        $query->where('juego_id', $juego->id);
+      ->with(['pronosticos' => function ($query) {
+        $query->where('juego_id', $this->juego->id);
       }])->get();
 
     $arr = $pronos->flatMap(function ($p) {
@@ -38,15 +52,6 @@ new class extends Component
     $this->pos = $this->tot > 0 ? round(($this->pos / $this->tot) * 100, 2) : 0;
     $this->neg = $this->tot > 0 ? round(($this->neg / $this->tot) * 100, 2) : 0;
     $this->emp = $this->tot > 0 ? round(($this->emp / $this->tot) * 100, 2) : 0;
-
-    $this->juego  = $juego;
-    $this->prono  = Pronostico::where('juego_id', $juego->id)
-      ->where('participacion_id', $participacion->id)
-      ->first()?->diferencia;
-
-    // info('Inicial Pronostico para juego #' . $juego->id . ' y participacion #' . $participacion->id . ': ' . $this->prono);
-
-    $this->valido = Gate::allows('pronosticar', $this->juego);
   }
 
   public function pronostica($prono) {
@@ -60,6 +65,8 @@ new class extends Component
     ], [
       'diferencia'        => $prono
     ]);
+
+    $this->calculaPronosticos();
   }
 };
 ?>
@@ -97,9 +104,9 @@ new class extends Component
 
       @if (auth()->user()->id == 1)
         <div class="flex items-center justify-between gap-1 font-bold text-base-content/50">
-          <div>{{ Number::format($pos) }}</div>
-          <div>{{ Number::format($emp) }}</div>
           <div>{{ Number::format($neg) }}</div>
+          <div>{{ Number::format($emp) }}</div>
+          <div>{{ Number::format($pos) }}</div>
         </div>
       @endif
     </div>
