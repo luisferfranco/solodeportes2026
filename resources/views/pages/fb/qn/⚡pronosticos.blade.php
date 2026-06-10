@@ -38,6 +38,7 @@ new class extends Component
       ->juegos()
       ->where('ronda', $this->ronda)
       ->with(['homeTeam', 'awayTeam'])
+      ->orderBy('valido_hasta')
       ->get();
   }
 
