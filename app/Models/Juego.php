@@ -19,7 +19,7 @@ class Juego extends Model
     'valido_hasta' => 'datetime',
   ];
 
-   //! RELACIONES
+  //! RELACIONES
   public function temporada() {
     return $this->belongsTo(Temporada::class);
   }

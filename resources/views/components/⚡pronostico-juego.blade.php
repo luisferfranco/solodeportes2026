@@ -16,6 +16,15 @@ new class extends Component
 
   public function mount(Juego $juego, Participacion $participacion) {
 
+    // Cálculo de los pronósticos generales
+    $pronos = $participacion
+      ->evento
+      ->participaciones()
+      ->with(['pronosticos' => function ($query) use ($juego) {
+        $query->where('juego_id', $juego->id);
+      }])->get();
+    info('Pronósticos para juego #' . $juego->id . ': ' . $pronos->pluck('pronosticos')->flatten()->pluck('diferencia'));
+
     $this->juego  = $juego;
     $this->prono  = Pronostico::where('juego_id', $juego->id)
       ->where('participacion_id', $participacion->id)
