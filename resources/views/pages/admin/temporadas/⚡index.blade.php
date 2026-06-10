@@ -202,7 +202,7 @@ new class extends Component
             tooltip-left="Ver"
             />
           <x-button
-            class="btn-secondary btn-sm"
+            class="btn-primary btn-sm"
             icon="fas.edit"
             link="{{ route('admin.temporadas.edit', $row) }}"
             tooltip-left="Editar temporada"
