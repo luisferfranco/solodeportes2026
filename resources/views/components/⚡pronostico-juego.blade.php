@@ -94,7 +94,7 @@ new class extends Component
       <div class="flex items-center justify-center grow gap-1 lg:gap-2">
         @for ($i = -2; $i <= 2; $i++)
           <x-button
-            label=" {{ abs($i) }} "
+            label=" {{ @abs($i) == 2 ? '+' : '' }}{{ abs($i) }}"
             class="h-8 w-8 lg:h-14 lg:w-14 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
             wire:click='pronostica({{ $i }})'
             spinner
@@ -102,16 +102,14 @@ new class extends Component
         @endfor
       </div>
 
-      @if (auth()->user()->id == 1)
-        <div class="mt-2 px-2 py-1 bg-base-200 rounded-lg shadow">
-          <p class="text-center text-xs font-bold tracking-widest mb-2 uppercase">Tendencias</p>
-          <div class="flex items-center justify-between gap-1 font-bold text-base-content/50 text-xs md:text-sm">
-            <div>{{ Number::format($neg, precision: 2) }}%</div>
-            <div>{{ Number::format($emp, precision: 2) }}%</div>
-            <div>{{ Number::format($pos, precision: 2) }}%</div>
-          </div>
+      <div class="mt-2 px-2 py-1 bg-base-200 rounded-lg shadow">
+        <p class="text-center text-xs font-bold tracking-widest mb-2 uppercase">Tendencias</p>
+        <div class="flex items-center justify-between gap-1 font-bold text-base-content/50 text-xs md:text-sm">
+          <div>{{ Number::format($neg, precision: 2) }}%</div>
+          <div>{{ Number::format($emp, precision: 2) }}%</div>
+          <div>{{ Number::format($pos, precision: 2) }}%</div>
         </div>
-      @endif
+      </div>
     </div>
 
     <div class="w-1/4">
