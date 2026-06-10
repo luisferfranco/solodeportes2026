@@ -94,7 +94,7 @@ new class extends Component
       <div class="flex items-center justify-center grow gap-1 lg:gap-2">
         @for ($i = -2; $i <= 2; $i++)
           <x-button
-            label="{{ abs($i) }}{{ @abs($i) == 2 ? '+' : '' }}"
+            label="{{ $i==0 ? '0' : abs($i) }}{{ @abs($i) == 2 ? '+' : '' }}"
             class="h-8 w-8 lg:h-14 lg:w-14 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
             wire:click='pronostica({{ $i }})'
             spinner
