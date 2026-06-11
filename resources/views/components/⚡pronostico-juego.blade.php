@@ -105,9 +105,9 @@ new class extends Component
       <div class="mt-2 px-2 py-1 bg-base-200 rounded-lg shadow">
         <p class="text-center text-xs font-bold tracking-widest mb-2 uppercase">Tendencias</p>
         <div class="flex items-center justify-between gap-1 font-bold text-base-content/50 text-xs md:text-sm">
-          <div>{{ Number::format($neg, precision: 2) }}%</div>
-          <div>{{ Number::format($emp, precision: 2) }}%</div>
           <div>{{ Number::format($pos, precision: 2) }}%</div>
+          <div>{{ Number::format($emp, precision: 2) }}%</div>
+          <div>{{ Number::format($neg, precision: 2) }}%</div>
         </div>
       </div>
     </div>
