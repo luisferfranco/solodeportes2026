@@ -80,10 +80,10 @@ class FBService
 
       foreach ($evento->participaciones as $participacion) {
         info("------ Participación: {$participacion->id}");
+
         $result = $participacion->pronosticos()
             ->whereHas('juego', function ($query) use ($ronda) {
-              $query->where('ronda', $ronda)
-            ->where('status', 'Match Finished');
+              $query->where('ronda', $ronda);
           })
         ->selectRaw('SUM(res) as sumres, SUM(dif) as sumdif')
         ->first();
