@@ -12,9 +12,18 @@ new class extends Component
   use Toast;
   use WithFileUploads;
 
+  public User $user;
   public $monto = 0;
   public $file;
   public $notas;
+
+  public function mount(?User $user = null) {
+    if (auth()->user()->isAdmin) {
+      $this->user = $user ?? auth()->user();
+    } else {
+      $this->user = auth()->user();
+    }
+  }
 
   public function save() {
     $this->validate([
@@ -26,7 +35,7 @@ new class extends Component
     $file = $this->file->store('comprobantes', 'public');
 
     $transaccion = Transaccion::create([
-      'user_id'     => auth()->id(),
+      'user_id'     => $this->user->id,
       'monto'       => $this->monto,
       'tipo'        => 'deposito',
       'estado'      => 'pendiente',
@@ -36,15 +45,25 @@ new class extends Component
 
     User::where('nivel', 99)
       ->get()
-      ->each(fn($admin) => $admin->notify(new BankNotification(auth()->user(), $transaccion)));
+      ->each(fn($admin) => $admin->notify(new BankNotification($this->user, $transaccion)));
 
-    $this->success(
-      title: 'Depósito Enviado',
-      description: 'Tu depósito ha sido enviado y está pendiente de verificación.',
-      icon: 'fas.circle-check',
-      timeout: 3000,
-      redirectTo: route('banco')
-    );
+    if ($this->user == auth()->user()) {
+      $this->success(
+        title: 'Depósito Enviado',
+        description: 'Tu depósito ha sido enviado y está pendiente de verificación.',
+        icon: 'fas.circle-check',
+        timeout: 3000,
+        redirectTo: route('banco')
+      );
+    } else {
+      $this->warning(
+        title: 'Depósito Enviado',
+        description: 'El depósito del usuario ' . $this->user->name . ' ha sido enviado y está pendiente de verificación.',
+        icon: 'fas.circle-check',
+        timeout: 3000,
+        redirectTo: route('banco')
+      );
+    }
 
   }
 };
@@ -52,6 +71,15 @@ new class extends Component
 
 <div>
   <x-title title="Depósito" />
+
+  @if ($user !== auth()->user())
+    <x-alert
+      class="mb-4 alert-warning"
+      icon="o-information-circle"
+      title="Realizando un depósito a un usuario diferente"
+      description="Estás realizando un depósito para {{ $user->name }}. Asegúrate de que esta acción es intencional."
+      />
+  @endif
 
   <div class="max-w-4xl mx-auto">
     <x-card class="bg-info text-info-content mb-4">

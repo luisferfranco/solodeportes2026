@@ -47,7 +47,7 @@ new class extends Component
         <div class="grid grid-cols-2 gap-1 w-full">
           <x-button
             class="btn-success h-18"
-            link="{{ route('banco.deposito') }}"
+            link="{{ route('banco.deposito', ['user' => $user->id]) }}"
             >
             <div>
               <div><x-icon name="fas.plus-circle" class="w-6 h-6 mb-2" /></div>
