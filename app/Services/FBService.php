@@ -69,7 +69,7 @@ class FBService
         ->whereRaw('SIGN(diferencia) = SIGN(?)', [$dif])
         ->update(['res' => 1, 'dif' => 0]);
 
-      info($updated = Pronostico::query()
+      info(Pronostico::query()
         ->where('juego_id', $juego->id)
         ->whereRaw('SIGN(diferencia) = SIGN(?)', [$dif])
         ->toSql());
@@ -80,6 +80,11 @@ class FBService
         ->where('juego_id', $juego->id)
         ->where('diferencia', $dif)
         ->update(['res' => 1, 'dif' => 1]);
+
+      info(Pronostico::query()
+        ->where('juego_id', $juego->id)
+        ->where('diferencia', $dif)
+        ->toSql());
     }
 
     foreach ($temporada->eventos as $evento) {
