@@ -14,9 +14,6 @@ class FBService
       ->where('ronda', $ronda)
       ->get();
 
-    info("Calificando ronda $ronda de temporada {$temporada->nombre}");
-    info("Se encontraron " . count($juegos) . " juegos en la ronda $ronda");
-
     // Resetear todas las calificaciones de la ronda
     foreach ($temporada->eventos as $evento) {
       Leaderboard::where('ronda', $ronda)
@@ -42,7 +39,6 @@ class FBService
       }
 
       $dif = $juego->home_score - $juego->away_score;
-      info("***Diferencia original: $dif");
       if ($temporada->deporte_id == "FA") {
         // Para el futbol americano se recalculan las diferencias
         $d = abs($dif);
@@ -57,8 +53,6 @@ class FBService
         }
       }
 
-      info("Calificando juego {$juego->id} con resultado {$juego->home_score}-{$juego->away_score} y diferencia $dif");
-
       // Todas las calificaciones a cero
       $updated = Pronostico::query()
         ->where('juego_id', $juego->id)
@@ -69,6 +63,7 @@ class FBService
         ->where('juego_id', $juego->id)
         ->whereRaw('SIGN(diferencia) = SIGN(?)', [$dif])
         ->update(['res' => 1, 'dif' => 0]);
+      more($updated);
 
       info(Pronostico::query()
         ->where('juego_id', $juego->id)
@@ -82,32 +77,35 @@ class FBService
         ->where('diferencia', $dif)
         ->update(['res' => 1, 'dif' => 1]);
 
-      info(Pronostico::query()
-        ->where('juego_id', $juego->id)
-        ->where('diferencia', $dif)
-        ->toSql());
     }
 
+
+    info("Actualizando Leaderboards para la {$temporada->nombre}, ronda {$ronda}");
     foreach ($temporada->eventos as $evento) {
+      info("--- Evento: {$evento->nombre}");
+
       foreach ($evento->participaciones as $participacion) {
-      $result = $participacion->pronosticos()
-        ->whereHas('juego', function ($query) use ($ronda) {
-          $query->where('ronda', $ronda)
-          ->where('status', 'Match Finished');
-        })
+        info("------ Participación: {$participacion->id}");
+        $result = $participacion->pronosticos()
+            ->whereHas('juego', function ($query) use ($ronda) {
+              $query->where('ronda', $ronda)
+            ->where('status', 'Match Finished');
+          })
         ->selectRaw('SUM(res) as sumres, SUM(dif) as sumdif')
         ->first();
 
+        info("--------- Resultados: aciertos={$result->sumres}, diferencias={$result->sumdif}");
+
       Leaderboard::updateOrCreate(
         [
-        'participacion_id' => $participacion->id,
-        'ronda' => $ronda,
-        'evento_id' => $evento->id
+          'participacion_id' => $participacion->id,
+          'ronda' => $ronda,
+          'evento_id' => $evento->id
         ],
         [
-        'aciertos' => $result->sumres ?? 0,
-        'diferencias' => $result->sumdif ?? 0,
-        'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
+          'aciertos' => $result->sumres ?? 0,
+          'diferencias' => $result->sumdif ?? 0,
+          'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
         ]
       );
       }
