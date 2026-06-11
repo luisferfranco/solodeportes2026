@@ -132,17 +132,17 @@ class APIService
     //   info("Error: $url");
     // }
 
+    info("Fecha mínima: $min - Fecha máxima: $max");
+
     $res = $response->json()['schedule'] ?? [];
     foreach ($res as $game) {
-
-      info(var_dump($game));
-      info();
-
       $gameDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $game['dateEvent'] . ' 00:00:00');
       $minDateTime = \Carbon\Carbon::parse($min);
       $maxDateTime = \Carbon\Carbon::parse($max);
 
       info($game['idEvent']);
+      info($game['dateEvent'] . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
+
       if ($gameDateTime->lte($minDateTime) || $gameDateTime->gte($maxDateTime)) {
         continue;
       }
