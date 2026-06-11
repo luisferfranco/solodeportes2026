@@ -135,6 +135,9 @@ class APIService
     $res = $response->json()['schedule'] ?? [];
     foreach ($res as $game) {
 
+      info(var_dump($game));
+      info();
+
       $gameDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $game['dateEvent'] . ' 00:00:00');
       $minDateTime = \Carbon\Carbon::parse($min);
       $maxDateTime = \Carbon\Carbon::parse($max);
