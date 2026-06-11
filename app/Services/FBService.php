@@ -63,12 +63,6 @@ class FBService
         ->where('juego_id', $juego->id)
         ->whereRaw('SIGN(diferencia) = SIGN(?)', [$dif])
         ->update(['res' => 1, 'dif' => 0]);
-      more($updated);
-
-      info(Pronostico::query()
-        ->where('juego_id', $juego->id)
-        ->whereRaw('SIGN(diferencia) = SIGN(?)', [$dif])
-        ->toSql());
 
       // Los que hayan atinado a la diferencia, 3 puntos. Debería funcionar
       // para los empates
