@@ -140,19 +140,18 @@ class APIService
       $minDateTime = \Carbon\Carbon::parse($min);
       $maxDateTime = \Carbon\Carbon::parse($max);
 
-      info($game['idEvent']);
-      info($game->validoHasta . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
-
-      if ($game->validoHasta->lte($minDateTime) || $game->validoHasta->gte($maxDateTime)) {
-        continue;
-      }
-      // info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
-
-
       $juego = Juego::find($game['idEvent']);
       if (!$juego) {
         continue;
       }
+
+      info($game['idEvent']);
+      info($juego->validoHasta . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
+
+      if ($juego->validoHasta->lte($minDateTime) || $juego->validoHasta->gte($maxDateTime)) {
+        continue;
+      }
+      // info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
 
       $juego->home_score  = $game['intHomeScore'];
       $juego->away_score  = $game['intAwayScore'];
