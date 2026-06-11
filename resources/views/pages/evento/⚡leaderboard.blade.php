@@ -17,6 +17,7 @@ new class extends Component
   public $participaciones;
   public $resultados;
   public $headers;
+  public $headersxs;
   public $modalPago = false;
   public ?Participacion $partPago = null;
   public $monto=0;
@@ -34,6 +35,12 @@ new class extends Component
       ['key' => 'participacion_id', 'label' => 'Participante'],
       ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right'],
       ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right'],
+      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right font-bold'],
+    ];
+
+    $this->headersxs = [
+      ['key' => 'participacion_id', 'label' => 'Participante'],
+      ['key' => 'aciertos', 'label' => "Aciertos", 'class' => 'text-right'],
       ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right font-bold'],
     ];
 
@@ -193,61 +200,118 @@ new class extends Component
     </section>
   @endif
 
-  <x-table
-    :headers="$headers"
-    :rows="$resultados"
-    class="mt-6"
-    :empty-message="'No hay resultados para esta ronda.'"
-    >
-    @scope('cell_participacion_id', $row)
-      <div class="flex items-center gap-2">
-        <x-avatar
-          :image="$row->participacion->user->avatarUrl"
-          class="h-10 w-10"
-          />
-        <div>
-          <p>
-            <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
-              {{ $row->participacion->nombre }}
-            </a>
-          </p>
-          <p class="text-base-content/50 text-xs">De: <a href="{{ route('profile', ['user' => $row->participacion->user->id]) }}" class="hover:underline hover:text-info">{{ $row->participacion->user->displayName }}</a></p>
-        </div>
+  <div class="bg-base-100 py-4 md:px-6 mt-6 md:rounded-xl shadow-xl border border-base-300">
+    <div class="hidden md:block md:w-full">
+      <x-table
+        :headers="$headers"
+        :rows="$resultados"
+        :empty-message="'No hay resultados para esta ronda.'"
+        >
+        @scope('cell_participacion_id', $row)
+          <div class="flex items-center gap-2">
+            <x-avatar
+              :image="$row->participacion->user->avatarUrl"
+              class="h-10 w-10"
+              />
+            <div>
+              <p>
+                <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline">
+                  {{ $row->participacion->nombre }}
+                </a>
+              </p>
+              <p class="text-base-content/50 text-xs">De: <a href="{{ route('profile', ['user' => $row->participacion->user->id]) }}" class="hover:underline hover:text-info">{{ $row->participacion->user->displayName }}</a></p>
+            </div>
 
-        @php
-          $tienePremio = \App\Models\Transaccion::where('user_id', $row->participacion->user_id)
-            ->where('evento_id', $this->evento->id)
-            ->where('semana_premiada', $this->rd)
-            ->where('tipo', 'premio')
-            ->exists();
-        @endphp
-        @if ($tienePremio)
-          <x-icon name="fas.trophy" class="w-6 h-6 text-green-500" title="Premio pagado" />
-        @endif
+            @php
+              $tienePremio = \App\Models\Transaccion::where('user_id', $row->participacion->user_id)
+                ->where('evento_id', $this->evento->id)
+                ->where('semana_premiada', $this->rd)
+                ->where('tipo', 'premio')
+                ->exists();
+            @endphp
+            @if ($tienePremio)
+              <x-icon name="fas.trophy" class="w-6 h-6 text-green-500" title="Premio pagado" />
+            @endif
 
-      </div>
-    @endscope
+          </div>
+        @endscope
 
-    @scope('cell_aciertos', $row)
-      <div class="text-xl">{{ $row->aciertos }}</div>
-    @endscope
+        @scope('cell_aciertos', $row)
+          <div class="text-xl">{{ $row->aciertos }}</div>
+        @endscope
 
-    @scope('cell_diferencias', $row)
-      <div class="text-xl">{{ $row->diferencias }}</div>
-    @endscope
+        @scope('cell_diferencias', $row)
+          <div class="text-xl">{{ $row->diferencias }}</div>
+        @endscope
 
-    @scope('cell_puntos', $row)
-      <div class="text-xl">{{ Number::format($row->puntos,2) }}</div>
-    @endscope
+        @scope('cell_puntos', $row)
+          <div class="text-xl">{{ Number::format($row->puntos,2) }}</div>
+        @endscope
 
-    @scope('actions', $row)
-      @if (auth()->user()->isAdmin)
-        <x-button
-          wire:click='pagar({{ $row->participacion }})'
-          icon="fas.money-bill-wave"
-          class="btn-ghost btn-xs"
-          />
-      @endif
-    @endscope
-  </x-table>
+        @scope('actions', $row)
+          @if (auth()->user()->isAdmin)
+            <x-button
+              wire:click='pagar({{ $row->participacion }})'
+              icon="fas.money-bill-wave"
+              class="btn-ghost btn-xs"
+              />
+          @endif
+        @endscope
+      </x-table>
+    </div>
+
+    <div class="block md:hidden w-full">
+      <x-table
+        :headers="$headersxs"
+        :rows="$resultados"
+        :empty-message="'No hay resultados para esta ronda.'"
+        >
+        @scope('cell_participacion_id', $row)
+          <div>
+            <div>
+              <p>
+                <a href="{{ route('evento.resultados', ['evento' => $this->evento, 'participacion' => $row->participacion_id]) }}" class="hover:underline text-sm">
+                  {{ $row->participacion->nombre }}
+                </a>
+              </p>
+              <p class="text-base-content/50 text-xs">De: <a href="{{ route('profile', ['user' => $row->participacion->user->id]) }}" class="hover:underline hover:text-info">{{ $row->participacion->user->displayName }}</a></p>
+            </div>
+
+            @php
+              $tienePremio = \App\Models\Transaccion::where('user_id', $row->participacion->user_id)
+                ->where('evento_id', $this->evento->id)
+                ->where('semana_premiada', $this->rd)
+                ->where('tipo', 'premio')
+                ->exists();
+            @endphp
+            @if ($tienePremio)
+              <x-icon name="fas.trophy" class="w-6 h-6 text-green-500" title="Premio pagado" />
+            @endif
+
+          </div>
+        @endscope
+
+        @scope('cell_aciertos', $row)
+          <div class="text-xs font-mono text-base-content/70">
+            <div>ACI {{ $row->aciertos }}</div>
+            <div>DIF {{ $row->diferencias }}</div>
+          </div>
+        @endscope
+
+        @scope('cell_puntos', $row)
+          <div class="text-xs font-bold">{{ Number::format($row->puntos,2) }}</div>
+        @endscope
+
+        @scope('actions', $row)
+          @if (auth()->user()->isAdmin)
+            <x-button
+              wire:click='pagar({{ $row->participacion }})'
+              icon="fas.money-bill-wave"
+              class="btn-ghost btn-xs btn.square"
+              />
+          @endif
+        @endscope
+      </x-table>
+    </div>
+  </div>
 </div>
