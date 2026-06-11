@@ -141,9 +141,9 @@ class APIService
       $maxDateTime = \Carbon\Carbon::parse($max);
 
       info($game['idEvent']);
-      info($game['dateEvent'] . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
+      info($game->validoHasta . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
 
-      if ($gameDateTime->lte($minDateTime) || $gameDateTime->gte($maxDateTime)) {
+      if ($game->validoHasta->lte($minDateTime) || $game->validoHasta->gte($maxDateTime)) {
         continue;
       }
       // info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
