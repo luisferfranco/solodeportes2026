@@ -108,6 +108,8 @@ class APIService
   }
 
   public function cargarMarcadores(Temporada $temporada, $ronda) {
+    info("Cargando marcadores para temporada {$temporada->id} - Ronda $ronda");
+
     $liga   = $temporada->sport_api_id;
     $apikey = env('API_KEY');
     $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
@@ -125,10 +127,10 @@ class APIService
       'X_API_KEY' => $apikey
     ])->get($url);
 
-    if ($response->failed()) {
-      info("Juego: {$juego->id}", [$juego]);
-      info("Error: $url");
-    }
+    // if ($response->failed()) {
+    //   info("Juego: {$juego->id}", [$juego]);
+    //   info("Error: $url");
+    // }
 
     $res = $response->json()['schedule'] ?? [];
     foreach ($res as $game) {
@@ -141,7 +143,7 @@ class APIService
       if ($gameDateTime->lte($minDateTime) || $gameDateTime->gte($maxDateTime)) {
         continue;
       }
-      info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
+      // info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
 
 
       $juego = Juego::find($game['idEvent']);
@@ -154,6 +156,8 @@ class APIService
       $juego->status      = $game['strStatus'];
       $juego->youtube     = $game['strVideo'] ?? null;
       $juego->save();
+
+      info($juego);
     }
 
   }
