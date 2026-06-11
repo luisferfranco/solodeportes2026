@@ -141,6 +141,7 @@ class APIService
       $maxDateTime = \Carbon\Carbon::parse($max);
 
       $juego = Juego::find($game['idEvent']);
+      info($juego);
       if (!$juego) {
         continue;
       }
