@@ -35,6 +35,5 @@ new class extends Component
       :headers="$headers"
       :rows="$participaciones"
       />
-
   </x-card>
 </div>

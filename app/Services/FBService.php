@@ -14,6 +14,9 @@ class FBService
       ->where('ronda', $ronda)
       ->get();
 
+    info("Calificando ronda $ronda de temporada {$temporada->nombre}");
+    info("Se encontraron " . count($juegos) . " juegos en la ronda $ronda");
+
     // Resetear todas las calificaciones de la ronda
     foreach ($temporada->eventos as $evento) {
       Leaderboard::where('ronda', $ronda)
@@ -31,7 +34,10 @@ class FBService
         ->where('juego_id', $juego->id)
         ->update(['res' => null, 'dif' => null]);
 
-      if ($juego->status != 'Match Finished') {
+      // TODO: Revisar cuál es el código que enviará la API de FB
+      // para los juegos que no han terminado, para no calificar
+      // esos juegos
+      if ($juego->status != 'FT') {
         continue;
       }
 
@@ -49,6 +55,8 @@ class FBService
           $dif = $dif > 0 ? 4 : -4;
         }
       }
+
+      info("Calificando juego {$juego->id} con resultado {$juego->home_score}-{$juego->away_score} y diferencia $dif");
 
       // Todas las calificaciones a cero
       $updated = Pronostico::query()
