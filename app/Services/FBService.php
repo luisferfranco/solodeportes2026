@@ -42,6 +42,7 @@ class FBService
       }
 
       $dif = $juego->home_score - $juego->away_score;
+      info("***Diferencia original: $dif");
       if ($temporada->deporte_id == "FA") {
         // Para el futbol americano se recalculan las diferencias
         $d = abs($dif);
