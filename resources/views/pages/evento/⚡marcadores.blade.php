@@ -32,6 +32,7 @@ new class extends Component
     $this->juegos = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $this->rd)
       ->with(['homeTeam', 'awayTeam'])
+      ->orderBy('valido_hasta')
       ->get();
 
     $this->headers = [

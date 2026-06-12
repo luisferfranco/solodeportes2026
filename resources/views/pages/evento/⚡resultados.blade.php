@@ -47,6 +47,7 @@ new class extends Component {
       ->with(['homeTeam', 'awayTeam', 'pronosticos' => function ($query) {
         $query->where('participacion_id', $this->participacion->id);
       }])
+      ->orderBy('valido_hasta')
       ->get();
 
     // Obtener la suma de los pronosticos en los campos res y dif
