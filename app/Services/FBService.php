@@ -53,6 +53,16 @@ class FBService
         }
       }
 
+      if ($temporada->deporte_id == "FB") {
+        // Para el futbol soccer se recalculan las diferencias
+        if ($dif > 2) {
+          $dif = 2;
+        }
+        if ($dif < -2) {
+          $dif = -2;
+        }
+      }
+
       // Todas las calificaciones a cero
       $updated = Pronostico::query()
         ->where('juego_id', $juego->id)
