@@ -17,7 +17,8 @@ new class extends Component {
   public $rd;
   public $juegos;
   public $juegosIds;
-  public $headers;
+  public $headers, $headersMobile;
+
   public $nopar;
   public $resSum;
   public $difSum;
@@ -63,6 +64,12 @@ new class extends Component {
       ['key' => 'marcador', 'label' => 'Marcador', 'class' => 'text-right'],
       ['key' => 'pronostico', 'label' => 'Pronóstico', 'class' => 'text-center'],
       ['key' => 'real', 'label' => 'Real', 'class' => 'text-center'],
+      ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-center'],
+    ];
+
+    $this->headersMobile = [
+      ['key' => 'juegos', 'label' => 'Juego'],
+      ['key' => 'marcador', 'label' => 'Marcador', 'class' => 'text-right'],
       ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-center'],
     ];
   }
@@ -117,88 +124,66 @@ new class extends Component {
   </div>
 
   {{-- mobile cards --}}
-  <div class="sm:hidden mt-6 space-y-4">
-    @foreach($pronosticos as $row)
-      <div class="p-4 bg-base-100 rounded-lg shadow">
-        {{-- juego info --}}
-        <div>
-          <span class="text-xs text-base-content/50">{{ $row->valido_hasta->format('d M Y, H:i') }}</span>
-          <x-badge class="badge-info badge-xs" value="{{ $row->status }}" />
-        </div>
-        <div class="flex items-center justify-between mt-2">
-          <div class="flex items-center gap-2">
-            <img src="{{ $row->homeTeam->logo }}" alt="{{ $row->homeTeam->nombre }}" class="w-6 h-6">
-            <span class="font-medium text-sm">{{ $row->homeTeam->nombre }}</span>
-          </div>
-          <div class="text-lg font-bold">
-            {{ $row->home_score ?? '???' }} - {{ $row->away_score ?? '???' }}
-          </div>
-          <div class="flex items-center gap-2">
-            <img src="{{ $row->awayTeam->logo }}" alt="{{ $row->awayTeam->nombre }}" class="w-6 h-6">
-            <span class="font-medium text-sm">{{ $row->awayTeam->nombre }}</span>
-          </div>
-        </div>
+  <div class="sm:hidden mt-6">
 
-        {{-- detalles de pronóstico/real/puntos --}}
-        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
-          <div>
-            <div class="text-xs uppercase text-base-content/70">Pronóstico</div>
-            <div class="text-2xl font-bold">
-              {{ $row->pronosticos->first()?->diferencia ?? '???' }}
+    @foreach ($pronosticos as $p)
+      <div class="bg-base-300 rounded-t shadow-md px-2 py-1">
+        <span class="text-xs text-base-content/50">{{ $p->valido_hasta->format('d M Y, H:i') }}</span>
+        <x-badge class="badge-info badge-xs" value="{{ $p->status }}" />
+      </div>
+
+      <div class="grid grid-cols-5 text-xs mb-2 bg-base-100 rounded-b shadow-md px-2 py-1">
+        <div class="col-span-3 space-y-2">
+          {{-- Home --}}
+          <div class="flex justify-between items-center gap-1">
+            <div class="flex gap-1">
+              <img src="{{ $p->homeTeam->logo }}" alt="{{ $p->homeTeam->nombre }}" class="w-6 h-6">
+              <span class="font-medium text-sm">{{ $p->homeTeam->nombre }}</span>
+            </div>
+            <div>
+              {{ $p->home_score ?? "???" }}
             </div>
           </div>
-          <div>
-            <div class="text-xs uppercase text-base-content/70">Real</div>
-            <div class="text-2xl font-bold">
-              @if ($row->home_score === null || $row->away_score === null)
-                <span class="text-sm">--</span>
-              @else
-                @if ($row->deporte_id == 'FA')
-                  @php
-                    $dif = $row->home_score - $row->away_score;
-                    $d = abs($dif);
-                    if ($d < 7) {
-                      $dif = $dif > 0 ? '1' : '-1';
-                    } else if ($d < 14) {
-                      $dif = $dif > 0 ? '2' : '-2';
-                    } else if ($d < 21) {
-                      $dif = $dif > 0 ? '3' : '-3';
-                    } else {
-                      $dif = $dif > 0 ? '4' : '-4';
-                    }
-                  @endphp
-                  {{ $dif }}
-                @else
-                  {{ $row->home_score - $row->away_score }}
-                @endif
-              @endif
+
+          {{-- Away --}}
+          <div class="flex justify-between items-center gap-1">
+            <div class="flex gap-1">
+              <img src="{{ $p->awayTeam->logo }}" alt="{{ $p->awayTeam->nombre }}" class="w-6 h-6">
+              <span class="font-medium text-sm">{{ $p->awayTeam->nombre }}</span>
+            </div>
+            <div>
+              {{ $p->away_score ?? "???" }}
             </div>
           </div>
         </div>
 
-        <div class="mt-4 text-center">
-          <div class="text-xs uppercase text-base-content/70">Puntos</div>
-          <div class="mt-1">
-            @if ($row->pronosticos->first()?->diferencia === null)
-              <x-badge class="badge-info" value="NO PICK" />
-            @elseif ($row->pronosticos->first()?->res === null)
+        <div></div>
+
+        {{-- Resultados (thumbs) --}}
+        <div class="flex items-center justify-center">
+          <div class="flex flex-col items-center gap-1">
+            @if ($p->pronosticos->first()?->diferencia === null)
+              <x-badge class="badge-xs badge-neutral" value="NO PICK" />
+            @elseif ($p->pronosticos->first()?->res === null)
               <x-badge class="badge-info badge-xs" value="SIN CALIFICAR" />
-            @elseif ($row->pronosticos->first()?->res == 0)
-              <x-icon name="fas.thumbs-down" class="text-error h-8 w-8" />
+            @elseif ($p->pronosticos->first()?->res == 0)
+              <x-icon name="fas.thumbs-down" class="text-error h-6 w-6" />
               <p><x-badge class="badge-error text-error-content not-last:badge-xs" value="FALLIDO" /></p>
             @else
-              @if ($row->pronosticos->first()?->dif == 1)
-                <x-icon name="fas.thumbs-up" class="text-success h-8 w-8" />
+              @if ($p->pronosticos->first()?->dif == 1)
+                <x-icon name="fas.thumbs-up" class="text-success h-6 w-6" />
                 <p><x-badge class="badge-success badge-xs" value="TOTAL" /></p>
               @else
-                <x-icon name="fas.thumbs-up" class="text-warning h-8 w-8" />
+                <x-icon name="fas.thumbs-up" class="text-warning h-6 w-6" />
                 <p><x-badge class="badge-warning badge-xs" value="PARCIAL" /></p>
               @endif
             @endif
           </div>
         </div>
+
       </div>
     @endforeach
+
   </div>
 
   <div class="hidden sm:block">

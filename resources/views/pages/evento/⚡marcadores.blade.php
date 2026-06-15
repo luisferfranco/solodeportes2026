@@ -62,47 +62,50 @@ new class extends Component
   <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
 
   <div class="max-w-3xl mx-auto">
-    <x-table
-      :headers="$headers"
-      :rows="$juegos"
-      class="mt-6"
-      >
-      @scope('cell_juegos', $row)
-        <div class="flex flex-col space-y-2">
-          <div class="text-xs text-base-content/50">
-            {{ $row->valido_hasta->format('d M Y, H:i') }}
-            <x-badge value="{{ $row->status }}" class="badge-neutral badge-xs ml-2" />
+
+    @foreach ($juegos as $j)
+      <div class="bg-base-300 rounded-t shadow-md px-2 py-1">
+        <span class="text-xs text-base-content/50">{{ $j->valido_hasta->format('d M Y, H:i') }}</span>
+        <x-badge class="badge-info badge-xs" value="{{ $j->status }}" />
+      </div>
+
+      <div class="grid grid-cols-5 text-xs mb-2 bg-base-100 rounded-b shadow-md px-2 py-1 border border-base-300">
+        <div class="col-span-3 space-y-2">
+          {{-- Home --}}
+          <div class="flex justify-between items-center gap-1">
+            <div class="flex gap-1">
+              <img src="{{ $j->homeTeam->logo }}" alt="{{ $j->homeTeam->nombre }}" class="w-6 h-6">
+              <span class="font-medium text-sm">{{ $j->homeTeam->nombre }}</span>
+            </div>
+            <div>
+              {{ $j->home_score ?? "???" }}
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <img src="{{ $row->homeTeam->logo }}" alt="{{ $row->homeTeam->nombre }}" class="w-6 h-6">
-            <span class="{{ $row->home_score > $row->away_score ? 'font-bold' : '' }}">{{ $row->homeTeam->nombre }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <img src="{{ $row->awayTeam->logo }}" alt="{{ $row->awayTeam->nombre }}" class="w-6 h-6">
-            <span class="{{ $row->away_score > $row->home_score ? 'font-bold' : '' }}">{{ $row->awayTeam->nombre }}</span>
+
+          {{-- Away --}}
+          <div class="flex justify-between items-center gap-1">
+            <div class="flex gap-1">
+              <img src="{{ $j->awayTeam->logo }}" alt="{{ $j->awayTeam->nombre }}" class="w-6 h-6">
+              <span class="font-medium text-sm">{{ $j->awayTeam->nombre }}</span>
+            </div>
+            <div>
+              {{ $j->away_score ?? "???" }}
+            </div>
           </div>
         </div>
-      @endscope
 
-      @scope('cell_marcador', $row)
-        <div class="flex flex-col space-y-2">
-          <div class="flex items-center justify-end gap-2">
-            <span class="{{ $row->home_score > $row->away_score ? 'font-bold' : '' }}">{{ $row->home_score ?? '???' }}</span>
-          </div>
-          <div class="flex items-center justify-end gap-2">
-            <span class="{{ $row->away_score > $row->home_score ? 'font-bold' : '' }}">{{ $row->away_score ?? '???' }}</span>
-          </div>
+        <div></div>
+
+        <div class="flex items-center justify-center">
+          @if($j->youtube)
+            <a href="{{ $j->youtube }}" target="_blank" class="text-blue-500 hover:underline">
+              <x-icon name="fab.youtube" class="w-10 h-10 text-error" />
+            </a>
+          @endif
         </div>
-      @endscope
 
-      @scope('cell_youtube', $row)
-        @if($row->youtube)
-          <a href="{{ $row->youtube }}" target="_blank" class="text-blue-500 hover:underline">
-            <x-icon name="fab.youtube" class="w-10 h-10 text-error" />
-          </a>
-        @endif
-      @endscope
+      </div>
+    @endforeach
 
-    </x-table>
   </div>
 </div>
