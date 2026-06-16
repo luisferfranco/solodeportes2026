@@ -94,11 +94,20 @@ new class extends Component
           </div>
         </div>
 
-        <div></div>
+        <div class="flex items-center justify-center">
+          @if ($j->status == "FT")
+            <a
+              wire:navigate
+              href="{{ route('evento.juego-index', ['evento' => $evento, 'juego' => $j]) }}"
+              >
+              <x-icon name="fas.bullseye" class="w-8 h-8 text-accent" />
+            </a>
+          @endif
+        </div>
 
         <div class="flex items-center justify-center">
           @if($j->youtube)
-            <a href="{{ $j->youtube }}" target="_blank" class="text-blue-500 hover:underline">
+            <a href="{{ $j->youtube }}" target="_blank">
               <x-icon name="fab.youtube" class="w-10 h-10 text-error" />
             </a>
           @endif

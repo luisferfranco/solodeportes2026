@@ -23,8 +23,11 @@ class Pronostico extends Model
     'dif' => 'integer'
   ];
 
-   //! RELACIONES
+  //! RELACIONES
   public function juego() {
     return $this->belongsTo(Juego::class);
+  }
+  public function participacion() {
+    return $this->belongsTo(Participacion::class);
   }
 }
