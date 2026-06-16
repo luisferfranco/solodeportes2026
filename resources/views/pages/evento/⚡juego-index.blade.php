@@ -56,6 +56,13 @@ new class extends Component
   </div>
 
   <div class="rounded-xl overflow-hidden shadow-md">
+
+    <div class="grid grid-cols-5 gap-2 py-1 px-2 bg-base-100 font-bold text-sm">
+      <div class="col-span-3">Participación</div>
+      <div class="flex items-center justify-center">Pronóstico</div>
+      <div class="flex items-center justify-center">Resultado</div>
+    </div>
+
     @foreach ($pronosticos as $p)
 
       @php
@@ -83,7 +90,7 @@ new class extends Component
           </a>
         </div>
 
-        <div>{{ $p->diferencia }}</div>
+        <div class="flex items-center justify-center">{{ $p->diferencia }}</div>
 
         <div class="flex items-center justify-center">
           <x-icon name="{{ $icon }}" class="w-4 h-4 {{ $iconClass }}" />
