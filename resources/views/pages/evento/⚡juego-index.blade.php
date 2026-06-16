@@ -28,25 +28,38 @@ new class extends Component
 ?>
 
 <x-card class="bg-base-100">
-  <div class="grid grid-cols-5 gap-2">
-    @foreach ($pronosticos as $p)
+  @foreach ($pronosticos as $p)
+
+    @php
+      if ($p->res == 1) {
+        if ($p->dif == 1) {
+          $icon = 'fas.thumbs-up';
+          $iconClass = 'text-success';
+          $class = "bg-success/30 text-success";
+        } else {
+          $icon = 'fas.thumbs-up';
+          $iconClass = 'text-warning';
+          $class = "bg-warning/30 text-warning";
+        }
+      } else {
+        $icon = 'fas.thumbs-down';
+        $iconClass = 'text-error';
+        $class = "bg-error/30 text-error";
+      }
+    @endphp
+
+    <div class="grid grid-cols-5 gap-2 py-1 px-2 {{ $class }}">
       <div class="col-span-3">
-        {{ $p->participacion->nombre }}
+        <a wire:navigate href="{{ route('evento.resultados', ['evento' => $evento, 'participacion' => $p->participacion]) }}">
+          {{ $p->participacion->nombre }}
+        </a>
       </div>
 
       <div>{{ $p->diferencia }}</div>
 
-      <div>
-        @if ($p->res == 1)
-          @if ($p->dif == 1)
-            <x-icon name="fas.thumbs-up" class="w-6 h-6 text-success" />
-          @else
-            <x-icon name="fas.thumbs-up" class="w-6 h-6 text-warning" />
-          @endif
-        @else
-          <x-icon name="fas.thumbs-down" class="w-6 h-6 text-error" />
-        @endif
+      <div class="flex items-center justify-center">
+        <x-icon name="{{ $icon }}" class="w-4 h-4 {{ $iconClass }}" />
       </div>
-    @endforeach
-  </div>
+    </div>
+  @endforeach
 </x-card>
