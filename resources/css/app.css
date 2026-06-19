@@ -51,7 +51,7 @@
   --noise: 1;
 }
 
-@plugin "daisyui/theme" {
+/* @plugin "daisyui/theme" {
   name: "darkqn";
   default: false;
   prefersdark: true;
@@ -84,18 +84,42 @@
   --border: 0.5px;
   --depth: 0;
   --noise: 0;
+} */
+
+@plugin "daisyui/theme" {
+  name: "darkqn";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: #121212;
+  --color-base-200: #1E1E1E;
+  --color-base-300: #2a2a2a;
+  --color-base-content: oklch(84.87% 0 0);
+  --color-primary: #FB4F14;
+  --color-primary-content: oklch(0% 0 0);
+  --color-secondary: #002244;
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: #004b8d;
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: #929090;
+  --color-neutral-content: oklch(0% 0 0);
+  --color-info: oklch(62.616% 0.143 240.033);
+  --color-info-content: oklch(25% 0.09 281.288);
+  --color-success: oklch(44% 0.119 151.328);
+  --color-success-content: oklch(92% 0.084 155.995);
+  --color-warning: oklch(77.482% 0.115 81.519);
+  --color-warning-content: oklch(26% 0.079 36.259);
+  --color-error: oklch(44% 0.177 26.899);
+  --color-error-content: oklch(80% 0.114 19.571);
+  --radius-selector: 0.25rem;
+  --radius-field: 0rem;
+  --radius-box: 1rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 0.5px;
+  --depth: 1;
+  --noise: 1;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* maryUI */
