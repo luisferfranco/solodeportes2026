@@ -10,6 +10,10 @@ new class extends Component
   use Toast;
 
   public function mount() {
+    if (auth()->check()) {
+      return $this->redirect(route('dashboard'));
+    }
+
     $recUser = Socialite::driver('google')->user();
     // id, name, email, avatar, token
 

@@ -17,6 +17,11 @@ class extends Component
   public $password, $password_confirmation;
 
   public function mount($token) {
+    if (auth()->check()) {
+      return $this->redirect(route('dashboard'));
+    }
+
+
     $this->user = User::where('password_reset_token', $token)->first();
 
     if (!$this->user) {

@@ -9,6 +9,12 @@ class extends Component
 {
     public $email, $password;
 
+    public function mount() {
+      if (auth()->check()) {
+        return $this->redirect(route('dashboard'));
+      }
+    }
+
     public function login() {
         $this->validate([
             'email' => 'required|string|email',

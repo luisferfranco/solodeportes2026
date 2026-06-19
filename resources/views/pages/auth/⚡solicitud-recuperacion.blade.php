@@ -15,6 +15,12 @@ class extends Component
 
   public $email;
 
+  public function mount() {
+    if (auth()->check()) {
+      return $this->redirect(route('dashboard'));
+    }
+  }
+
   public function reinicio() {
       $this->validate([
           'email' => 'required|string|email',
