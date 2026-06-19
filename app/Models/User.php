@@ -21,18 +21,7 @@ class User extends Authenticatable
    *
    * @var list<string>
    */
-  protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'clabe',
-    'nivel',
-    'nick',
-    'equipo_id',
-    'avatar',
-    'is_active',
-    'razon',
-  ];
+  protected $guarded = [];
 
   /**
    * The attributes that should be hidden for serialization.
@@ -61,7 +50,16 @@ class User extends Authenticatable
     return $this->nick ?? $this->name;
   }
   public function getAvatarUrlAttribute(): string {
-    return $this->avatar ? asset('storage/' . $this->avatar) : "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
+
+    if ($this->avatar) {
+      if (str_starts_with($this->avatar, 'http')) {
+        return $this->avatar;
+      } else {
+        return asset('storage/' . $this->avatar);
+      }
+    } else {
+      return "https://ui-avatars.com/api/?name={$this->name}&background=random&color=fff&size=128";
+    }
   }
   public function getSaldoAttribute(): float {
     // Saldo aprobado

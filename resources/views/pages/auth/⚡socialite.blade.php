@@ -14,7 +14,7 @@ new class extends Component
     // id, name, email, avatar, token
 
     // Si el usuario no existe, crearlo
-    $user = User::firstOrCreate(
+    $user = User::updateOrCreate(
       ['email'        => $recUser->email],
       [
         'name'        => $recUser->name,

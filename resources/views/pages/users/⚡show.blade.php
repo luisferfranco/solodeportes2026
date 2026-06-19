@@ -63,16 +63,28 @@ new class extends Component
   <x-modal
     wire:model='openModal'
     title="Editar Perfil"
+    class="backdrop-blur"
     >
     <x-form wire:submit='save'>
+
+      @if ($user->external_id)
+        <x-alert
+          class="alert-warning mb-4">
+          Tu cuenta está vinculada a <span class="font-bold">{{ $user->external_auth }}</span>. Si deseas cambiar tu nombre, constraseña o avatar, por favor hazlo desde dicha plataforma
+        </x-alert>
+      @endif
+
       <x-input
         label="Nombre"
         wire:model='name'
         required
         class="outline-none!"
         icon="fas.user"
+        :disabled="$user->external_id"
         />
-      <p class="text-xs text-base-content/70 -mt-2">Por favor utiliza tu nombre real, ya que es el que usaremos para las transacciones bancarias. Si quieres algo más de privacidad, puedes poner tu "nickname" abajo, que es el nombre que se mostrará en todo el sitio y el que verán los demás jugadores</p>
+      @if (!$user->external_id)
+        <p class="text-xs text-base-content/70 -mt-2">Por favor utiliza tu nombre real, ya que es el que usaremos para las transacciones bancarias. Si quieres algo más de privacidad, puedes poner tu "nickname" abajo, que es el nombre que se mostrará en todo el sitio y el que verán los demás jugadores</p>
+      @endif
 
       <x-input
         label="Nickname (nombre para mostrar)"
@@ -81,22 +93,24 @@ new class extends Component
         icon="fas.user-secret"
         />
 
-      <x-input
-        label="Correo Electrónico"
-        wire:model='email'
-        required
-        class="outline-none!"
-        icon="fas.envelope"
-        />
-      <p class="text-xs text-base-content/70 -mt-2">Por favor utiliza un correo electrónico válido, este es el que utilizarás para entrar a la aplicación</p>
+      @if (!$user->external_id)
+        <x-input
+          label="Correo Electrónico"
+          wire:model='email'
+          required
+          class="outline-none!"
+          icon="fas.envelope"
+          />
+        <p class="text-xs text-base-content/70 -mt-2">Por favor utiliza un correo electrónico válido, este es el que utilizarás para entrar a la aplicación</p>
 
-      <x-file
-        label="Avatar"
-        wire:model='file'
-        accept="image/*"
-        class="outline-none!"
-        />
-      <p class="text-xs text-base-content/70 -mt-2">Puedes subir una imagen para usar como avatar. Esta imagen se mostrará en el sitio para identtificarte. Deberá ser de menos de 2MB y en formato JPG, PNG o GIF</p>
+        <x-file
+          label="Avatar"
+          wire:model='file'
+          accept="image/*"
+          class="outline-none!"
+          />
+        <p class="text-xs text-base-content/70 -mt-2">Puedes subir una imagen para usar como avatar. Esta imagen se mostrará en el sitio para identtificarte. Deberá ser de menos de 2MB y en formato JPG, PNG o GIF</p>
+      @endif
 
       <x-input
         label="CLABE"
@@ -106,38 +120,40 @@ new class extends Component
         />
       <p class="text-xs text-base-content/70 -mt-2">Por favor verifica que tu nombre sea correcto, tal como aparece en la cuenta CLABE que esté registrada. Se utiliza para el depósito de premios</p>
 
-      <hr />
+      @if (!$user->external_id)
+        <hr />
 
-      <p class="text-xs text-base-content/70 -mt-2">Si deseas cambiar tu contraseña, ingresa una nueva a continuación. Si la dejas vacía, se mantendrá la que tienes</p>
-      <div class="flex gap-2">
-        <x-input
-          label="Contraseña"
-          wire:model='password'
-          type="password"
-          class="outline-none!"
-          icon="fas.lock"
-          />
-        <x-input
-          label="Confirmar Contraseña"
-          wire:model='password_confirmation'
-          type="password"
-          class="outline-none!"
-          icon="fas.lock"
-          />
-      </div>
+        <p class="text-xs text-base-content/70 -mt-2">Si deseas cambiar tu contraseña, ingresa una nueva a continuación. Si la dejas vacía, se mantendrá la que tienes</p>
+        <div class="flex gap-2">
+          <x-input
+            label="Contraseña"
+            wire:model='password'
+            type="password"
+            class="outline-none!"
+            icon="fas.lock"
+            />
+          <x-input
+            label="Confirmar Contraseña"
+            wire:model='password_confirmation'
+            type="password"
+            class="outline-none!"
+            icon="fas.lock"
+            />
+        </div>
+      @endif
 
-      <div class="flex gap-2">
-        <x-button
-          label="Guardar Cambios"
-          icon="fas.circle-check"
-          class="btn-primary mt-4"
-          type="submit"
-          />
+      <div class="flex justify-end gap-2">
         <x-button
           label="Cancelar"
           icon="fas.times"
           class="btn-secondary btn-ghost mt-4"
           wire:click="$set('edit', false)"
+          />
+        <x-button
+          label="Guardar Cambios"
+          icon="fas.circle-check"
+          class="btn-primary mt-4"
+          type="submit"
           />
       </div>
     </x-form>
