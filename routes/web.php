@@ -7,9 +7,15 @@ Route::livewire('/register', 'pages::auth.register')->name('register');
 Route::livewire('/login', 'pages::auth.login')->name('login');
 Route::get('/logout', function () {
     auth()->logout();
-
     return redirect(route('login'));
 })->name('logout');
+
+Route::get('/login-google', function () {
+    return Socialite::driver('google')->redirect();
+});
+Route::livewire('/google-callback', 'pages::auth.socialite')->name('socialite');
+
+
 
 Route::livewire('/evento/aceptar_invitacion/{code}', 'pages::evento.aceptar_invitacion')->name('evento.aceptar_invitacion');
 

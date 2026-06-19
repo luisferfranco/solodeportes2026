@@ -30,7 +30,7 @@ class extends Component
 };
 ?>
 
-<div class="relative bg-base-100 p-4 rounded-xl shadow-lg max-w-4xl w-full">
+<x-card class="relative bg-base-100 max-w-xl w-full border border-base-100">
   <img src="/img/solodeportes.png" class="absolute -top-24 left-1/2 transform -translate-x-1/2 w-48 h-48" alt="Logo">
 
   <h1 class="text-2xl text-base-content mt-12 mb-6 font-bold">Registro</h1>
@@ -46,4 +46,4 @@ class extends Component
     </div>
   </x-form>
 
-</div>
+</x-card>
