@@ -31,9 +31,10 @@ class extends Component
 
   <x-form wire:submit='login' class="w-full space-y-2">
     <div>
-      <label class="text-xs font-bold text-base-content/50 uppercase tracking-widest">
-        Correo electrónico<span class="text-red-500">*</span>
-      </label>
+      <x-label
+        value="Correo electrónico"
+        required
+        />
       <x-input
         wire:model='email'
         placeholder="Correo electrónico"
@@ -46,10 +47,10 @@ class extends Component
 
     <div>
       <div class="flex items-center justify-between">
-        <label class="text-xs font-bold text-base-content/50 uppercase tracking-widest">
-          Contraseña<span class="text-red-500">*</span>
-        </label>
-
+        <x-label
+          value="Contraseña"
+          required
+          />
         <a href="#" class="text-xs text-base-content/70 hover:text-primary hover:underline transition duration-300">¿Olvidaste tu contraseña?</a>
       </div>
       <x-input

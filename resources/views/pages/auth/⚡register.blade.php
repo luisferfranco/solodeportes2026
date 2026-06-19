@@ -36,13 +36,65 @@ class extends Component
   <h1 class="text-2xl text-base-content mt-12 mb-6 font-bold">Registro</h1>
 
   <x-form wire:submit='register' class="w-full space-y-2">
-    <x-input wire:model='name' label="Nombre" placeholder="Nombre" inline required class="outline-none!" autofocus />
-    <x-input wire:model='email' label="Correo electrónico" placeholder="Correo electrónico" inline required class="outline-none!" />
-    <x-input wire:model='password' label="Contraseña" placeholder="Contraseña" type="password" inline required class="outline-none!" />
-    <x-input wire:model='password_confirmation' label="Confirmar contraseña" placeholder="Confirmar contraseña" type="password" inline required class="outline-none!" />
-    <div class="flex justify-between items-center">
-      <a href="{{ route('login') }}" class="text-sm text-base-content/50 hover:underline hover:text-base-content">¿Ya tienes una cuenta? Inicia sesión</a>
-      <x-button type="submit" class="ml-auto btn-primary">Registrarse</x-button>
+    <div>
+      <x-label
+        value="Nombre"
+        required
+        />
+      <x-input
+        wire:model='name'
+        placeholder="Nombre"
+        required
+        class="outline-none!"
+        icon="fas.user"
+        autofocus
+        />
+    </div>
+
+    <div>
+      <x-label value="Correo Electrónico" required />
+      <x-input
+        wire:model='email'
+        placeholder="Correo electrónico"
+        required
+        class="outline-none!"
+        icon="fas.envelope"
+        />
+    </div>
+
+    <div>
+      <x-label value="Contraseña" required />
+      <x-input
+        wire:model='password'
+        placeholder="Contraseña"
+        type="password"
+        required
+        class="outline-none!"
+        icon="fas.lock"
+        />
+    </div>
+
+    <div>
+      <x-label value="Confirmar Contraseña" required />
+      <x-input
+        wire:model='password_confirmation'
+        placeholder="Confirmar Contraseña"
+        type="password"
+        required
+        class="outline-none!"
+        icon="fas.lock"
+        />
+    </div>
+
+    <x-button type="submit" class="w-full btn-primary">Registrarse</x-button>
+
+
+    <div class="text-center">
+      ¿Ya tienes una cuenta?
+      <a
+        wire:navigate
+        href="{{ route('login') }}"
+        class="text-base-content/50 hover:text-primary hover:underline transition duration-500">Inicia sesión</a>
     </div>
   </x-form>
 
