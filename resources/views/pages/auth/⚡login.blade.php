@@ -51,7 +51,7 @@ class extends Component
           value="Contraseña"
           required
           />
-        <a href="#" class="text-xs text-base-content/70 hover:text-primary hover:underline transition duration-300">¿Olvidaste tu contraseña?</a>
+        <a wire:navigate href="{{ route('solicitud-recuperacion') }}" class="text-xs text-base-content/70 hover:text-primary hover:underline transition duration-300">¿Olvidaste tu contraseña?</a>
       </div>
       <x-input
         wire:model='password'

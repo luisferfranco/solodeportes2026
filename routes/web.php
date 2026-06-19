@@ -14,6 +14,9 @@ Route::get('/login-google', function () {
     return Socialite::driver('google')->redirect();
 });
 Route::livewire('/google-callback', 'pages::auth.socialite')->name('socialite');
+Route::livewire('/solicitud-recuperacion', 'pages::auth.solicitud-recuperacion')
+  ->name('solicitud-recuperacion');
+Route::livewire('/reiniciar-password/{token}', 'pages::auth.reiniciar-password');
 
 
 
