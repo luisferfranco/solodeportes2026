@@ -66,6 +66,8 @@ class APIService
       return;
     }
 
+    // info($response->json());
+
     $schedule = $response->json()['schedule'] ?? [];
 
     foreach ($schedule as $game) {
@@ -84,6 +86,8 @@ class APIService
       $home_id = Equipo::where('api_id', $game['idHomeTeam'])->first();
       $away_id = Equipo::where('api_id', $game['idAwayTeam'])->first();
 
+      $ronda = min($game['intRound'], 4);
+
       $valido = $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00');
       $valido = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $valido, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
 
@@ -93,7 +97,7 @@ class APIService
         'temporada_id'  => $temporada->id,
         'home_id'       => $home_id->id ?? null,
         'away_id'       => $away_id->id ?? null,
-        'ronda'         => $game['intRound'] ?? null,
+        'ronda'         => $ronda,
         'valido_hasta'  => $valido,
         'status'        => $game['strStatus'] ?? null,
       ];
