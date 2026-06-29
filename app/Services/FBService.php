@@ -34,7 +34,8 @@ class FBService
       // TODO: Revisar cuál es el código que enviará la API de FB
       // para los juegos que no han terminado, para no calificar
       // esos juegos
-      if ($juego->status != 'FT') {
+      // Si el juego no es FT, ET o AP continuar, no calificarlo. Por ejemplo, si es NS, no calificarlo.
+      if ($juego->status != 'FT' && $juego->status != 'ET' && $juego->status != 'AP') {
         continue;
       }
 

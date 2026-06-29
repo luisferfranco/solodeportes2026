@@ -95,7 +95,8 @@ new class extends Component
         </div>
 
         <div class="flex items-center justify-center">
-          @if ($j->status == "FT")
+          {{-- Si el estado es FT, ET o AP, puedes ver los detalles del juego haciendo clic en el ícono de la diana. De lo contrario, no hay detalles disponibles. --}}
+          @if ($j->status == "FT" || $j->status == "ET" || $j->status == "AP")
             <a
               wire:navigate
               href="{{ route('evento.juego-index', ['evento' => $evento, 'juego' => $j]) }}"
