@@ -66,7 +66,7 @@ new class extends Component
     @foreach ($juegos as $j)
       <div class="bg-base-300 rounded-t shadow-md px-2 py-1">
         <span class="text-xs text-base-content/50">{{ $j->valido_hasta->format('d M Y, H:i') }}</span>
-        <x-badge class="badge-info badge-xs" value="{{ $j->status }}" />
+        <x-badge class="{{ in_array($j->status, ['ET', 'AP', 'AET']) ? 'badge-warning' : 'badge-info' }} badge-xs" value="{{ $j->status }}" />
       </div>
 
       <div class="grid grid-cols-5 text-xs mb-2 bg-base-100 rounded-b shadow-md px-2 py-1 border border-base-300">
@@ -95,8 +95,7 @@ new class extends Component
         </div>
 
         <div class="flex items-center justify-center">
-          {{-- Si el estado es FT, ET o AP, puedes ver los detalles del juego haciendo clic en el ícono de la diana. De lo contrario, no hay detalles disponibles. --}}
-          @if ($j->status == "FT" || $j->status == "ET" || $j->status == "AP")
+          @if (in_array($j->status, ['FT', 'ET', 'AP', 'AET']))
             <a
               wire:navigate
               href="{{ route('evento.juego-index', ['evento' => $evento, 'juego' => $j]) }}"
