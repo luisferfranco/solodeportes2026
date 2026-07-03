@@ -149,8 +149,14 @@ class APIService
         continue;
       }
 
-      info($game['idEvent']);
-      info($juego->valido_hasta . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
+
+      if ($game['idEvent'] == 2503392) {
+        info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");
+        info($game);
+      }
+
+      // info($game['idEvent']);
+      // info($juego->valido_hasta . ' ' . $minDateTime->format('Y-m-d H:i:s') . ' ' . $maxDateTime->format('Y-m-d H:i:s'));
 
       if ($juego->valido_hasta->lte($minDateTime) || $juego->valido_hasta->gte($maxDateTime)) {
         continue;

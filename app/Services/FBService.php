@@ -35,7 +35,7 @@ class FBService
       // para los juegos que no han terminado, para no calificar
       // esos juegos
       // Si el juego no es FT, ET o AP continuar, no calificarlo. Por ejemplo, si es NS, no calificarlo.
-      if (!(in_array($juego->status, ['FT', 'ET', 'AP', 'AET']))) {
+      if (!(in_array($juego->status, ['FT', 'ET', 'AP', 'AET', ]))) {
         continue;
       }
 
@@ -55,12 +55,15 @@ class FBService
       }
 
       if ($temporada->deporte_id == "FB") {
-        // Para el futbol soccer se recalculan las diferencias
-        if ($dif > 2) {
-          $dif = 2;
-        }
-        if ($dif < -2) {
-          $dif = -2;
+        if ($juego->status == "AET") {
+          $dif = 0;
+        } else {
+          if ($dif > 2) {
+            $dif = 2;
+          }
+          if ($dif < -2) {
+            $dif = -2;
+          }
         }
       }
 

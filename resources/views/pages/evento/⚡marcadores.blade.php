@@ -66,7 +66,14 @@ new class extends Component
     @foreach ($juegos as $j)
       <div class="bg-base-300 rounded-t shadow-md px-2 py-1">
         <span class="text-xs text-base-content/50">{{ $j->valido_hasta->format('d M Y, H:i') }}</span>
-        <x-badge class="{{ in_array($j->status, ['ET', 'AP', 'AET']) ? 'badge-warning' : 'badge-info' }} badge-xs" value="{{ $j->status }}" />
+
+        {{--
+        ET o AP => badge-warning
+        FT => badge-info
+        AET => badge-error
+        --}}
+
+        <x-badge class="{{ in_array($j->status, ['ET', 'AP']) ? 'badge-warning' : (in_array($j->status, ['FT', 'NS']) ? 'badge-info' : 'badge-error') }} badge-xs" value="{{ $j->status }}" />
       </div>
 
       <div class="grid grid-cols-5 text-xs mb-2 bg-base-100 rounded-b shadow-md px-2 py-1 border border-base-300">
