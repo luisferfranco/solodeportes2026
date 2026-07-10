@@ -156,3 +156,7 @@
 .EasyMDEContainer .editor-toolbar > button:hover, .EasyMDEContainer .editor-toolbar > .active {
     @apply bg-base-100 text-base-content
 }
+
+.markdown h1 {
+  @apply text-4xl font-bold font-display text-primary;
+}

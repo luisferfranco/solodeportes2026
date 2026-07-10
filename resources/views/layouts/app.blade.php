@@ -10,6 +10,8 @@
 </head>
 <body class="min-h-screen font-sans antialiased bg-base-200">
 
+  <livewire:anuncios />
+
   {{-- NAVBAR mobile only --}}
   <x-nav sticky class="lg:hidden">
     <x-slot:brand>
@@ -25,23 +27,23 @@
   <x-main>
     <x-slot:sidebar
       drawer="main-drawer"
-      class="bg-base-100 lg:bg-base-100/75 border-r border-base-300 flex flex-col h-screen shadow-m rounded-l-xl"
+      class="flex flex-col h-screen border-r bg-base-100 lg:bg-base-100/75 border-base-300 shadow-m rounded-l-xl"
       >
 
-      <div class="flex w-full justify-center">
+      <div class="flex justify-center w-full">
         <img src="/img/solodeplogo.png" alt="Logo" class="w-32 h-32 rounded-full">
       </div>
 
       @if($user = auth()->user())
-        <div class="flex gap-1 px-3 items-start">
+        <div class="flex items-start gap-1 px-3">
           <img
             src="{{ $user->avatarUrl }}"
-            class="w-10 h-10 rounded-full inline-block me-2"
+            class="inline-block w-10 h-10 rounded-full me-2"
             >
           <div>
             <div class="font-bold">{{ $user->displayName }}</div>
-            <p class="text-xs text-base-content/75">Saldo: <span class="font-bold font-mono">{{ Number::format($user->saldo,2) }}</span></p>
-            <div class="flex gap-1 items-center">
+            <p class="text-xs text-base-content/75">Saldo: <span class="font-mono font-bold">{{ Number::format($user->saldo,2) }}</span></p>
+            <div class="flex items-center gap-1">
               <x-button icon="lucide.power" class="btn-circle btn-accent btn-ghost btn-xs" no-wire-navigate link="/logout" />
               <x-button icon="lucide.settings" class="btn-circle btn-accent btn-ghost btn-xs" link="/profile" />
               <x-theme-toggle darkTheme="darkqn" />
@@ -69,7 +71,7 @@
         {{-- Administradores de eventos --}}
         @if ($user && $user->administrador_eventos)
           <x-menu-separator />
-          <p class="text-xs uppercase font-bold text-gray-500 px-4">administrar Eventos</p>
+          <p class="px-4 text-xs font-bold text-gray-500 uppercase">administrar Eventos</p>
 
           @foreach ($user->eventosAdministrados as $evento)
             <x-menu-item title="{{ $evento->nombre }}" icon="lucide.trophy" link="{{ route('evento.show', $evento) }}" />
@@ -80,7 +82,7 @@
         {{-- Administración global --}}
         @if ($user && $user->is_admin)
           <x-menu-separator />
-          <p class="text-xs uppercase font-bold text-gray-500 px-4">Admin</p>
+          <p class="px-4 text-xs font-bold text-gray-500 uppercase">Admin</p>
 
           <x-menu-item title="Usuarios" icon="lucide.users" link="{{ route('admin.users.index') }}" />
           <x-menu-item title="Deportes" icon="lucide.medal" link="{{ route('admin.deportes.index') }}" />
