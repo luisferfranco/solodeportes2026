@@ -7,6 +7,7 @@ new
 class extends Component
 {
   public Anuncio $anuncio;
+  public $estado = [];
   public $show = false;
 
   public $anuncios;
@@ -20,7 +21,11 @@ class extends Component
   public function mount() {
     $this->anuncios = Anuncio::all();
     $this->anuncio = new Anuncio();
-    // $this->anuncio = Anuncio::find(3);
+
+    // Inicializar el arreglo para los estados de los anuncios
+    foreach ($this->anuncios as $anuncio) {
+      $this->estado[$anuncio->id] = $anuncio->estado === 'activo';
+    }
   }
 
   public function showAnuncio($id) {
@@ -35,6 +40,15 @@ class extends Component
       $this->anuncios = Anuncio::all();
     }
   }
+
+  public function saveEstado($id) {
+    $anuncio = Anuncio::find($id);
+    if ($anuncio) {
+      $anuncio->estado = $this->estado[$id] ? 'activo' : 'inactivo';
+      $anuncio->save();
+    }
+  }
+
 };
 ?>
 
@@ -76,7 +90,7 @@ class extends Component
       @endscope
 
       @scope('actions', $row)
-        <div class="flex gap-1">
+        <div class="flex gap-1 items-center
           <x-button
             wire:click="showAnuncio({{ $row->id }})"
             icon="fas.eye"
@@ -91,6 +105,13 @@ class extends Component
             wire:click="delete({{ $row->id }})"
             icon="fas.trash"
             class="btn-error btn-square"
+            />
+          <x-toggle
+            wire:model="estado.{{ $row->id }}"
+            wire:change="saveEstado({{ $row->id }})"
+            :checked="$row->estado === 'activo'"
+            label="Activo"
+            class="ml-2"
             />
         </div>
       @endscope
