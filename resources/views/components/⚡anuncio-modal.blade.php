@@ -10,14 +10,33 @@ new class extends Component
   public $dismissed = false;
 
   public function mount(Anuncio $anuncio) {
-    $this->anuncio = $anuncio;
+    $this->anuncio    = $anuncio;
+    $this->dismissed  = $anuncio->usuarios()
+      ->where('user_id', auth()->id())
+      ->wherePivot('no_mostrar', true)
+      ->exists();
+
+    // Si el anuncio se ha presentado al usuario en los pasados diez minutos, no deberá presentarse, se usará la columna fecha_visto de la tabla pivote para el cálculo
+    if ($anuncio->usuarios()
+      ->where('user_id', auth()->id())
+      ->wherePivot('fecha_visto', '>=', now()->subMinutes(10))
+      ->exists()) {
+      $this->show = false;
+      return;
+    }
+
+    // Ahora se deberá actualizar la fecha_visto con este momento, para que no se vuelva a mostrar el anuncio en los próximos diez minutos
+    $anuncio->usuarios()->syncWithoutDetaching([
+      auth()->id() => ['fecha_visto' => now()]
+    ]);
+
   }
 
   public function updatedDismissed($value) {
     if ($value) {
-      $this->anuncio->usuarios()->attach(auth()->id());
+      $this->anuncio->usuarios()->updateExistingPivot(auth()->id(), ['no_mostrar' => true]);
     } else {
-      $this->anuncio->usuarios()->detach(auth()->id());
+      $this->anuncio->usuarios()->updateExistingPivot(auth()->id(), ['no_mostrar' => false]);
     }
   }
 };
@@ -36,5 +55,16 @@ new class extends Component
       wire:model.live="dismissed"
       label="No volver a mostrar este anuncio"
       />
+  </div>
+
+  <div class="flex justify-between mt-5 items-center">
+    <div class="text-base-content/20 text-xs">Anuncio {{ sprintf("%04d", $anuncio->id) }}</div>
+    <div>
+      <x-button
+        wire:click="$set('show', false)"
+        class="btn-primary"
+        label="Cerrar"
+        />
+    </div>
   </div>
 </x-modal>

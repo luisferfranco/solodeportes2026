@@ -6,26 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-  /**
-   * Run the migrations.
-   */
-  public function up(): void
-  {
-    Schema::create('anuncio_users', function (Blueprint $table) {
-      $table->id();
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('anuncio_users', function (Blueprint $table) {
+            $table->id();
 
-      $table->foreignId('anuncio_id')->constrained('anuncios')->onDelete('cascade');
-      $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('anuncio_id')->constrained('anuncios')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-      $table->timestamps();
-    });
-  }
+            $table->boolean('no_mostrar')->default(false);
+            $table->datetime('fecha_visto')->nullable();
 
-  /**
-   * Reverse the migrations.
-   */
-  public function down(): void
-  {
-    Schema::dropIfExists('anuncio_users');
-  }
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('anuncio_users');
+    }
 };
