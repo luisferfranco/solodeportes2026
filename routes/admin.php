@@ -16,3 +16,10 @@ Route::livewire('users', 'pages::admin.users.index')->name('users.index');
 Route::livewire('users/{user}', 'pages::admin.users.show')->name('users.show');
 
 Route::livewire('banco', 'pages::admin.banco')->name('banco');
+
+Route::livewire('anuncios/create', 'pages::admin.anuncios.create')
+  ->name('anuncios.create');
+Route::livewire('anuncios', 'pages::admin.anuncios.index')
+  ->name('anuncios.index');
+Route::livewire('anuncios/{anuncio}/edit', 'pages::admin.anuncios.create')
+  ->name('anuncios.edit');

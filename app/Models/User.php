@@ -109,4 +109,7 @@ class User extends Authenticatable
   public function invitaciones_recibidas() {
     return $this->hasMany(Invitacion::class, 'invitado_id');
   }
+  public function anuncios() {
+    return $this->belongsToMany(Anuncio::class, 'anuncio_users');
+  }
 }
