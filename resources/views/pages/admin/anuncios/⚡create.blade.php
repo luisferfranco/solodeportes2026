@@ -6,7 +6,6 @@ use Livewire\Attributes\Layout;
 use App\Models\Anuncio;
 
 new
-#[Layout('layouts.admin')]
 class extends Component
 {
   use Toast;
