@@ -160,3 +160,25 @@
 .markdown h1 {
   @apply text-4xl font-bold font-display text-primary;
 }
+.markdown h2 {
+  @apply text-2xl font-bold font-display text-secondary;
+}
+.markdown ul {
+    list-style-type: square;
+    list-style-position: outside;
+    margin-left: 0;
+    padding-left: 1.5em; /* Ajusta la indentación del texto según sea necesario */
+}
+
+.markdown li::marker {
+    color: orange;
+}
+
+.markdown p img {
+  display: block;
+  margin: 0 auto;
+}
+
+.markdown p {
+  margin-bottom: 1.5rem;
+}
