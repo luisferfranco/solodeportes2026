@@ -57,7 +57,7 @@ class extends Component
       label="Titulo"
       />
 
-      <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4">
       <x-datetime
         wire:model="desde"
         label="Desde"
