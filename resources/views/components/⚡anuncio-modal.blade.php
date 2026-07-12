@@ -19,13 +19,13 @@ new class extends Component
     // Si el anuncio se ha presentado al usuario en los pasados diez minutos, no deberá presentarse, se usará la columna fecha_visto de la tabla pivote para el cálculo
     if ($anuncio->usuarios()
       ->where('user_id', auth()->id())
-      ->wherePivot('fecha_visto', '>=', now()->subMinutes(10))
+      ->wherePivot('fecha_visto', '>=', now()->subMinutes($this->anuncio->mostrar_cada ?? 240))
       ->exists()) {
       $this->show = false;
       return;
     }
 
-    // Ahora se deberá actualizar la fecha_visto con este momento, para que no se vuelva a mostrar el anuncio en los próximos diez minutos
+    // Ahora se deberá actualizar la fecha_visto con este momento, para que no se vuelva a mostrar el anuncio en los próximos minutos especificados en mostrar_cada
     $anuncio->usuarios()->syncWithoutDetaching([
       auth()->id() => ['fecha_visto' => now()]
     ]);

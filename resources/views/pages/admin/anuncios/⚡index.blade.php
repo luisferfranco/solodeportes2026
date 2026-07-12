@@ -16,6 +16,7 @@ class extends Component
     ['key' => 'titulo', 'label' => 'Titulo'],
     ['key' => 'desde', 'label' => 'Desde'],
     ['key' => 'hasta', 'label' => 'Hasta'],
+    ['key' => 'mostrar_cada', 'label' => 'Mostrar']
   ];
 
   public function mount() {
@@ -90,7 +91,7 @@ class extends Component
       @endscope
 
       @scope('actions', $row)
-        <div class="flex gap-1 items-center
+        <div class="flex gap-1 items-center">
           <x-button
             wire:click="showAnuncio({{ $row->id }})"
             icon="fas.eye"

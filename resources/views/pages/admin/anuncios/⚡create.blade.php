@@ -12,7 +12,7 @@ class extends Component
 
   public Anuncio $anuncio;
   public $user;
-  public $titulo = "", $cuerpo = "", $desde = "", $hasta = "";
+  public $titulo = "", $cuerpo = "", $desde = "", $hasta = "", $cada = "";
 
   public function mount(?Anuncio $anuncio = null) {
     $this->user = auth()->user();
@@ -21,12 +21,14 @@ class extends Component
     $this->cuerpo = $this->anuncio->cuerpo ?? "";
     $this->desde = $this->anuncio->desde ?? "";
     $this->hasta = $this->anuncio->hasta ?? "";
+    $this->cada = $this->anuncio->mostrar_cada ?? 240;
   }
 
   public function save() {
     $this->validate([
       'titulo' => 'required|string|max:255',
       'cuerpo' => 'required|string',
+      'cada' => 'required|integer|min:1',
     ]);
 
     $this->anuncio->titulo = $this->titulo;
@@ -54,12 +56,8 @@ class extends Component
       wire:model="titulo"
       label="Titulo"
       />
-    <x-markdown
-      wire:model="cuerpo"
-      label="Blog post"
-      />
 
-    <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4">
       <x-datetime
         wire:model="desde"
         label="Desde"
@@ -68,7 +66,20 @@ class extends Component
         wire:model="hasta"
         label="Hasta"
         />
+      <x-input
+        wire:model="cada"
+        required
+        label="Mostrar cada (minutos)"
+        type="number"
+        min="1"
+        />
     </div>
+
+    <x-markdown
+      wire:model="cuerpo"
+      label="Blog post"
+      />
+
 
     <div class="flex items-center justify-end">
       <x-button link="{{ route('admin.anuncios.index') }}" class="btn-ghost">Cancelar</x-button>

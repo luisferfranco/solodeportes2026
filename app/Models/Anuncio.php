@@ -13,6 +13,7 @@ class Anuncio extends Model
     'hasta',
     'estado',
     'autor_id',
+    'mostrar_cada',
   ];
 
   public function casts(): array
