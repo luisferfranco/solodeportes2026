@@ -100,7 +100,7 @@ new class extends Component {
     <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
   @endif
 
-  <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
+  <livewire:selector-rondas :model="$evento" :key="'selector-ronda-' . $evento->id" />
 
   <div class="grid grid-cols-1 md:grid-cols-3 mt-4 gap-2">
     <x-stat

@@ -50,6 +50,12 @@ class APIService
   }
 
   public function cargarRondas(Temporada $temporada) {
+    // Se guardarán un unique de las rondas de la temporada
+    $rondas = [];
+
+    // La $rondafinal indica la última ronda de la temporada, sin considerar los playoffs
+    $rondafinal = 0;
+
     $liga   = $temporada->sport_api_id;
     $apikey = env('API_KEY');
     $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
@@ -65,8 +71,6 @@ class APIService
       info("Error: $url");
       return;
     }
-
-    // info($response->json());
 
     $schedule = $response->json()['schedule'] ?? [];
 
@@ -86,7 +90,20 @@ class APIService
       $home_id = Equipo::where('api_id', $game['idHomeTeam'])->first();
       $away_id = Equipo::where('api_id', $game['idAwayTeam'])->first();
 
-      $ronda = min($game['intRound'], 4);
+      // Obtener un listado de todas las rondas que trajo el API
+      $ronda = $game['intRound'];
+      $rondas[$ronda] = true;
+
+      // La ronda 100 indicará que son juegos de Playoffs
+      if ($temporada->deporte_id == 'FB') {
+        if ($ronda >= 16) $ronda = 100;
+      } else if ($temporada->deporte_id == 'FA') {
+        $ronda = min((int) $ronda, 100);
+      }
+
+      if ($ronda > $rondafinal && $ronda < 100) {
+        $rondafinal = $ronda;
+      }
 
       $valido = $game['dateEvent'] . ' ' . ($game['strTime'] ?? '00:00:00');
       $valido = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $valido, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
@@ -102,13 +119,16 @@ class APIService
         'status'        => $game['strStatus'] ?? null,
       ];
 
-      info("({$temporada->id}/{$gameData['ronda']}) {$home_id->nombre} vs {$away_id->nombre} [{$gameData['valido_hasta']}]");
-
       Juego::updateOrCreate(
         ['id' => $gameData['id']],
         $gameData
       );
+
+      $temporada->rondafinal = $rondafinal;
+      $temporada->save();
     }
+
+    info("Rondas cargadas para temporada {$temporada->id}: " . implode(', ', array_keys($rondas)));
   }
 
   public function cargarMarcadores(Temporada $temporada, $ronda) {

@@ -100,7 +100,7 @@ new class extends Component
       />
   </div>
 
-  <livewire:selector-rondas :temporada="$temporada" />
+  <livewire:selector-rondas :model="$temporada" />
 
   <x-table
     :headers="$headers"

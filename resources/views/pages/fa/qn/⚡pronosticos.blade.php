@@ -4,6 +4,7 @@ use App\Models\Evento;
 use App\Models\Participacion;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -64,7 +65,7 @@ new class extends Component
     <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
   @endif
 
-  <livewire:selector-rondas :temporada="$evento->temporada" />
+  <livewire:selector-rondas :model="$evento" />
 
   <div class="max-w-3xl mx-auto">
     @foreach ($juegos as $juego)

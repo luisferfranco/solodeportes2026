@@ -5,23 +5,47 @@ use App\Services\APIService;
 use App\Services\FBService;
 use Livewire\Component;
 use Mary\Traits\Toast;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Evento;
 
 new class extends Component
 {
   use Toast;
 
-  public Temporada $temporada;
+  public Model $model;
   public $ronda;
   public $options = [];
 
-  public function mount(Temporada $temporada) {
-    $this->temporada = $temporada;
-    $this->ronda  = request()->query('rd') ?? $temporada->ronda;
+  public function mount(Model $model) {
 
-    for ($i=1; $i<$temporada->rondafinal + 1; $i++) {
+    info("Selector Rondas mount: " . get_class($model));
+
+    if ($model instanceof Temporada) {
+      $jornada_inicial  = 1;
+      $jornada_final    = $model->rondafinal;
+      $this->ronda      = request()->query('rd') ?? $model->ronda;
+      $postemporada     = true;
+    } elseif ($model instanceof Evento) {
+      $jornada_inicial  = $model->jornada_inicio;
+      $jornada_final    = $model->jornada_fin;
+      $this->ronda      = request()->query('rd') ?? $model->temporada->ronda;
+      $postemporada     = $model->temporada->rondafinal == $model->jornada_fin;
+    } else {
+      throw new \Exception("Modelo no soportado");
+    }
+
+    info("Selector Rondas: jornada_inicial=$jornada_inicial, jornada_final=$jornada_final, ronda={$this->ronda}");
+
+    for ($i=$jornada_inicial; $i<=$jornada_final; $i++) {
       $this->options[] = [
-        'id' => $i,
-        'name' => $i !== $temporada->rondafinal ? 'Ronda ' . $i : 'Eliminatoria Directa'
+        'id'    => $i,
+        'name'  => "Jornada ${i}",
+      ];
+      }
+    if ($postemporada) {
+      $this->options[] = [
+        'id'    => 100,
+        'name'  => 'Playoffs'
       ];
     }
   }

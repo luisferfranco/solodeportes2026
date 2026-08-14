@@ -59,7 +59,7 @@ new class extends Component
 
   <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="5" />
 
-  <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
+  <livewire:selector-rondas :model="$evento" :key="'selector-ronda-' . $evento->id" />
 
   <div class="max-w-3xl mx-auto">
 

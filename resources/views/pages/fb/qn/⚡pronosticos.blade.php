@@ -44,6 +44,7 @@ new class extends Component
 
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
+    info("Futbol Ronda $ronda");
     $this->ronda = $ronda;
     $this->redirectRoute('fb.qn.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, "p" => $this->partId]);
   }
@@ -64,7 +65,7 @@ new class extends Component
     <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
   @endif
 
-  <livewire:selector-rondas :temporada="$evento->temporada" />
+  <livewire:selector-rondas :model="$evento" />
 
   <div class="max-w-3xl mx-auto">
     @foreach ($juegos as $juego)

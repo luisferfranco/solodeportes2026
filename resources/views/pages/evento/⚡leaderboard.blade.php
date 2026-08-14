@@ -148,7 +148,7 @@ new class extends Component
 
   <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="2" />
 
-  <livewire:selector-rondas :temporada="$evento->temporada" :key="'selector-ronda-' . $evento->id" />
+  <livewire:selector-rondas :model="$evento" :key="'selector-ronda-' . $evento->id" />
 
   @php
     $topParticipaciones = $resultados->take(3);
