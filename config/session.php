@@ -214,4 +214,16 @@ return [
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | Keep this as "php" to avoid invalidating active sessions during upgrade.
+    | Switch to "json" after verifying your session payloads are object-free.
+    |
+    */
+
+    'serialization' => env('SESSION_SERIALIZATION', 'php'),
+
 ];

@@ -103,6 +103,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | To help prevent PHP object injection vulnerabilities, Laravel can block
+    | unserialization of arbitrary classes from cache payloads. Keep this set
+    | to false unless you intentionally cache objects and provide an allow-list.
+    |
+    */
+
+    'serializable_classes' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Key Prefix
     |--------------------------------------------------------------------------
     |
