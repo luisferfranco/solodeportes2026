@@ -34,14 +34,15 @@ new class extends Component
       throw new \Exception("Modelo no soportado");
     }
 
-    info("Selector Rondas: jornada_inicial=$jornada_inicial, jornada_final=$jornada_final, ronda={$this->ronda}");
-
     for ($i=$jornada_inicial; $i<=$jornada_final; $i++) {
       $this->options[] = [
         'id'    => $i,
         'name'  => "Jornada ${i}",
       ];
-      }
+    }
+
+    // Solo hay postemporada si están las jornadas completas
+    // Si es media quiniela (la mitad de las  jornadas), no se juega postemporada
     if ($postemporada) {
       $this->options[] = [
         'id'    => 100,

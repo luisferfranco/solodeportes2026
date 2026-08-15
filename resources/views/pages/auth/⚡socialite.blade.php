@@ -4,6 +4,8 @@ use Livewire\Component;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Mary\Traits\Toast;
+use App\Notifications\NuevoUsuarioNotification;
+use Illuminate\Support\Facades\Notification;
 
 new class extends Component
 {
@@ -27,6 +29,11 @@ new class extends Component
         'external_id' => $recUser->id,
       ]
     );
+
+    if ($user->wasRecentlyCreated) {
+      $admins = User::where('nivel', '>', 1)->get();
+      Notification::send($admins, new NuevoUsuarioNotification($user));
+    }
 
     auth()->login($user, true);
     $this->success(

@@ -2,6 +2,8 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NuevoUsuarioNotification;
 
 new
 #[Layout('layouts.empty')]
@@ -30,6 +32,9 @@ class extends Component
 
     auth()->login($user, true);
 
+    $admins = \App\Models\User::where('nivel', '>', 1)->get();
+    Notification::send($admins, new NuevoUsuarioNotification($user));
+
     return $this->redirectIntended(route('dashboard'));
   }
 
@@ -41,7 +46,7 @@ class extends Component
 
   <h1 class="text-2xl text-base-content mt-12 mb-6 font-bold">Registro</h1>
 
-  <x-form wire:submit='register' class="w-full space-y-2">
+  <x-form wire:submit='register' class="w-full space-y-2 py-2 border-b border-gray-500">
     <div>
       <x-label
         value="Nombre"
@@ -103,5 +108,16 @@ class extends Component
         class="text-base-content/50 hover:text-primary hover:underline transition duration-500">Inicia sesión</a>
     </div>
   </x-form>
+
+  <div class="pt-2">
+    <p>Si lo prefieres, puedes registrarte con tu cuenta de Google</p>
+    <x-button
+      link="/login-google"
+      no-wire-navigate
+      class="w-full btn-outline btn-primary mt-2"
+      icon="fab.google"
+      label="Regístrate con Google"
+      />
+  </div>
 
 </x-card>
