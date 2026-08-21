@@ -65,7 +65,19 @@
     </x-slot:content>
   </x-main>
 
-  <x-install-prompt />
   <x-toast />
+  <x-install-prompt />
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          console.log('ServiceWorker registrado con éxito');
+        }, function(err) {
+          console.log('Error al registrar ServiceWorker: ', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
