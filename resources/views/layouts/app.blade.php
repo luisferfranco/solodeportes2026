@@ -7,6 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>{{ isset($title) ? $title.' - '.config('app.name') : config('app.name') }}</title>
+  <link rel="manifest" href="/manifest.json">
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
@@ -64,6 +65,7 @@
     </x-slot:content>
   </x-main>
 
+  <x-install-prompt />
   <x-toast />
 </body>
 </html>
