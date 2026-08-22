@@ -18,6 +18,7 @@ new class extends Component
   public $seleccionadoId = null;
   public $estadoJugador = 'vivo';
   public $historico = [];
+  public array $estadoEquipos = [];
 
   public function mount(Evento $evento, ?Participacion $participacion = null) {
     if (Gate::forUser(auth()->user())->denies('view', $evento)) {
@@ -47,6 +48,7 @@ new class extends Component
       ->get();
 
     $this->cargarEstadoJugador();
+    $this->cargarEstadoEquipos();
     $this->historico = Survivor::query()
       ->where('participacion_id', $this->participacion?->id)
       ->where('ronda', '<', $this->ronda)
@@ -105,23 +107,43 @@ new class extends Component
     $this->seleccionadoId = $this->seleccionado->equipo_id;
   }
 
-  public function estadoEquipo(int $equipoId, int $ronda): ?string
+  public function estadoEquipo(int $equipoId): ?string
   {
-    if (! $this->participacion || $ronda >= $this->evento->temporada->ronda) {
+    if (! $this->participacion) {
       return null;
     }
 
-    $seleccion = Survivor::query()
+    return $this->estadoEquipos[$equipoId] ?? null;
+  }
+
+  protected function cargarEstadoEquipos(): void
+  {
+    $this->estadoEquipos = [];
+
+    if (! $this->participacion) {
+      return;
+    }
+
+    $temporadaRonda = (int) $this->evento->temporada->ronda;
+    $query = Survivor::query()
       ->where('participacion_id', $this->participacion->id)
-      ->where('ronda', $ronda)
-      ->where('equipo_id', $equipoId)
-      ->first();
+      ->orderBy('ronda');
 
-    if (! $seleccion) {
-      return null;
+    if ($this->ronda < $temporadaRonda) {
+      $query->where('ronda', $this->ronda);
+    } else {
+      $query->where('ronda', '<', $this->ronda);
     }
 
-    return $seleccion->acierto ? 'success' : 'error';
+    $selecciones = $query->get(['equipo_id', 'acierto']);
+
+    foreach ($selecciones as $seleccion) {
+      if (! $seleccion->equipo_id) {
+        continue;
+      }
+
+      $this->estadoEquipos[(int) $seleccion->equipo_id] = $seleccion->acierto ? 'success' : 'error';
+    }
   }
 
   protected function cargarEstadoJugador(): void
@@ -163,6 +185,27 @@ new class extends Component
 
   <livewire:selector-rondas :model="$evento" :ronda="$ronda" :key="'selector-ronda-' . $evento->id" />
 
+  @if ($historico->isNotEmpty())
+    <div class="max-w-3xl mx-auto mt-8">
+      <h3 class="text-lg font-semibold mb-3">Equipos ya Usados</h3>
+      <div class="flex gap-4 border-base-300 bg-base-100 rounded-xl p-4">
+        @foreach ($historico as $registro)
+          <div class="relative">
+            <img
+              src="{{ $registro->equipo?->logo }}"
+              alt="{{ $registro->equipo?->nombre }}"
+              class="w-8 h-8 object-contain"
+              />
+            <x-icon
+              name="{{ $registro->acierto ? 'fas.circle-check' : 'fas.circle-xmark' }}"
+              class="absolute -top-1 -right-2 w-4 h-4 {{ $registro->acierto ? 'text-success' : 'text-error' }}"
+              />
+          </div>
+        @endforeach
+      </div>
+    </div>
+  @endif
+
   @if ($participacion)
     <div class="max-w-3xl mx-auto mt-4">
       <div class="alert {{ $estadoJugador === 'vivo' ? 'alert-success' : 'alert-error' }} shadow-sm mb-6">
@@ -175,8 +218,8 @@ new class extends Component
     <div class="grid grid-cols-2 gap-2">
       @foreach ($juegos as $juego)
         @php
-          $estadoEquipoAway = $this->estadoEquipo($juego->awayTeam->id, $juego->ronda);
-          $estadoEquipoHome = $this->estadoEquipo($juego->homeTeam->id, $juego->ronda);
+          $estadoEquipoAway = $this->estadoEquipo($juego->awayTeam->id);
+          $estadoEquipoHome = $this->estadoEquipo($juego->homeTeam->id);
         @endphp
 
         <x-sr-equipo
@@ -197,21 +240,4 @@ new class extends Component
       @endforeach
     </div>
   </div>
-
-  @if ($historico->isNotEmpty())
-    <div class="max-w-3xl mx-auto mt-8">
-      <h3 class="text-lg font-semibold mb-3">Juegos ya jugados</h3>
-      <div class="space-y-2">
-        @foreach ($historico as $registro)
-          <div class="flex items-center justify-between rounded-lg border border-base-300 bg-base-100 px-3 py-2">
-            <span class="font-medium">Ronda {{ $registro->ronda }}</span>
-            <span>{{ $registro->equipo?->nombre ?? 'Equipo' }}</span>
-            <span class="badge {{ $registro->acierto ? 'badge-success' : 'badge-error' }}">
-              {{ $registro->acierto ? 'Acierto' : 'Fallo' }}
-            </span>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  @endif
 </div>
