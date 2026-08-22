@@ -2,37 +2,45 @@
 
 namespace App\Models;
 
-use App\Models\Evento;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Participacion extends Model
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  protected $table = 'participaciones';
-  protected $fillable = [
-    'nombre',
-    'user_id',
-    'evento_id',
-    // Indicación si esta vivo para los eventos de survivor
-    'survivor',
-  ];
+    protected $table = 'participaciones';
 
-  public function user() {
-    return $this->belongsTo(User::class);
-  }
+    protected $fillable = [
+        'nombre',
+        'user_id',
+        'evento_id',
+        // Indicación si esta vivo para los eventos de survivor
+        'survivor',
+    ];
 
-  public function evento() {
-    return $this->belongsTo(Evento::class);
-  }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-  public function pronosticos() {
-    return $this->hasMany(Pronostico::class, 'participacion_id');
-  }
+    public function evento()
+    {
+        return $this->belongsTo(Evento::class);
+    }
 
-  public function leaderboard() {
-    return $this->hasOne(Leaderboard::class, 'participacion_id');
-  }
+    public function pronosticos()
+    {
+        return $this->hasMany(Pronostico::class, 'participacion_id');
+    }
+
+    public function survivors()
+    {
+        return $this->hasMany(Survivor::class, 'participacion_id');
+    }
+
+    public function leaderboard()
+    {
+        return $this->hasOne(Leaderboard::class, 'participacion_id');
+    }
 }

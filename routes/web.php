@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 Route::livewire('/register', 'pages::auth.register')->name('register');
 Route::livewire('/login', 'pages::auth.login')->name('login');
 Route::get('/logout', function () {
     auth()->logout();
+
     return redirect(route('login'));
 })->name('logout');
 
@@ -15,10 +15,8 @@ Route::get('/login-google', function () {
 });
 Route::livewire('/google-callback', 'pages::auth.socialite')->name('socialite');
 Route::livewire('/solicitud-recuperacion', 'pages::auth.solicitud-recuperacion')
-  ->name('solicitud-recuperacion');
+    ->name('solicitud-recuperacion');
 Route::livewire('/reiniciar-password/{token}', 'pages::auth.reiniciar-password');
-
-
 
 Route::livewire('/evento/aceptar_invitacion/{code}', 'pages::evento.aceptar_invitacion')->name('evento.aceptar_invitacion');
 
@@ -55,6 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/fa/qn/{evento:slug}/pronosticos', 'pages::fa.qn.pronosticos')->name('fa.qn.pronosticos');
 
     // Futbol Americano - Survivor
-    Route::livewire('/fa/sr/{evento:slug}', 'pages::fb.qn.show')->name('fa.sr.pronosticos');
+    Route::livewire('/fa/sr/{evento:slug}/pronosticos', 'pages::fa.sr.pronosticos')->name('fa.sr.pronosticos');
 
 });
