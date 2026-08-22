@@ -16,19 +16,19 @@ new class extends Component
   public $ronda;
   public $options = [];
 
-  public function mount(Model $model) {
+  public function mount(Model $model, $ronda = null) {
 
     info("Selector Rondas mount: " . get_class($model));
 
     if ($model instanceof Temporada) {
       $jornada_inicial  = 1;
       $jornada_final    = $model->rondafinal;
-      $this->ronda      = request()->query('rd') ?? $model->ronda;
+      $this->ronda      = $ronda ?? request()->query('rd') ?? $model->ronda;
       $postemporada     = true;
     } elseif ($model instanceof Evento) {
       $jornada_inicial  = $model->jornada_inicio;
       $jornada_final    = $model->jornada_fin;
-      $this->ronda      = request()->query('rd') ?? $model->temporada->ronda;
+      $this->ronda      = $ronda ?? request()->query('rd') ?? $model->temporada->ronda;
       $postemporada     = $model->temporada->rondafinal == $model->jornada_fin;
     } else {
       throw new \Exception("Modelo no soportado");
@@ -37,7 +37,7 @@ new class extends Component
     for ($i=$jornada_inicial; $i<=$jornada_final; $i++) {
       $this->options[] = [
         'id'    => $i,
-        'name'  => "Jornada ${i}",
+        'name'  => "Jornada {$i}",
       ];
     }
 

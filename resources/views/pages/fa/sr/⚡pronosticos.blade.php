@@ -161,7 +161,7 @@ new class extends Component
     <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
   @endif
 
-  <livewire:selector-rondas :model="$evento" />
+  <livewire:selector-rondas :model="$evento" :ronda="$ronda" :key="'selector-ronda-' . $evento->id" />
 
   @if ($participacion)
     <div class="max-w-3xl mx-auto mt-4">
