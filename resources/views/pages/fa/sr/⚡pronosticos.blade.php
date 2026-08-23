@@ -37,7 +37,7 @@ new class extends Component
       ?? $this->participaciones->first()?->id;
 
     $this->participacion = $this->participaciones->firstWhere('id', $this->partId);
-    $this->ronda = min((int) (request()->query('rd') ?? $evento->temporada->ronda), (int) $evento->temporada->ronda);
+    $this->ronda = (int) (request()->query('rd') ?? $evento->temporada->ronda);
 
     $this->juegos = $this->evento
       ->temporada
@@ -59,7 +59,7 @@ new class extends Component
 
   #[On('ronda-seleccionada')]
   public function actualizarRonda($ronda) {
-    $this->ronda = min((int) $ronda, (int) $this->evento->temporada->ronda);
+    $this->ronda = (int) $ronda;
     $this->redirectRoute('fa.sr.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, 'p' => $this->partId]);
   }
 
@@ -208,9 +208,11 @@ new class extends Component
 
   @if ($participacion)
     <div class="max-w-3xl mx-auto mt-4">
-      <div class="alert {{ $estadoJugador === 'vivo' ? 'alert-success' : 'alert-error' }} shadow-sm mb-6">
-        <span>{{ $estadoJugador === 'vivo' ? 'Vivo' : 'Muerto' }}</span>
-      </div>
+      <x-alert
+        class="{{ $estadoJugador === 'vivo' ? 'alert-success' : 'alert-error' }}"
+        title="{{ $estadoJugador === 'vivo' ? 'Sobreviviente' : 'Has muerto' }}"
+        icon="{{ $estadoJugador === 'vivo' ? 'fas.shield-halved' : 'fas.skull-crossbones' }}"
+        />
     </div>
   @endif
 
