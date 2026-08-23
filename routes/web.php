@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     // Futbol Americano - Quiniela
     Route::livewire('/fa/qn/{evento:slug}/pronosticos', 'pages::fa.qn.pronosticos')->name('fa.qn.pronosticos');
+    Route::livewire('/fa/qn/{evento:slug}/tabla', 'pages::fa.qn.tabla')->name('fa.qn.tabla');
 
     // Futbol Americano - Survivor
     Route::livewire('/fa/sr/{evento:slug}/pronosticos', 'pages::fa.sr.pronosticos')->name('fa.sr.pronosticos');
