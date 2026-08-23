@@ -14,6 +14,7 @@ new class extends Component
 
   public Model $model;
   public $ronda;
+  public $temporada;
   public $options = [];
 
   public function mount(Model $model, $ronda = null) {
@@ -21,6 +22,7 @@ new class extends Component
     info("Selector Rondas mount: " . get_class($model));
 
     if ($model instanceof Temporada) {
+      $this->temporada = $model;
       $jornada_inicial  = 1;
       $jornada_final    = $model->rondafinal;
       $this->ronda      = $ronda ?? request()->query('rd') ?? $model->ronda;
@@ -28,6 +30,7 @@ new class extends Component
     } elseif ($model instanceof Evento) {
       $jornada_inicial  = $model->jornada_inicio;
       $jornada_final    = $model->jornada_fin;
+      $this->temporada = $model->temporada;
       $this->ronda      = $ronda ?? request()->query('rd') ?? $model->temporada->ronda;
       $postemporada     = $model->temporada->rondafinal == $model->jornada_fin;
     } else {

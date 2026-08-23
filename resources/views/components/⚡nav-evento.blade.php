@@ -41,7 +41,9 @@ new class extends Component
 
     $routeMap = [
       '1' => 'evento.show',
-      '2' => $route . 'leaderboard',
+      '2' => $this->evento->tipojuego_id == 'sr'
+        ? $route . 'leaderboard'
+        : 'evento.leaderboard',
       '3' => $route . 'pronosticos',
       '4' => 'evento.resultados',
       '5' => 'evento.marcadores',
