@@ -63,26 +63,23 @@ new class extends Component
   </div>
 
 
-  <div class="px-2 py-1 flex items-center justify-between gap-2 mb-4">
-    <div class="flex items-center justify-center gap-2 grow">
-      @for ($i = -4; $i < 0; $i++)
-        <x-button
-          label=" {{ abs($i) }} "
-          class="h-10 w-10 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
-          wire:click='pronostica({{ $i }})'
-          spinner
-          />
-      @endfor
-      @for ($i = 1; $i <= 4; $i++)
-        <x-button
-          label=" {{ $i }} "
-          class="h-10 w-10 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
-          wire:click='pronostica({{ $i }})'
-          spinner
-          />
-      @endfor
-    </div>
-
-
+  <div class="flex items-center justify-center gap-1 grow mb-4">
+    @for ($i = -4; $i < 0; $i++)
+      <x-button
+        label=" {{ abs($i) }} "
+        class="h-9 w-9 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
+        wire:click='pronostica({{ $i }})'
+        spinner
+        />
+    @endfor
+    @for ($i = 1; $i <= 4; $i++)
+      <x-button
+        label=" {{ $i }} "
+        class="h-9 w-9 rounded {{ $prono === $i ? 'bg-red-800 text-white' : 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-500' }}"
+        wire:click='pronostica({{ $i }})'
+        spinner
+        />
+    @endfor
   </div>
+
 </div>
