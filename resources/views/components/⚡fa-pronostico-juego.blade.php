@@ -43,16 +43,27 @@ new class extends Component
     <div>Valido hasta el <span class="font-bold">{{ $juego->valido_hasta }}</span> ({{ $juego->valido_hasta->diffForHumans() }})</div>
     <div>Juego #{{ $juego->id }}</div>
   </div>
-  <div class="px-2 py-1 flex items-center justify-between gap-2 my-4">
 
+  <div class="flex items-center justify-center gap-12">
     {{-- Equipo Home --}}
-    <div class="w-1/4">
-      <div class="flex justify-center">
-        <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="h-8 w-8 md:h-18 md:w-18"></p>
+    <div>
+      <div class="flex justify-center items-end gap-2">
+        <p class="text-center"><img src="{{ $juego->awayTeam->logo }}" class="h-8 w-8 md:h-10 md:w-10"></p>
+        <p class="text-center text-xs md:text-base">{{ $juego->awayTeam->nombre }}</p>
       </div>
-      <p class="text-center text-xs md:text-base">{{ $juego->awayTeam->nombre }}</p>
     </div>
 
+    {{-- Equipo Away --}}
+    <div>
+      <div class="flex justify-center items-end gap-2">
+        <p class="text-center text-xs md:text-base">{{ $juego->homeTeam->nombre }}</p>
+        <p class="text-center text-xs md:text-base"><img src="{{ $juego->homeTeam->logo }}" class="h-8 w-8 md:h-10 md:w-10"></p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="px-2 py-1 flex items-center justify-between gap-2 mb-4">
     <div class="flex items-center justify-center gap-2 grow">
       @for ($i = -4; $i < 0; $i++)
         <x-button
@@ -72,13 +83,6 @@ new class extends Component
       @endfor
     </div>
 
-    {{-- Equipo Away --}}
-    <div class="w-1/4">
-      <div class="flex justify-center">
-        <p class="text-center text-xs md:text-base"><img src="{{ $juego->homeTeam->logo }}" class="h-8 w-8 md:h-18 md:w-18"></p>
-      </div>
-      <p class="text-center text-xs md:text-base">{{ $juego->homeTeam->nombre }}</p>
-    </div>
 
   </div>
 </div>
