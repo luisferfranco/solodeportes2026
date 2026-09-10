@@ -45,12 +45,32 @@ new class extends Component
       ->orderBy('equipo_id')
       ->get();
 
-    $estadoPorAcierto = static function ($acierto): string {
-      if ($acierto === null) {
-        return 'neutral';
+    $juegosRonda = $this->evento->temporada
+      ->juegos()
+      ->where('ronda', $this->ronda)
+      ->get();
+
+    $estadoPorAcierto = function ($equipoId) use ($juegosRonda): string {
+      $juegoEquipo = $juegosRonda->first(function ($juego) use ($equipoId) {
+        return (int) $juego->home_id === (int) $equipoId || (int) $juego->away_id === (int) $equipoId;
+      });
+
+      if (! $juegoEquipo || strtoupper((string) ($juegoEquipo->status ?? '')) !== 'FT') {
+        return 'warning';
       }
 
-      return (bool) $acierto ? 'success' : 'error';
+      $homeScore = (int) ($juegoEquipo->home_score ?? 0);
+      $awayScore = (int) ($juegoEquipo->away_score ?? 0);
+
+      if ($homeScore === $awayScore) {
+        return 'error';
+      }
+
+      $equipoGanadorId = $homeScore > $awayScore
+        ? (int) $juegoEquipo->home_id
+        : (int) $juegoEquipo->away_id;
+
+      return (int) $equipoId === $equipoGanadorId ? 'success' : 'error';
     };
 
     $this->columnas = $selecciones
@@ -62,7 +82,7 @@ new class extends Component
           'equipo_id' => (int) $equipoId,
           'equipo_nombre' => $primero?->equipo?->nombre ?? 'Equipo',
           'equipo_logo' => $primero?->equipo?->logo,
-          'estado' => $estadoPorAcierto($primero?->acierto),
+          'estado' => $estadoPorAcierto($equipoId),
           'total' => $items->count(),
           'participaciones' => $items
             ->pluck('participacion.nombre')
@@ -129,8 +149,9 @@ new class extends Component
   @else
     @php
       $estadoHeader = [
-        'success' => 'bg-success/20 border-success/40',
-        'error' => 'bg-error/20 border-error/40',
+        'warning' => 'bg-warning/50 border-warning/40',
+        'success' => 'bg-success/50 border-success/40',
+        'error' => 'bg-error/50 border-error/40',
         'neutral' => 'bg-base-200 border-base-300',
       ];
     @endphp

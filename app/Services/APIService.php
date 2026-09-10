@@ -138,9 +138,6 @@ class APIService
     $apikey = env('API_KEY');
     $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
 
-    info('Carga de Marcadores');
-    info($url);
-
     // Obtener la fecha mínima y máxima de los juegos de la ronda
     $dateRange = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $ronda)
