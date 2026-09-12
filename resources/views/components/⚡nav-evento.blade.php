@@ -32,6 +32,10 @@ new class extends Component
         ['id' => '5', 'name' => 'Marcadores'],
       ];
     }
+
+    if ($this->evento->tipojuego_id == 'qn') {
+      $this->options[] = ['id' => '6', 'name' => 'Tabla'];
+    }
   }
 
   public function updatedOption($value) {
@@ -47,6 +51,7 @@ new class extends Component
       '3' => $route . 'pronosticos',
       '4' => 'evento.resultados',
       '5' => 'evento.marcadores',
+      '6' => $route . 'tabla',
     ];
 
     $this->redirectRoute($routeMap[$value ?? 1], ['evento' => $this->evento]);

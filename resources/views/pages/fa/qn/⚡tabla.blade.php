@@ -127,7 +127,7 @@ new class extends Component
 <div>
     <x-title title="{{ $evento->nombre }}" subtitle="Tabla de Picks" />
 
-    <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="3" />
+    <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="6" />
     <livewire:selector-rondas :model="$evento" :ronda="$ronda" :key="'selector-ronda-' . $evento->id" />
 
     @if ($juegos->isEmpty())
