@@ -157,7 +157,7 @@ new class extends Component
             <table class="table table-pin-rows w-full border-separate border-spacing-0">
                 <thead>
                     <tr>
-                        <th class="sticky left-0 z-30 min-w-56 border-b border-r border-base-300 bg-base-200">Participaciones</th>
+                        <th class="sticky left-0 z-30 w-24 border-b border-r border-base-300 bg-base-200">Participaciones</th>
 
                         @foreach ($juegos as $juego)
                             <th class="w-24 min-w-24 border-b border-base-300 bg-base-200 px-2 py-2 text-center">
@@ -173,7 +173,9 @@ new class extends Component
                 <tbody>
                     @foreach ($participaciones as $participacion)
                         <tr>
-                            <th class="sticky left-0 z-20 border-b border-r border-base-300 bg-base-100 font-medium whitespace-nowrap">{{ $participacion->nombre }}</th>
+                            <th class="sticky left-0 z-20 border-b border-r border-base-300 bg-base-100 font-medium whitespace-nowrap max-w-16 overflow-hidden text-ellipsis px-1 w-16">
+                                {{ $participacion->nombre }}
+                            </th>
 
                             @foreach ($juegos as $juego)
                                 @php
