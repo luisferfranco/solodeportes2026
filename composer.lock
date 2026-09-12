@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1338e05f8c7b2f0f1cd0a0cba8664fcc",
+    "content-hash": "2d73fcbde9395f0d27bd265f01eb1657",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -4334,16 +4334,16 @@
         },
         {
             "name": "robsontenorio/mary",
-            "version": "2.9.9",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/robsontenorio/mary.git",
-                "reference": "d02c03f54e16d28288cf26c15f33a8c18debd33e"
+                "url": "https://github.com/luisferfranco/mary.git",
+                "reference": "57b746ef69fa1cb0300074d0c367a8d8d951cb6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robsontenorio/mary/zipball/d02c03f54e16d28288cf26c15f33a8c18debd33e",
-                "reference": "d02c03f54e16d28288cf26c15f33a8c18debd33e",
+                "url": "https://api.github.com/repos/luisferfranco/mary/zipball/57b746ef69fa1cb0300074d0c367a8d8d951cb6a",
+                "reference": "57b746ef69fa1cb0300074d0c367a8d8d951cb6a",
                 "shasum": ""
             },
             "require": {
@@ -4353,18 +4353,19 @@
                 "laravel/prompts": "^0|^1"
             },
             "require-dev": {
-                "orchestra/testbench": "^8|^9|^10|^11.0",
-                "phpunit/phpunit": "^10|^11|^12.5.12"
+                "orchestra/testbench": "^8|^9|^10",
+                "phpunit/phpunit": "^10|^11"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
-                    "aliases": {
-                        "Mary": "Mary\\Facades\\Mary"
-                    },
                     "providers": [
                         "Mary\\MaryServiceProvider"
-                    ]
+                    ],
+                    "aliases": {
+                        "Mary": "Mary\\Facades\\Mary"
+                    }
                 }
             },
             "autoload": {
@@ -4372,7 +4373,11 @@
                     "Mary\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Mary\\Tests\\": "tests"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -4386,11 +4391,11 @@
             "description": "Gorgeous UI components for Livewire powered by daisyUI and Tailwind",
             "homepage": "https://mary-ui.com",
             "keywords": [
-                "DaisyUI",
                 "alpinejs",
                 "blade",
                 "blade ui components",
                 "components",
+                "daisyUI",
                 "laravel",
                 "livewire",
                 "livewire components",
@@ -4406,17 +4411,7 @@
                 "tallstackui",
                 "ui"
             ],
-            "support": {
-                "issues": "https://github.com/robsontenorio/mary/issues",
-                "source": "https://github.com/robsontenorio/mary/tree/2.9.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/robsontenorio",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-07-29T22:01:59+00:00"
+            "time": "2026-09-12T01:36:50+00:00"
         },
         {
             "name": "symfony/clock",
@@ -11804,7 +11799,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "robsontenorio/mary": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

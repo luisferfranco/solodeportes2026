@@ -8,6 +8,13 @@
         "framework"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/luisferfranco/mary.git",
+            "no-api": true
+        }
+    ],
     "require": {
         "php": "^8.2",
         "laravel/framework": "^13.0",
@@ -16,7 +23,7 @@
         "livewire/livewire": "^4.1",
         "mallardduck/blade-lucide-icons": "^1.26",
         "owenvoke/blade-fontawesome": "^3.3",
-        "robsontenorio/mary": "^2.7"
+        "robsontenorio/mary": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
