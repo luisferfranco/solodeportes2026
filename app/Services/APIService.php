@@ -147,6 +147,8 @@ class APIService
     $min = $dateRange?->min_date ? \Carbon\Carbon::parse($dateRange->min_date)->format('Y-m-d') . ' 00:00:00' : null;
     $max = $dateRange?->max_date ? \Carbon\Carbon::parse($dateRange->max_date)->format('Y-m-d') . ' 23:59:59' : null;
 
+    info("HDP {$url}");
+
     $response = Http::withHeaders([
       'X_API_KEY' => $apikey
     ])->get($url);
