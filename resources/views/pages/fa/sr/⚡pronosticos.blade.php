@@ -6,9 +6,12 @@ use App\Models\Participacion;
 use App\Models\Survivor;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 new class extends Component
 {
+  use Toast;
+
   public Evento $evento;
   public $juegos;
   public $ronda;
@@ -71,6 +74,19 @@ new class extends Component
   public function seleccionarEquipo(int $juegoId, int $equipoId): void
   {
     if (! $this->participacion || $this->estadoJugador === 'muerto') {
+      return;
+    }
+
+    $primerJuego = $this->juegos->first();
+
+    // Si el primer partido de la ronda actual aún está abierto, no permitimos cambiar la selección y dejamos el equipo actual intacto.
+    if ($primerJuego?->valido_hasta && now()->gt($primerJuego->valido_hasta)) {
+      $this->error(
+        title:  'No intentes hacer trampas',
+        description: 'No puedes cambiar tu selección una vez que ha empezado el primer partido de la ronda',
+        icon: 'fas.circle-exclamation',
+        timeout: 5000,
+      );
       return;
     }
 
