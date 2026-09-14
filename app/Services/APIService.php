@@ -138,10 +138,6 @@ class APIService
     $apikey = env('API_KEY');
     $url    = env('API_URL') . "v2/json/schedule/league/{$liga}/{$temporada->temporada}";
 
-    info("HDP {$url}");
-    info("HDP " . env('API_URL'));
-
-
     // Obtener la fecha mínima y máxima de los juegos de la ronda
     $dateRange = Juego::where('temporada_id', $temporada->id)
       ->where('ronda', $ronda)
@@ -150,8 +146,6 @@ class APIService
 
     $min = $dateRange?->min_date ? \Carbon\Carbon::parse($dateRange->min_date)->format('Y-m-d') . ' 00:00:00' : null;
     $max = $dateRange?->max_date ? \Carbon\Carbon::parse($dateRange->max_date)->format('Y-m-d') . ' 23:59:59' : null;
-
-    info("HDP {$url}");
 
     $response = Http::withHeaders([
       'X_API_KEY' => $apikey
@@ -174,7 +168,6 @@ class APIService
       if (!$juego) {
         continue;
       }
-
 
       if ($game['idEvent'] == 2503392) {
         info("Evaluando juego {$game['idEvent']} con fecha {$game['dateEvent']} - Rango: {$min} a {$max}");

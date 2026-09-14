@@ -35,7 +35,7 @@ class FBService
       // para los juegos que no han terminado, para no calificar
       // esos juegos
       // Si el juego no es FT, ET o AP continuar, no calificarlo. Por ejemplo, si es NS, no calificarlo.
-      if (!(in_array($juego->status, ['FT', 'ET', 'AP', 'AET', ]))) {
+      if (!(in_array($juego->status, ['FT', 'ET', 'AP', 'AET', 'AOT']))) {
         continue;
       }
 

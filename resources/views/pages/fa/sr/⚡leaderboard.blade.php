@@ -55,7 +55,8 @@ new class extends Component
         return (int) $juego->home_id === (int) $equipoId || (int) $juego->away_id === (int) $equipoId;
       });
 
-      if (! $juegoEquipo || strtoupper((string) ($juegoEquipo->status ?? '')) !== 'FT') {
+      // 'warning' si el resultado no es FT o AOT
+      if (! $juegoEquipo || ! in_array(strtoupper((string) ($juegoEquipo->status ?? '')), ['FT', 'AOT'])) {
         return 'warning';
       }
 
