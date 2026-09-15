@@ -16,6 +16,12 @@ class Survivor extends Model
         'acierto',
     ];
 
+    public function casts(): array {
+      return [
+        'acierto' => 'boolean',
+      ];
+    }
+
     public function evento(): BelongsTo
     {
         return $this->belongsTo(Evento::class);

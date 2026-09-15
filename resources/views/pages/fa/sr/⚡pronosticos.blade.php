@@ -19,7 +19,7 @@ new class extends Component
   public $partId;
   public $seleccionado = null;
   public $seleccionadoId = null;
-  public $estadoJugador = 'vivo';
+  public $estadoJugador = null;
   public $historico = [];
   public array $estadoEquipos = [];
 
@@ -73,7 +73,7 @@ new class extends Component
 
   public function seleccionarEquipo(int $juegoId, int $equipoId): void
   {
-    if (! $this->participacion || $this->estadoJugador === 'muerto') {
+    if (! $this->participacion || $this->estadoJugador === false) {
       return;
     }
 
@@ -117,7 +117,7 @@ new class extends Component
       'ronda' => $this->ronda,
     ], [
       'equipo_id' => $equipoId,
-      'acierto' => 0,
+      'acierto' => null,
     ]);
 
     $this->seleccionadoId = $this->seleccionado->equipo_id;
@@ -158,7 +158,11 @@ new class extends Component
         continue;
       }
 
-      $this->estadoEquipos[(int) $seleccion->equipo_id] = $seleccion->acierto ? 'success' : 'error';
+      $this->estadoEquipos[(int) $seleccion->equipo_id] = match (true) {
+        $seleccion->acierto === null => 'warning',
+        $seleccion->acierto === true => 'success',
+        default => 'error',
+      };
     }
   }
 
@@ -170,21 +174,27 @@ new class extends Component
       ->first();
 
     $this->seleccionadoId = $this->seleccionado?->equipo_id;
-    $this->estadoJugador = 'vivo';
+
+    $aciertoRaw = $this->seleccionado?->getRawOriginal('acierto');
+    $this->estadoJugador = match (true) {
+      $aciertoRaw === null => null,
+      (bool) $aciertoRaw === true => true,
+      default => false,
+    };
 
     if (! $this->participacion) {
-      $this->estadoJugador = 'muerto';
-
       return;
     }
 
-    $previas = Survivor::query()
-      ->where('participacion_id', $this->participacion->id)
-      ->where('ronda', '<', $this->ronda)
-      ->get();
+    if ($this->ronda > 1) {
+      $previas = Survivor::query()
+        ->where('participacion_id', $this->participacion->id)
+        ->where('ronda', '<', $this->ronda)
+        ->get();
 
-    if ($previas->isNotEmpty() && $previas->contains(fn (Survivor $seleccion) => ! (bool) $seleccion->acierto)) {
-      $this->estadoJugador = 'muerto';
+      if ($previas->isNotEmpty() && $previas->contains(fn (Survivor $registro) => ! (bool) $registro->acierto)) {
+        $this->estadoJugador = false;
+      }
     }
   }
 };
@@ -213,8 +223,8 @@ new class extends Component
               class="w-8 h-8 object-contain"
               />
             <x-icon
-              name="{{ $registro->acierto ? 'fas.circle-check' : 'fas.circle-xmark' }}"
-              class="absolute -top-1 -right-2 w-4 h-4 {{ $registro->acierto ? 'text-success' : 'text-error' }}"
+              name="{{ $registro->acierto === null ? 'fas.circle-exclamation' : ($registro->acierto ? 'fas.circle-check' : 'fas.circle-xmark') }}"
+              class="absolute -top-1 -right-2 w-4 h-4 {{ $registro->acierto === null ? 'text-warning' : ($registro->acierto ? 'text-success' : 'text-error') }}"
               />
           </div>
         @endforeach
@@ -222,40 +232,65 @@ new class extends Component
     </div>
   @endif
 
-  @if ($participacion)
+  @if ($this->ronda === $evento->temporada->ronda && $participacion)
     <div class="max-w-3xl mx-auto mt-4">
-      <x-alert
-        class="{{ $estadoJugador === 'vivo' ? 'alert-success' : 'alert-error' }}"
-        title="{{ $estadoJugador === 'vivo' ? 'Sobreviviente' : 'Has muerto' }}"
-        icon="{{ $estadoJugador === 'vivo' ? 'fas.shield-halved' : 'fas.skull-crossbones' }}"
+      @if ($estadoJugador === null)
+        <x-alert
+          class="alert-warning"
+          title="Esperando a tu destino"
+          icon="fas.hourglass-half"
         />
+      @elseif ($estadoJugador === true)
+        <x-alert
+          class="alert-success"
+          title="Sobreviviente"
+          icon="fas.shield-halved"
+        />
+      @else
+        <x-alert
+          class="alert-error"
+          title="Moriste"
+          icon="fas.skull-crossbones"
+        />
+      @endif
     </div>
   @endif
 
-  <div class="max-w-3xl mx-auto mt-6">
-    <div class="grid grid-cols-2 gap-2">
-      @foreach ($juegos as $juego)
-        @php
-          $estadoEquipoAway = $this->estadoEquipo($juego->awayTeam->id);
-          $estadoEquipoHome = $this->estadoEquipo($juego->homeTeam->id);
-        @endphp
-
-        <x-sr-equipo
-          :equipo="$juego->awayTeam"
-          :seleccionado="$seleccionadoId"
-          :estado="$estadoEquipoAway"
-          :disabled="$estadoJugador !== 'vivo' || ($juego->valido_hasta && $juego->valido_hasta->isPast())"
-          wire:click="seleccionarEquipo({{ $juego->id }}, {{ $juego->awayTeam->id }})"
-          />
-
-        <x-sr-equipo
-          :equipo="$juego->homeTeam"
-          :seleccionado="$seleccionadoId"
-          :estado="$estadoEquipoHome"
-          :disabled="$estadoJugador !== 'vivo' || ($juego->valido_hasta && $juego->valido_hasta->isPast())"
-          wire:click="seleccionarEquipo({{ $juego->id }}, {{ $juego->homeTeam->id }})"
-          />
-      @endforeach
+  @if ($this->ronda > $evento->temporada->ronda)
+    <div class="max-w-3xl mx-auto mt-6">
+      <div class="alert alert-neutral">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-clock text-xl"></i>
+          <span>Esta ronda aún no está abierta</span>
+        </div>
+      </div>
     </div>
-  </div>
+  @elseif ($this->ronda === $evento->temporada->ronda && $estadoJugador !== false)
+    <div class="max-w-3xl mx-auto mt-6">
+      <div class="grid grid-cols-2 gap-2">
+        @foreach ($juegos as $juego)
+          @php
+            $estadoEquipoAway = $this->estadoEquipo($juego->awayTeam->id);
+            $estadoEquipoHome = $this->estadoEquipo($juego->homeTeam->id);
+          @endphp
+
+          <x-sr-equipo
+            :equipo="$juego->awayTeam"
+            :seleccionado="$seleccionadoId"
+            :estado="$estadoEquipoAway"
+            :disabled="$estadoJugador === false || ($juego->valido_hasta && $juego->valido_hasta->isPast())"
+            wire:click="seleccionarEquipo({{ $juego->id }}, {{ $juego->awayTeam->id }})"
+          />
+
+          <x-sr-equipo
+            :equipo="$juego->homeTeam"
+            :seleccionado="$seleccionadoId"
+            :estado="$estadoEquipoHome"
+            :disabled="$estadoJugador === false || ($juego->valido_hasta && $juego->valido_hasta->isPast())"
+            wire:click="seleccionarEquipo({{ $juego->id }}, {{ $juego->homeTeam->id }})"
+          />
+        @endforeach
+      </div>
+    </div>
+  @endif
 </div>

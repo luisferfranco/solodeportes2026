@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
     // Futbol Americano - Survivor
     Route::livewire('/fa/sr/{evento:slug}/pronosticos', 'pages::fa.sr.pronosticos')->name('fa.sr.pronosticos');
+    Route::livewire('/fa/sr/{evento:slug}/pronos', 'pages::fa.sr.pronos')->name('fa.sr.pronos');
     Route::livewire('/fa/sr/{evento:slug}/leaderboard', 'pages::fa.sr.leaderboard')->name('fa.sr.leaderboard');
 
 });
