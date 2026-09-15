@@ -73,7 +73,7 @@ new class extends Component
         AET => badge-error
         --}}
 
-        <x-badge class="{{ in_array($j->status, ['ET', 'AP']) ? 'badge-warning' : (in_array($j->status, ['FT', 'NS']) ? 'badge-info' : 'badge-error') }} badge-xs" value="{{ $j->status }}" />
+        <x-badge class="{{ in_array($j->status, ['ET', 'AP', 'AOT']) ? 'badge-warning' : (in_array($j->status, ['FT', 'NS']) ? 'badge-info' : 'badge-error') }} badge-xs" value="{{ $j->status }}" />
       </div>
 
       <div class="grid grid-cols-5 text-xs mb-2 bg-base-100 rounded-b shadow-md px-2 py-1 border border-base-300">
@@ -102,7 +102,7 @@ new class extends Component
         </div>
 
         <div class="flex items-center justify-center">
-          @if (in_array($j->status, ['FT', 'ET', 'AP', 'AET']))
+          @if (in_array($j->status, ['FT', 'ET', 'AP', 'AET', 'AOT']))
             <a
               wire:navigate
               href="{{ route('evento.juego-index', ['evento' => $evento, 'juego' => $j]) }}"

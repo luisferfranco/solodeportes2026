@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Leaderboard;
 use App\Models\Pronostico;
 use App\Models\Temporada;
+use App\Models\Participacion;
+use App\Models\Survivor;
 
 class FBService
 {
@@ -21,6 +23,19 @@ class FBService
         ->delete();
     }
 
+    // Resetear todo los survivor de la ronda
+    $eventos = $temporada->eventos()
+      ->where('tipojuego_id', 'sr')
+      ->pluck('id')
+      ->toArray();
+    $participaciones = Participacion::whereIn('evento_id', $eventos)
+      ->pluck('id')
+      ->toArray();
+    Participacion::whereIn('id', $participaciones)
+      ->update(['survivor' => 0]);
+    Survivor::whereIn('participacion_id', $participaciones)
+      ->update(['acierto' => 0]);
+
     // Resetear todos los pronósticos
 
     // Debería calificar todos los juegos para todos los pronósticos,
@@ -31,9 +46,6 @@ class FBService
         ->where('juego_id', $juego->id)
         ->update(['res' => null, 'dif' => null]);
 
-      // TODO: Revisar cuál es el código que enviará la API de FB
-      // para los juegos que no han terminado, para no calificar
-      // esos juegos
       // Si el juego no es FT, ET o AP continuar, no calificarlo. Por ejemplo, si es NS, no calificarlo.
       if (!(in_array($juego->status, ['FT', 'ET', 'AP', 'AET', 'AOT']))) {
         continue;
@@ -67,6 +79,30 @@ class FBService
         }
       }
 
+      // acierto a los survivors que le hayan ido al equipo local
+      if ($dif > 0) {
+        Survivor::whereIn('participacion_id', $participaciones)
+          ->where('equipo_id', '=', $juego->home_id)
+          ->where('ronda', $ronda)
+          ->update(['acierto' => 1]);
+      }
+      // acierto a los survivors que le hayan ido al equipo visitante
+      if ($dif < 0) {
+        Survivor::whereIn('participacion_id', $participaciones)
+          ->where('equipo_id', '=', $juego->away_id)
+          ->where('ronda', $ronda)
+          ->update(['acierto' => 1]);
+      }
+
+      $survivors = Survivor::whereIn('participacion_id', $participaciones)
+        ->where('ronda', $ronda)
+        ->where('acierto', 1)
+        ->pluck('participacion_id')
+        ->toArray();
+      info('caca', [$survivors]);
+      Participacion::whereIn('id', $survivors)
+        ->update(['survivor' => 1]);
+
       // Todas las calificaciones a cero
       $updated = Pronostico::query()
         ->where('juego_id', $juego->id)
@@ -84,9 +120,7 @@ class FBService
         ->where('juego_id', $juego->id)
         ->where('diferencia', $dif)
         ->update(['res' => 1, 'dif' => 1]);
-
     }
-
 
     info("Actualizando Leaderboards para la {$temporada->nombre}, ronda {$ronda}");
     foreach ($temporada->eventos as $evento) {
@@ -105,19 +139,20 @@ class FBService
         info("--------- Resultados: aciertos={$result->sumres}, diferencias={$result->sumdif}");
 
       Leaderboard::updateOrCreate(
-        [
-          'participacion_id' => $participacion->id,
-          'ronda' => $ronda,
-          'evento_id' => $evento->id
-        ],
-        [
-          'aciertos' => $result->sumres ?? 0,
-          'diferencias' => $result->sumdif ?? 0,
-          'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
-        ]
-      );
+          [
+            'participacion_id' => $participacion->id,
+            'ronda' => $ronda,
+            'evento_id' => $evento->id
+          ],
+          [
+            'aciertos' => $result->sumres ?? 0,
+            'diferencias' => $result->sumdif ?? 0,
+            'puntos' => ($result->sumres ?? 0) * $evento->acierto + ($result->sumdif ?? 0) * $evento->diferencia,
+          ]
+        );
       }
     }
+
 
   }
 }
