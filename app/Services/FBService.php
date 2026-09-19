@@ -31,10 +31,10 @@ class FBService
     $participaciones = Participacion::whereIn('evento_id', $eventos)
       ->pluck('id')
       ->toArray();
-    Participacion::whereIn('id', $participaciones)
-      ->update(['survivor' => 0]);
-    Survivor::whereIn('participacion_id', $participaciones)
-      ->update(['acierto' => 0]);
+    // Participacion::whereIn('id', $participaciones)
+    //   ->update(['survivor' => 0]);
+    // Survivor::whereIn('participacion_id', $participaciones)
+    //   ->update(['acierto' => 0]);
 
     // Resetear todos los pronósticos
 
@@ -85,6 +85,10 @@ class FBService
           ->where('equipo_id', '=', $juego->home_id)
           ->where('ronda', $ronda)
           ->update(['acierto' => 1]);
+        Survivor::whereIn('participacion_id', $participaciones)
+          ->where('equipo_id', '=', $juego->away_id)
+          ->where('ronda', $ronda)
+          ->update(['acierto' => 0]);
       }
       // acierto a los survivors que le hayan ido al equipo visitante
       if ($dif < 0) {
@@ -92,6 +96,10 @@ class FBService
           ->where('equipo_id', '=', $juego->away_id)
           ->where('ronda', $ronda)
           ->update(['acierto' => 1]);
+        Survivor::whereIn('participacion_id', $participaciones)
+          ->where('equipo_id', '=', $juego->home_id)
+          ->where('ronda', $ronda)
+          ->update(['acierto' => 0]);
       }
 
       $survivors = Survivor::whereIn('participacion_id', $participaciones)
