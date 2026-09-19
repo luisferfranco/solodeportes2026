@@ -18,9 +18,6 @@ new class extends Component
   public $options = [];
 
   public function mount(Model $model, $ronda = null) {
-
-    info("Selector Rondas mount: " . get_class($model));
-
     if ($model instanceof Temporada) {
       $this->temporada = $model;
       $jornada_inicial  = 1;

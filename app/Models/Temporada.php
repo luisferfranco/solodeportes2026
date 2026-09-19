@@ -21,18 +21,15 @@ class Temporada extends Model
         'fecha_fin'
     ];
 
-    public function deporte()
-    {
+    public function deporte() {
         return $this->belongsTo(Deporte::class);
     }
 
-    public function juegos()
-    {
+    public function juegos() {
         return $this->hasMany(Juego::class);
     }
 
-    public function eventos()
-    {
+    public function eventos() {
         return $this->hasMany(Evento::class);
     }
 }
