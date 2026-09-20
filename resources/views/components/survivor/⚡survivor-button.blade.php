@@ -16,12 +16,14 @@ new class extends Component
   public $participacion;
   public $ronda;
   public $estado;
+  public $eliminado;
 
-  public function mount(Equipo $equipo, $usados, $participacion, $ronda) {
+  public function mount(Equipo $equipo, $usados, $participacion, $ronda, $eliminado = false) {
     $this->equipo = $equipo;
     $this->usados = $usados;
     $this->participacion = $participacion;
     $this->ronda = $ronda;
+    $this->eliminado = $eliminado;
 
     if ($this->isUsed()) {
       $this->estado = 'usado';
@@ -49,17 +51,29 @@ new class extends Component
 
   public function selectTeam(Equipo $equipo): void
   {
+    // Verificar que el usuario no esté eliminado
+    if ($this->eliminado) {
+      $this->error(
+        title: 'Estás eliminado',
+        description: 'No puedes seleccionar un equipo porque has sido eliminado.',
+        icon: 'fas.skull',
+        timeout: 3000,
+      );
+
+      return;
+    }
+
     // Verificar que pueda pronosticar
     $valido = $this->participacion->evento->temporada->juegos()
       ->where('ronda', $this->ronda)
       ->orderBy('valido_hasta')
       ->first()
-      ->value('valido_hasta');
+      ->valido_hasta;
     if (now() > $valido) {
       $this->error(
         title: 'Selección no válida',
         description: 'El tiempo para hacer la selección en esta ronda del survivor ha expirado',
-        icon: 'fas.circle-exclamation',
+        icon: 'fas.triangle-exclamation',
         timeout: 3000,
       );
 
@@ -92,7 +106,7 @@ new class extends Component
   #[On('team-selected')]
   public function handleTeamSelected(): void
   {
-    $this->mount($this->equipo, $this->usados, $this->participacion, $this->ronda);
+    $this->mount($this->equipo, $this->usados, $this->participacion, $this->ronda, $this->eliminado);
   }
 }
 ?>

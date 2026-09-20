@@ -6,6 +6,7 @@ use App\Models\Participacion;
 use App\Models\Survivor;
 use App\Models\Equipo;
 use Mary\Traits\Toast;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -17,6 +18,7 @@ new class extends Component
   public $participacion = null;
   public int $ronda;
   public $juegos;
+  public $rondaTemporada;
 
   // Estado de la participación, vivo, muerto, indefinido
   public $estadoPart;
@@ -58,10 +60,20 @@ new class extends Component
       ->orderBy('valido_hasta')
       ->get();
 
-    $this->estadoPart = Survivor::where('participacion_id', $this->partId)
-      ->where('ronda', $this->ronda)
-      ->first()
-      ->acierto;
+    $this->estadoPart = $participacion?->survivor;
+
+    $this->rondaTemporada = $this->participacion->evento->temporada->ronda;
+  }
+
+  #[On('ronda-seleccionada')]
+  public function actualizarRonda($ronda) {
+    $this->ronda = (int) $ronda;
+    $this->redirectRoute('fa.sr.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, 'p' => $this->partId]);
+  }
+
+  #[On('participacion-seleccionada')]
+  public function actualizaParticipacion($participacionId) {
+    $this->redirectRoute('fa.sr.pronosticos', ['evento' => $this->evento, 'rd' => $this->ronda, 'p' => $participacionId]);
   }
 };
 ?>
@@ -91,13 +103,13 @@ new class extends Component
 
   <div class="mt-2 max-w-3xl mx-auto">
     {{-- Estado de la participación --}}
-    @if ($estadoPart === true)
+    @if ($participacion->survivor === true)
       <x-alert
       class="alert-success"
       title="Sobreviviente"
       icon="fas.shield-heart"
       />
-    @elseif ($estadoPart === false)
+    @elseif ($participacion->survivor === false)
       <x-alert
       class="alert-error"
       title="Eliminado"
@@ -113,22 +125,33 @@ new class extends Component
   </div>
 
   {{-- Selección de juego --}}
-  <div class="grid grid-cols-2 gap-2 max-w-3xl mx-auto mt-2">
-    @foreach ($juegos as $j)
-      <livewire:survivor.survivor-button
-        :equipo="$j->awayTeam"
-        :participacion="$participacion"
-        :usados="$usados"
-        :ronda="$ronda"
-        :key="'survivor-button-away-' . $j->id"
-        />
-      <livewire:survivor.survivor-button
-        :equipo="$j->homeTeam"
-        :participacion="$participacion"
-        :usados="$usados"
-        :ronda="$ronda"
-        :key="'survivor-button-home-' . $j->id"
-        />
-    @endforeach
-  </div>
+  @if ($ronda > $rondaTemporada)
+    <x-alert
+      class="alert-neutral max-w-3xl mx-auto mt-2"
+      title="Esta ronda no está disponible"
+      icon="fas.clock"
+      description="Aún no se ha abierto esta ronda para pronósticos"
+    />
+  @else
+    <div class="grid grid-cols-2 gap-2 max-w-3xl mx-auto mt-2">
+      @foreach ($juegos as $j)
+        <livewire:survivor.survivor-button
+          :equipo="$j->awayTeam"
+          :participacion="$participacion"
+          :usados="$usados"
+          :ronda="$ronda"
+          :eliminado="$participacion->survivor === false"
+          :key="'survivor-button-away-' . $j->id"
+          />
+        <livewire:survivor.survivor-button
+          :equipo="$j->homeTeam"
+          :participacion="$participacion"
+          :usados="$usados"
+          :ronda="$ronda"
+          :eliminado="$participacion->survivor === false"
+          :key="'survivor-button-home-' . $j->id"
+          />
+      @endforeach
+    </div>
+  @endif
 </div>
