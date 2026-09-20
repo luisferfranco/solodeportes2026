@@ -92,7 +92,7 @@ new class extends Component
   </section>
 
   {{-- Equipos seleccionados --}}
-  <section class="mt-2 max-w-3xl mx-auto bg-base-300 py-1 px-2 rounded-lg">
+  <section class="mt-2 bg-base-300 py-1 px-2 rounded-lg">
     <x-label value="Equipos seleccionados anteriormente" />
     <div class="flex gap-1 mt-2">
       @foreach ($usados as $seleccion)
@@ -101,7 +101,7 @@ new class extends Component
     </div>
   </section>
 
-  <div class="mt-2 max-w-3xl mx-auto">
+  <div class="mt-2">
     {{-- Estado de la participación --}}
     @if ($participacion->survivor === true)
       <x-alert
@@ -127,13 +127,13 @@ new class extends Component
   {{-- Selección de juego --}}
   @if ($ronda > $rondaTemporada)
     <x-alert
-      class="alert-neutral max-w-3xl mx-auto mt-2"
+      class="alert-neutral mt-2"
       title="Esta ronda no está disponible"
       icon="fas.clock"
       description="Aún no se ha abierto esta ronda para pronósticos"
     />
   @else
-    <div class="grid grid-cols-2 gap-2 max-w-3xl mx-auto mt-2">
+    <div class="grid grid-cols-2 gap-2 mt-2">
       @foreach ($juegos as $j)
         <livewire:survivor.survivor-button
           :equipo="$j->awayTeam"

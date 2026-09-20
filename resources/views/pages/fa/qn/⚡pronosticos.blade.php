@@ -57,19 +57,19 @@ new class extends Component
 ?>
 
 <div>
-  <x-title title="{{ $evento->nombre }}" subtitle="Pronósticos" />
+  <section>
+    <x-title title="{{ $evento->nombre }}" subtitle="Pronósticos" />
 
-  <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="3" />
+    <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="3" />
 
-  @if ($participaciones->count() > 1)
-    <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
-  @endif
+    @if ($participaciones->count() > 1)
+      <livewire:selector-participacion :evento="$evento" :key="'selector-participacion-' . $evento->id" />
+    @endif
 
-  <livewire:selector-rondas :model="$evento" />
+    <livewire:selector-rondas :model="$evento" />
+  </section>
 
-  <div class="max-w-3xl mx-auto">
-    @foreach ($juegos as $juego)
-      <livewire:fa-pronostico-juego :juego="$juego" :participacion="$participacion" :key="'juego-' . $juego->id" />
-    @endforeach
-  </div>
+  @foreach ($juegos as $juego)
+    <livewire:fa-pronostico-juego :juego="$juego" :participacion="$participacion" :key="'juego-' . $juego->id" />
+  @endforeach
 </div>
