@@ -163,12 +163,14 @@ class FBService
       ->where('ronda', $ronda)
       ->pluck('acierto', 'participacion_id');
 
-    Participacion::whereIn('id', $participaciones)
-      ->update(['survivor' => null]);
+    // Participacion::whereIn('id', $participaciones)
+    //   ->update(['survivor' => null]);
 
     foreach ($survivorResults as $participacionId => $acierto) {
-      Participacion::where('id', $participacionId)
-        ->update(['survivor' => $acierto]);
+      if ($acierto !== null) {
+        Participacion::where('id', $participacionId)
+          ->update(['survivor' => $acierto]);
+      }
     }
 
   }
