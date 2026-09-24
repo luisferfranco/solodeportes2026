@@ -47,10 +47,7 @@ new class extends Component
       ['key' => 'MNF', 'label' => 'MNF'],
     ];
 
-    $this->resultados = Leaderboard::where('evento_id', $evento->id)
-      ->where('ronda', $this->rd)
-      ->orderByDesc('puntos')
-      ->get();
+    $this->getData();
   }
 
   public function getData() {
@@ -260,6 +257,8 @@ new class extends Component
 
         @scope('cell_MNF', $row)
           @php
+            info($this->juegoMNF);
+
             $prono = $row->participacion->pronosticos->where('juego_id', $this->juegoMNF)->first();
             if ($prono) {
               if ($prono->diferencia > 0) {
