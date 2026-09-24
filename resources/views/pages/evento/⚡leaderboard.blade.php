@@ -22,6 +22,7 @@ new class extends Component
   public ?Participacion $partPago = null;
   public $monto=0;
   public $acumuladoBtn = false;
+  public $juegoMNF;
 
   public function mount(Evento $evento)
   {
@@ -36,12 +37,14 @@ new class extends Component
       ['key' => 'aciertos', 'label' => "Aciertos ($aciertos)", 'class' => 'text-right'],
       ['key' => 'diferencias', 'label' => "Diferencias ($diferencias)", 'class' => 'text-right'],
       ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right font-bold'],
+      ['key' => 'MNF', 'label' => 'MNF'],
     ];
 
     $this->headersxs = [
       ['key' => 'participacion_id', 'label' => 'Participante'],
       ['key' => 'aciertos', 'label' => "Aciertos", 'class' => 'text-right'],
       ['key' => 'puntos', 'label' => 'Puntos', 'class' => 'text-right font-bold'],
+      ['key' => 'MNF', 'label' => 'MNF'],
     ];
 
     $this->resultados = Leaderboard::where('evento_id', $evento->id)
@@ -64,6 +67,12 @@ new class extends Component
         ->orderByDesc('puntos')
         ->get();
     }
+
+    $this->juegoMNF = $this->evento->temporada->juegos
+      ->where('ronda', $this->rd)
+      ->sortByDesc('fecha')
+      ->last()
+      ->id;
   }
 
   #[On('ronda-seleccionada')]
@@ -144,12 +153,21 @@ new class extends Component
     @endif
   </x-modal>
 
-  <x-title title="{{ $evento->nombre }}" subtitle="Leaderboard" />
+  <section>
+    <x-title title="{{ $evento->nombre }}" subtitle="Leaderboard" />
+    <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="2" />
+    <livewire:selector-rondas :model="$evento" :key="'selector-ronda-' . $evento->id" />
+  </section>
 
-  <livewire:nav-evento :evento="$evento" :key="'nav-evento-' . $evento->id" opc="2" />
+  {{-- Botón de acumulado --}}
+  <div class="my-6 text-xl flex items-center">
+    <div>
+      <x-toggle wire:model.live='acumuladoBtn' class="toggle-xl" />
+    </div>
+    <div class="text-xl">Mostrar Acumulado</div>
+  </div>
 
-  <livewire:selector-rondas :model="$evento" :key="'selector-ronda-' . $evento->id" />
-
+  {{-- Medallero --}}
   @php
     $topParticipaciones = $resultados->take(3);
     $medallas = [
@@ -159,14 +177,6 @@ new class extends Component
     ];
   @endphp
 
-  <div class="my-6 text-xl flex items-center">
-    <div>
-      <x-toggle wire:model.live='acumuladoBtn' class="toggle-xl" />
-    </div>
-    <div class="text-xl">Mostrar Acumulado</div>
-  </div>
-
-  {{-- Medallero --}}
   @if ($topParticipaciones->isNotEmpty())
     <section class="mt-6">
       <div class="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -248,6 +258,26 @@ new class extends Component
           <div class="text-xl">{{ Number::format($row->puntos,2) }}</div>
         @endscope
 
+        @scope('cell_MNF', $row)
+          @php
+            $prono = $row->participacion->pronosticos->where('juego_id', $this->juegoMNF)->first();
+            if ($prono) {
+              if ($prono->diferencia > 0) {
+                $equipo = $prono->juego->homeTeam;
+              } else {
+                $equipo = $prono->juego->awayTeam;
+              }
+            } else {
+              $equipo = null;
+            }
+          @endphp
+          @if ($equipo)
+            <img src="{{ $equipo->logo }}" class="h-10 w-10">
+          @else
+            N/A
+          @endif
+        @endscope
+
         @scope('actions', $row)
           @if (auth()->user()->isAdmin)
             <x-button
@@ -301,6 +331,27 @@ new class extends Component
         @scope('cell_puntos', $row)
           <div class="text-xs font-bold">{{ Number::format($row->puntos,2) }}</div>
         @endscope
+
+        @scope('cell_MNF', $row)
+          @php
+            $prono = $row->participacion->pronosticos->where('juego_id', $this->juegoMNF)->first();
+            if ($prono) {
+              if ($prono->diferencia > 0) {
+                $equipo = $prono->juego->homeTeam;
+              } else {
+                $equipo = $prono->juego->awayTeam;
+              }
+            } else {
+              $equipo = null;
+            }
+          @endphp
+          @if ($equipo)
+            <img src="{{ $equipo->logo }}" class="w-10 object-contain">
+          @else
+            N/A
+          @endif
+        @endscope
+
 
         @scope('actions', $row)
           @if (auth()->user()->isAdmin)
