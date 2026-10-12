@@ -5,40 +5,52 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Guarded;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Guarded([])]
 class Survivor extends Model
 {
-    protected $fillable = [
-        'participacion_id',
-        'ronda',
-        'equipo_id',
-        'acierto',
+  use LogsActivity;
+
+  protected $fillable = [
+    'participacion_id',
+    'ronda',
+    'equipo_id',
+    'acierto',
+  ];
+
+  public function casts(): array {
+    return [
+    'acierto' => 'boolean',
     ];
+  }
 
-    public function casts(): array {
-      return [
-        'acierto' => 'boolean',
-      ];
-    }
+  public function getActivitylogOptions(): LogOptions
+  {
+      return LogOptions::defaults()
+          ->logAll()
+          ->logOnlyDirty();
+  }
 
-    public function evento(): BelongsTo
-    {
-        return $this->belongsTo(Evento::class);
-    }
 
-    public function participacion(): BelongsTo
-    {
-        return $this->belongsTo(Participacion::class);
-    }
+  public function evento(): BelongsTo
+  {
+    return $this->belongsTo(Evento::class);
+  }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+  public function participacion(): BelongsTo
+  {
+    return $this->belongsTo(Participacion::class);
+  }
 
-    public function equipo(): BelongsTo
-    {
-        return $this->belongsTo(Equipo::class);
-    }
+  public function user(): BelongsTo
+  {
+    return $this->belongsTo(User::class);
+  }
+
+  public function equipo(): BelongsTo
+  {
+    return $this->belongsTo(Equipo::class);
+  }
 }

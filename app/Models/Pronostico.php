@@ -4,9 +4,13 @@ namespace App\Models;
 
 use App\Models\Juego;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Pronostico extends Model
 {
+  use LogsActivity;
+
   protected $fillable = [
     'participacion_id',
     'juego_id',
@@ -22,6 +26,14 @@ class Pronostico extends Model
     'res' => 'integer',
     'dif' => 'integer'
   ];
+
+  public function getActivitylogOptions(): LogOptions
+  {
+      return LogOptions::defaults()
+          ->logAll()
+          ->logOnlyDirty();
+  }
+
 
   //! RELACIONES
   public function juego() {

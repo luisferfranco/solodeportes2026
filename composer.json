@@ -23,7 +23,8 @@
         "livewire/livewire": "^4.1",
         "mallardduck/blade-lucide-icons": "^1.26",
         "owenvoke/blade-fontawesome": "^3.3",
-        "robsontenorio/mary": "dev-main"
+        "robsontenorio/mary": "dev-main",
+        "spatie/laravel-activitylog": "^5.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
