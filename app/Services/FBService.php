@@ -51,7 +51,9 @@ class FBService
       if ($temporada->deporte_id == "FA") {
         // Para el futbol americano se recalculan las diferencias
         $d = abs($dif);
-        if ($d < 7) {
+        if ($d == 0) {
+          $dif = 0;
+        } else if ($d < 7) {
           $dif = $dif > 0 ? 1 : -1;;
         } else if ($d < 14) {
           $dif = $dif > 0 ? 2 : -2;
@@ -103,7 +105,6 @@ class FBService
         ->where('acierto', 1)
         ->pluck('participacion_id')
         ->toArray();
-      info('caca', [$survivors]);
       Participacion::whereIn('id', $survivors)
         ->update(['survivor' => 1]);
 
